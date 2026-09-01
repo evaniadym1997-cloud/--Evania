@@ -1818,17 +1818,38 @@ window.addEventListener('load', fitAllSlides);
   function escHtml(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
   function truncate(s, n){ s = String(s || ''); return s.length > n ? s.slice(0, n) + '…' : s; }
 
+  function cleanMarkdown(s){
+    return String(s||'')
+      .replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1')
+      .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+      .replace(/`([^`]+)`/g, '$1')
+      .replace(/^#{1,6}\s+/gm, '');
+  }
   function splitSentences(text){
-    var paras = String(text||'').replace(/\r/g,'').split(/\n+/).map(function(s){ return s.trim(); }).filter(Boolean);
+    var paras = cleanMarkdown(text).replace(/\r/g,'').split(/\n+/).map(function(s){ return s.trim(); }).filter(Boolean);
     var out = [];
     paras.forEach(function(p){
       var parts = p.split(/([.!?。！？；;]+)/);
       var cur = '';
+      var attach = false;
       for(var i=0;i<parts.length;i++){
-        cur += parts[i];
-        if(/([.!?。！？；;]+)$/.test(parts[i]) && cur.trim()){ out.push(cur.trim()); cur=''; }
+        var part = parts[i];
+        if(!cur.trim() && /^["'”’)\]}]+/.test(part) && out.length && !/["'”’]$/.test(out[out.length-1])){
+          out[out.length-1] += part;
+          attach = true;
+          continue;
+        }
+        cur += part;
+        if(/([.!?。！？；;]+)$/.test(part) && cur.trim()){
+          if(attach){ out[out.length-1] += cur.trim(); attach = false; }
+          else { out.push(cur.trim()); }
+          cur = '';
+        }
       }
-      if(cur.trim()) out.push(cur.trim());
+      if(cur.trim()){
+        if(attach){ out[out.length-1] += cur.trim(); }
+        else { out.push(cur.trim()); }
+      }
     });
     return out;
   }
@@ -1906,6 +1927,13 @@ window.addEventListener('load', fitAllSlides);
     });
   }
 
+  function friendlyImgErr(msg){
+    var m = String(msg || '').toLowerCase();
+    if(/余额|recharge|balance|resource package/.test(m)) return '智谱账户余额不足，请充值后重新生成';
+    if(/429|rate|limit|频繁|限流/.test(m)) return '请求过于频繁，请稍后重试';
+    if(/401|unauthorized|invalid|key/i.test(m)) return 'API Key 无效，请在导入弹窗中检查 Key';
+    return String(msg || '渲染失败').slice(0, 60);
+  }
   function renderPanelsSequential(items, key){
     var chain = Promise.resolve();
     items.forEach(function(it){
@@ -1915,6 +1943,13 @@ window.addEventListener('load', fitAllSlides);
           if(img){ img.src = dataUrl; img.classList.add('rendered'); }
         }).catch(function(e){
           console.warn('panel ' + it.idx + ' render failed:', e && e.message);
+          var img = document.querySelector('[data-panel-img="' + it.idx + '"]');
+          if(img){
+            var msg = friendlyImgErr((e && e.message) || '渲染失败');
+            var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="768" height="1024" viewBox="0 0 768 1024"><rect width="768" height="1024" fill="#f4e2d8"/><text x="384" y="460" text-anchor="middle" font-size="44" font-family="Arial, sans-serif" font-weight="bold" fill="#a05a3a">渲染失败</text><text x="384" y="540" text-anchor="middle" font-size="28" font-family="Arial, sans-serif" fill="#a05a3a">' + escHtml(msg) + '</text></svg>';
+            img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+            img.title = msg;
+          }
         });
       });
     });
@@ -1980,8 +2015,8 @@ window.addEventListener('load', fitAllSlides);
     html += '<section class="slide" data-title="任务总览">' +
       '<p class="page-kicker">Lesson Overview</p><h2 style="font-size:40px;line-height:1.2;margin:8px 0 14px">任务总览</h2>' +
       '<div class="crit-grid two" style="margin-bottom:16px">' +
-      '<div class="crit-card" style="padding:14px 18px"><b style="color:var(--accent)">文本统计</b><div style="font-size:27px;line-height:1.5;margin-top:6px">段落 ' + paras.length + ' · 句子 ' + sents.length + ' · 词数约 ' + analysis.wordCount + ' · 检测角色 ' + names.length + '</div></div>' +
-      '<div class="crit-card" style="padding:14px 18px"><b style="color:var(--accent)">情节走向</b><div style="font-size:27px;line-height:1.5;margin-top:6px">' + escHtml(truncate(sents[0] || '', 90)) + '</div></div></div>' +
+      '<div class="crit-card" style="padding:14px 18px"><b style="color:var(--accent)">文本统计</b><div style="font-size:27px;line-height:1.5;margin-top:6px">段落 ' + paras.length + ' · 句子 ' + sents.length + ' · 词数约 ' + analysis.wordCount + ' · 检测到 ' + names.length + ' 个角色</div></div>' +
+      '<div class="crit-card" style="padding:14px 18px"><b style="color:var(--accent)">情节走向</b><div style="font-size:27px;line-height:1.5;margin-top:6px">' + escHtml(truncate(sents[0] || '', 130)) + '</div></div></div>' +
       '<div style="font-size:18px;font-weight:800;margin-bottom:8px;color:var(--text-2)">14 格分镜速查（逐格点击展开）</div>' +
       '<table class="cell-table" style="width:100%">' + rows.join('') + '</table>' +
       '<div class="teacher-note-label">讲评记录</div><div class="teacher-note" data-placeholder="在此记录课堂讲评要点…" contenteditable="true"></div>' +
@@ -1991,7 +2026,8 @@ window.addEventListener('load', fitAllSlides);
     var four = [sents.slice(0, q), sents.slice(q, q*2), sents.slice(q*2, q*3), sents.slice(q*3)];
     var fourTitles = ['开头 · Setup', '发展 · Development', '转折 · Turning Point', '结尾 · Resolution'];
     var branches = four.map(function(seg, i){
-      return '<div class="branch"><b>' + fourTitles[i] + '：</b>' + escHtml(truncate(seg[0] || '', 80)) + '</div>';
+      var text = (seg.join(' ') || '').trim() || (seg[0] || '');
+      return '<div class="branch"><b>' + fourTitles[i] + '：</b>' + escHtml(truncate(text, 120)) + '</div>';
     }).join('');
     html += '<section class="slide" data-title="四段式情节导图">' +
       '<p class="page-kicker">Plot Map</p><h2 style="font-size:40px;line-height:1.2;margin:8px 0 14px">四段式情节导图</h2>' +
@@ -2098,7 +2134,7 @@ window.addEventListener('load', fitAllSlides);
     while(chunks.length < 14){ chunks.push([sents[sents.length-1]]); }
     var prompts = chunks.map(function(ch, i){ return buildPrompt(i, ch, title, names); });
     var wordCount = (text.match(/[A-Za-z]+/g) || []).length + (text.match(/[\u4e00-\u9fa5]/g) || []).length;
-    var analysis = { title: title, sents: sents, paras: paras, names: names, chunks: chunks, prompts: prompts, wordCount: wordCount };
+    var analysis = { title: title, sents: sents, paras: paras, names: names, chunks: chunks, prompts: prompts, wordCount: wordCount, hasKey: !!key };
 
     var deck = document.querySelector('.deck');
     var beforeCount = deck.querySelectorAll('section.slide').length;
@@ -2120,8 +2156,8 @@ window.addEventListener('load', fitAllSlides);
   genBtn.addEventListener('click', function(){
     var text = (preview.value || paste.value || '').trim();
     if(!text){ setStatus('请先导入文件或粘贴文本'); return; }
-    var key = document.getElementById('import-key').value.trim();
-    setImgKey(key);
+    var key = document.getElementById('import-key').value.trim() || getImgKey();
+    if(key){ setImgKey(key); }
     setStatus('正在自动分析文本并生成漫画故事板…');
     setTimeout(function(){
       try {
@@ -2137,4 +2173,15 @@ window.addEventListener('load', fitAllSlides);
 })();
 </script>
 <script src="assets/runtime.js"></script>
+
+<script>
+  /* ===== 智谱 GLM-Image Key 自动保存（由 Marvis 注入） ===== */
+  (function(){
+    try{
+      if(!localStorage.getItem('comic_img_key')){
+        localStorage.setItem('comic_img_key', '78b05970e2d642ba923e654d762bb684.9m2o0GHkKc1jgaga');
+      }
+    }catch(e){}
+  })();
+</script>
 </body></html>
