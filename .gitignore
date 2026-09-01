@@ -1,0 +1,5 @@
+# 预览截图与临时文件
+preview/
+*.log
+.DS_Store
+Thumbs.db
