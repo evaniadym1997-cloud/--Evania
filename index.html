@@ -1,0 +1,1829 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="sunset-warm">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Anjali's Tabla Dream · 漫画故事板</title>
+<link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" href="assets/base.css">
+<link rel="stylesheet" id="theme-link" href="assets/themes/sunset-warm.css">
+<link rel="stylesheet" href="assets/animations/animations.css">
+<style>
+  /* ===== Comic storybook scoped styles ===== */
+  .comic-meta { display:flex; gap:12px; align-items:center; margin-bottom:18px; flex-wrap:wrap; }
+  .panel-badge { display:inline-flex; align-items:center; gap:10px; }
+  .panel-num { display:inline-flex; align-items:center; justify-content:center; min-width:52px; height:52px; padding:0 14px; border-radius:16px; background:var(--accent); color:var(--accent-contrast, #fff); font-weight:900; font-size:22px; box-shadow:0 6px 18px color-mix(in srgb, var(--accent) 40%, transparent); }
+  .panel-title { font-size:34px; font-weight:900; margin:0; line-height:1.15; }
+  .emotion-tag { display:inline-block; padding:5px 14px; border-radius:999px; background:color-mix(in srgb, var(--accent) 16%, var(--surface)); color:var(--text-1); border:1px solid color-mix(in srgb, var(--accent) 40%, transparent); font-size:13px; font-weight:600; }
+
+  .comic-stage { position:relative; border-radius:20px; padding:22px 24px; background:linear-gradient(160deg, color-mix(in srgb, var(--surface) 92%, var(--accent) 8%), var(--surface)); border:1px solid color-mix(in srgb, var(--accent) 22%, transparent); box-shadow:0 10px 34px color-mix(in srgb, var(--accent) 14%, transparent); margin-bottom:16px; }
+  .comic-stage .scene-desc { font-size:15.5px; line-height:1.7; color:var(--text-1); margin:0; }
+
+  .bubble-wrap { display:flex; flex-direction:column; gap:10px; margin-top:14px; }
+  .bubble { position:relative; display:inline-block; max-width:100%; padding:12px 18px; border-radius:22px; font-size:17px; line-height:1.5; font-weight:600; }
+  .bubble::after { content:""; position:absolute; width:16px; height:16px; transform:rotate(45deg); background:inherit; }
+  .bubble.speech { background:#fff; color:#222; border:2px solid #e6d9c0; box-shadow:0 4px 14px rgba(0,0,0,.12); }
+  .bubble.speech::after { bottom:-9px; left:30px; border-right:2px solid #e6d9c0; border-bottom:2px solid #e6d9c0; border-radius:0 0 4px 0; }
+  .bubble.thought { background:#eaf3fb; color:#1c3a5e; border:2px solid #bcd8ee; border-radius:26px; font-style:italic; }
+  .bubble.thought::after { top:50%; right:-10px; width:12px; height:12px; border-top:2px solid #bcd8ee; border-right:2px solid #bcd8ee; border-radius:0 4px 0 0; transform:rotate(45deg) translate(2px,-2px); }
+  .bubble.jagged { background:#fff; color:#b3121d; border:3px solid #b3121d; border-radius:8px; font-weight:900; font-size:19px; box-shadow:0 6px 18px rgba(179,18,29,.25); }
+  .bubble.jagged::after { display:none; }
+  .bubble.wobbly { background:#fff; color:#222; border:2px solid #d8c9a8; border-radius:16px 26px 18px 28px; box-shadow:0 4px 14px rgba(0,0,0,.10); }
+  .bubble.wobbly::after { bottom:-9px; left:60px; border-left:2px solid #d8c9a8; border-bottom:2px solid #d8c9a8; border-radius:0 0 0 4px; }
+  .bubble small { display:block; font-size:11px; font-weight:700; letter-spacing:.08em; opacity:.55; margin-bottom:2px; text-transform:uppercase; }
+
+  .sfx { display:inline-block; margin-top:14px; font-size:26px; font-weight:900; letter-spacing:.06em; background:linear-gradient(120deg, #ff8a3d, #ff4d6d 55%, #b5179e); -webkit-background-clip:text; background-clip:text; color:transparent; filter:drop-shadow(0 3px 8px rgba(255,110,70,.35)); }
+
+  .caption { margin-top:14px; padding:10px 18px; border-left:4px solid var(--accent); background:color-mix(in srgb, var(--accent) 10%, var(--surface)); border-radius:0 12px 12px 0; font-size:15px; line-height:1.6; font-style:italic; color:var(--text-1); }
+  .caption b { font-style:normal; }
+
+  .prompt-box { border-radius:16px; padding:16px 18px; background:color-mix(in srgb, var(--text-1) 7%, var(--surface)); border:1px dashed color-mix(in srgb, var(--text-1) 25%, transparent); font-size:13px; line-height:1.6; color:var(--text-2); max-height:200px; overflow:auto; }
+  .prompt-box .lbl { display:block; font-size:11px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; opacity:.5; margin-bottom:6px; }
+
+  .char-card { border-radius:18px; padding:20px; background:linear-gradient(165deg, color-mix(in srgb, var(--surface) 90%, var(--accent) 10%), var(--surface)); border:1px solid color-mix(in srgb, var(--accent) 24%, transparent); box-shadow:0 8px 26px color-mix(in srgb, var(--accent) 12%, transparent); }
+  .char-card h4 { margin:0 0 8px; font-size:20px; }
+  .char-swatch { display:inline-block; width:14px; height:14px; border-radius:50%; margin-right:6px; vertical-align:middle; border:1px solid rgba(0,0,0,.15); }
+
+  .spec-list { font-size:14.5px; line-height:1.75; color:var(--text-1); }
+  .spec-list li { margin-bottom:6px; }
+
+  .panel-row { display:grid; grid-template-columns:1fr; gap:16px; }
+  .comic-img img { max-width:100%; max-height:44vh; width:auto; margin:0 auto; border-radius:18px; box-shadow:0 10px 30px rgba(0,0,0,.18); display:block; object-fit:contain; }
+  @media (min-width:900px){ .panel-row.two { grid-template-columns:0.9fr 1.1fr; align-items:start; } }
+
+  .tiny-table { width:100%; border-collapse:collapse; font-size:14px; }
+  .tiny-table th, .tiny-table td { padding:10px 12px; text-align:left; border-bottom:1px solid color-mix(in srgb, var(--text-1) 14%, transparent); }
+  .tiny-table th { font-size:12px; text-transform:uppercase; letter-spacing:.08em; opacity:.6; }
+
+  .page-kicker { letter-spacing:.22em; text-transform:uppercase; font-size:12px; font-weight:800; opacity:.6; margin-bottom:8px; }
+
+  /* ===== 续写讲评 lesson styles ===== */
+  .crit-grid { display:grid; grid-template-columns:1fr; gap:14px; }
+  @media (min-width:900px){
+    .crit-grid.two { grid-template-columns:1fr 1fr; }
+    .crit-grid.three { grid-template-columns:repeat(3,1fr); }
+  }
+  .crit-card { background:linear-gradient(160deg, color-mix(in srgb, var(--surface) 95%, var(--accent) 5%), var(--surface)); border:1px solid color-mix(in srgb, var(--accent) 24%, transparent); border-radius:18px; padding:18px 20px; box-shadow:0 8px 26px color-mix(in srgb, var(--accent) 10%, transparent); }
+  .crit-card h3 { margin:0 0 10px; font-size:17px; font-weight:800; }
+  .crit-card p { font-size:14.5px; line-height:1.7; margin:0 0 8px; }
+  .crit-card ul { font-size:14.5px; line-height:1.7; }
+  .model-passage { background:color-mix(in srgb, var(--surface) 88%, var(--accent) 12%); border-left:4px solid var(--accent); border-radius:12px; padding:14px 18px; font-size:14.5px; line-height:1.75; }
+  .en { font-style:italic; }
+  .tab-nav { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+  .tab-btn { padding:8px 18px; border-radius:999px; border:1px solid color-mix(in srgb, var(--accent) 45%, transparent); background:color-mix(in srgb, var(--surface) 90%, var(--accent) 10%); color:var(--text-1); font-size:14px; font-weight:600; cursor:pointer; transition:all .2s; }
+  .tab-btn:hover { border-color:var(--accent); }
+  .tab-btn.active { background:var(--accent); color:var(--accent-contrast, #fff); }
+  .tab-panel { display:none; }
+  .tab-panel.active { display:block; }
+  .check-list { list-style:none; padding:0; margin:0; }
+  .check-list li { border-bottom:1px dashed color-mix(in srgb, var(--accent) 26%, transparent); }
+  .check-list label { display:flex; gap:10px; align-items:flex-start; padding:11px 4px; font-size:14.5px; line-height:1.6; cursor:pointer; }
+  .check-list input { accent-color:var(--accent); width:17px; height:17px; margin-top:2px; flex:none; }
+  .flow-arrow { text-align:center; color:var(--accent); font-size:14px; line-height:1; }
+
+  /* ===== 思维导图 ===== */
+  .mindmap { display:flex; align-items:center; gap:22px; margin-top:14px; }
+  .mindmap .hub { flex:none; width:150px; text-align:center; background:var(--accent); color:var(--accent-contrast, #fff); border-radius:18px; padding:18px 12px; font-weight:800; box-shadow:0 8px 22px color-mix(in srgb, var(--accent) 35%, transparent); position:relative; font-size:16px; line-height:1.45; }
+  .mindmap .hub::after { content:''; position:absolute; right:-22px; top:50%; width:22px; height:3px; background:var(--accent); }
+  .mindmap .branches { flex:1; display:flex; flex-direction:column; gap:10px; position:relative; padding-left:28px; }
+  .mindmap .branches::before { content:''; position:absolute; left:0; top:14px; bottom:14px; width:3px; background:color-mix(in srgb, var(--accent) 45%, transparent); border-radius:2px; }
+  .mindmap .branch { position:relative; background:linear-gradient(160deg, color-mix(in srgb, var(--surface) 95%, var(--accent) 5%), var(--surface)); border:1px solid color-mix(in srgb, var(--accent) 26%, transparent); border-radius:14px; padding:10px 14px; font-size:14.5px; line-height:1.6; }
+  .mindmap .branch::before { content:''; position:absolute; left:-28px; top:50%; width:28px; height:3px; background:color-mix(in srgb, var(--accent) 45%, transparent); }
+  .mindmap .branch b { color:var(--accent); }
+
+  /* ===== 表格逐格点击 ===== */
+  .cell-table { border-collapse:separate; border-spacing:6px; }
+  .cell-table td { cursor:pointer; position:relative; background:color-mix(in srgb, var(--surface) 96%, var(--accent) 4%); border:1px dashed color-mix(in srgb, var(--accent) 42%, transparent); border-radius:10px; padding:10px 12px; min-width:130px; transition:background .2s, border-color .2s; }
+  .cell-table td:hover { background:color-mix(in srgb, var(--surface) 90%, var(--accent) 10%); }
+  .cell-table .cell-hint { display:block; color:var(--text-3); font-size:16px; font-weight:700; letter-spacing:.04em; }
+  .cell-table td.open { border-style:solid; border-color:var(--accent); background:color-mix(in srgb, var(--surface) 88%, var(--accent) 12%); }
+  .cell-table .cell-body { display:none; margin-top:6px; }
+  .cell-table td.open .cell-body { display:block; }
+
+  /* ===== 讲评文本框 ===== */
+  .teacher-note-label { display:flex; align-items:center; gap:8px; margin-top:18px; font-size:18px; font-weight:800; color:var(--accent); letter-spacing:.04em; }
+  .teacher-note-label::before { content:'▤'; font-size:16px; }
+  .teacher-note { margin-top:10px; min-height:72px; padding:12px 16px; border:2px dashed color-mix(in srgb, var(--accent) 50%, transparent); border-radius:14px; background:color-mix(in srgb, var(--surface) 55%, transparent); font-size:27px; line-height:1.55; color:var(--text-1); outline:none; transition:border-color .2s, background .2s; }
+  .teacher-note:focus { border-style:solid; border-color:var(--accent); background:color-mix(in srgb, var(--surface) 85%, var(--accent) 6%); }
+  .teacher-note:empty::before { content:attr(data-placeholder); color:var(--text-3); font-size:20px; }
+
+  /* ===== 正文字号不小于 27 ===== */
+  .slide p, .slide li, .slide td, .slide th, .slide label, .slide .scene-desc, .slide .bubble, .slide .caption, .slide .prompt-box, .slide .spec-list, .slide .crit-card p, .slide .crit-card ul, .slide .model-passage, .slide .check-list label, .slide .tiny-table td, .slide .tiny-table th, .slide .tab-btn, .slide .flow-arrow, .slide .emotion-tag, .slide .char-card h4, .slide .crit-card h3, .slide .sfx, .slide .mindmap .branch, .slide .cell-table .cell-body { font-size:27px; line-height:1.5; }
+  .slide .bubble small, .slide .prompt-box .lbl, .slide .page-kicker, .slide .kicker { font-size:16px; }
+  .slide .tiny-table th { font-size:16px; letter-spacing:.06em; text-transform:uppercase; }
+  .slide .prompt-box { max-height:280px; }
+  .slide h4, .slide .crit-card h3 { line-height:1.3; }
+
+  /* ===== 讲评点击展开 ===== */
+  .lesson-reveal .reveal-head { cursor:pointer; display:flex; align-items:center; gap:12px; flex-wrap:wrap; user-select:none; padding:6px 0; }
+  .lesson-reveal .reveal-head .reveal-arrow { display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:50%; background:color-mix(in srgb, var(--accent) 16%, var(--surface)); border:1px solid color-mix(in srgb, var(--accent) 40%, transparent); color:var(--accent); font-size:17px; font-weight:900; transition:transform .25s; flex:none; }
+  .lesson-reveal.open .reveal-arrow { transform:rotate(90deg); }
+  .lesson-reveal .reveal-hint { font-size:16px; font-weight:600; color:var(--text-2); opacity:.75; }
+  .lesson-reveal .reveal-body { display:none; }
+  .lesson-reveal.open .reveal-body { display:block; animation:revealFade .35s ease; }
+  @keyframes revealFade { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+
+  /* ===== 讲评逐框折叠 ===== */
+  .lesson-reveal .box-wrap { margin-bottom:14px; }
+  .lesson-reveal .box-head { cursor:pointer; display:flex; align-items:center; gap:10px; flex-wrap:wrap; user-select:none; padding:8px 12px; border-radius:12px; background:color-mix(in srgb, var(--accent) 9%, var(--surface)); border:1px solid color-mix(in srgb, var(--accent) 28%, transparent); margin-bottom:10px; transition:background .2s; }
+  .lesson-reveal .box-head:hover { background:color-mix(in srgb, var(--accent) 15%, var(--surface)); }
+  .lesson-reveal .box-head .box-arrow { display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; background:color-mix(in srgb, var(--accent) 18%, var(--surface)); color:var(--accent); font-size:15px; font-weight:900; transition:transform .25s; flex:none; }
+  .lesson-reveal .box-item.box-open > .box-head .box-arrow, .lesson-reveal .box-wrap.box-open > .box-head .box-arrow { transform:rotate(90deg); }
+  .lesson-reveal .box-head .box-label { font-size:22px; font-weight:800; color:var(--text-1); line-height:1.3; flex:1; min-width:0; }
+  .lesson-reveal .box-head .box-hint { font-size:15px; font-weight:600; color:var(--text-2); opacity:.7; flex:none; }
+  .lesson-reveal .box-body { display:none; padding-top:2px; }
+  .lesson-reveal .box-item.box-open > .box-body, .lesson-reveal .box-wrap.box-open > .box-body { display:block; animation:revealFade .3s ease; }
+
+  /* ===== 涂鸦工具栏 ===== */
+  .doodle-toolbar { position:fixed; right:18px; bottom:18px; z-index:9999; display:flex; flex-direction:column; gap:8px; align-items:flex-end; }
+  .doodle-toolbar .d-btn { min-width:72px; padding:10px 18px; border-radius:14px; border:1px solid rgba(0,0,0,.15); background:rgba(255,255,255,.94); color:#222; font-size:20px; font-weight:700; cursor:pointer; box-shadow:0 6px 18px rgba(0,0,0,.18); transition:all .15s; }
+  .doodle-toolbar .d-btn:hover { transform:translateY(-1px); }
+  .doodle-toolbar .d-btn.on { background:#222; color:#fff; }
+  .import-fab { position:fixed; right:18px; top:18px; z-index:9999; padding:10px 18px; border-radius:14px; border:1px solid rgba(0,0,0,.15); background:rgba(255,255,255,.94); color:#222; font-size:18px; font-weight:700; cursor:pointer; box-shadow:0 6px 18px rgba(0,0,0,.18); transition:all .15s; }
+  .import-fab:hover { transform:translateY(-1px); }
+  .import-modal { position:fixed; inset:0; z-index:10002; background:rgba(0,0,0,.45); display:none; align-items:center; justify-content:center; }
+  .import-modal.open { display:flex; }
+  .import-box { width:min(720px,92vw); max-height:88vh; background:var(--surface,#fff); border-radius:18px; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.4); }
+  .import-head { padding:14px 18px; background:#222; color:#fff; font-size:18px; font-weight:800; display:flex; justify-content:space-between; align-items:center; }
+  .import-close { cursor:pointer; background:rgba(255,255,255,.18); border:none; color:#fff; border-radius:8px; padding:4px 12px; font-size:14px; }
+  .import-body { padding:18px; overflow:auto; display:flex; flex-direction:column; gap:12px; }
+  .import-drop { border:2px dashed color-mix(in srgb, var(--accent,#c96) 50%, transparent); border-radius:14px; padding:22px; text-align:center; font-size:16px; color:var(--text-2,#666); cursor:pointer; transition:background .2s; }
+  .import-drop.over { background:color-mix(in srgb, var(--accent,#c96) 12%, transparent); }
+  .import-drop button { margin-top:10px; padding:8px 18px; border-radius:10px; border:1px solid rgba(0,0,0,.15); background:var(--accent,#c96); color:#fff; font-size:15px; font-weight:700; cursor:pointer; }
+  .import-or { text-align:center; color:var(--text-3,#999); font-size:14px; font-weight:600; }
+  .import-body textarea { width:100%; box-sizing:border-box; min-height:96px; border:1px solid rgba(0,0,0,.18); border-radius:12px; padding:10px 12px; font-size:14px; font-family:inherit; resize:vertical; background:var(--surface,#fff); color:var(--text-1,#222); }
+  #import-preview { min-height:150px; }
+  .import-status { font-size:14px; color:var(--accent,#c96); font-weight:600; min-height:20px; }
+  .import-preview-label { font-size:14px; font-weight:700; color:var(--text-2,#666); }
+  .import-actions { display:flex; justify-content:flex-end; }
+  .import-gen { padding:10px 20px; border:none; border-radius:12px; background:var(--accent,#c96); color:#fff; font-size:16px; font-weight:800; cursor:pointer; }
+  .import-gen:hover { opacity:.9; }
+  .doodle-colors { display:flex; gap:6px; background:rgba(255,255,255,.94); padding:8px 10px; border-radius:14px; box-shadow:0 6px 18px rgba(0,0,0,.18); }
+  .doodle-colors .dc { width:30px; height:30px; border-radius:50%; border:2px solid rgba(0,0,0,.2); cursor:pointer; }
+  .doodle-colors .dc.on { outline:3px solid var(--accent); outline-offset:1px; }
+  .doodle-sizes { display:flex; gap:6px; background:rgba(255,255,255,.94); padding:6px 8px; border-radius:14px; box-shadow:0 6px 18px rgba(0,0,0,.18); }
+  .doodle-sizes .ds { min-width:40px; padding:6px 10px; border-radius:10px; border:1px solid rgba(0,0,0,.15); background:#fff; color:#555; font-size:15px; font-weight:700; cursor:pointer; transition:all .15s; }
+  .doodle-sizes .ds.on { background:#222; color:#fff; }
+  #doodle-canvas { position:fixed; inset:0; z-index:9998; display:none; touch-action:none; cursor:crosshair; }
+  #doodle-canvas.on { display:block; }
+  .doodle-tip { position:fixed; left:50%; bottom:20px; transform:translateX(-50%); z-index:10000; background:rgba(0,0,0,.78); color:#fff; font-size:16px; padding:8px 18px; border-radius:999px; pointer-events:none; opacity:0; transition:opacity .2s; white-space:nowrap; }
+  .doodle-tip.show { opacity:1; }
+  /* 底部页码 + 跳转 */
+  .page-nav { position:fixed; left:50%; bottom:12px; transform:translateX(-50%); z-index:9500; display:flex; align-items:center; gap:8px; background:rgba(255,255,255,.92); border:1px solid rgba(0,0,0,.12); border-radius:999px; padding:4px 12px; box-shadow:0 4px 14px rgba(0,0,0,.16); }
+  .page-nav .slide-number { font-size:14px; font-weight:700; color:#333; letter-spacing:.04em; white-space:nowrap; }
+  .page-nav select { font-size:13px; color:#333; border:1px solid rgba(0,0,0,.18); border-radius:999px; padding:3px 8px; max-width:220px; background:#fff; cursor:pointer; }
+  /* 讲评页：左侧分镜漫画抽屉 */
+  .comic-peek-btn { position:absolute; left:14px; top:50%; transform:translateY(-50%); width:54px; height:54px; border-radius:50%; border:2px solid rgba(0,0,0,.16); background:rgba(255,255,255,.95); font-size:24px; line-height:1; cursor:pointer; z-index:30; box-shadow:0 4px 14px rgba(0,0,0,.18); transition:transform .15s, background .15s; }
+  .comic-peek-btn:hover { transform:translateY(-50%) scale(1.07); }
+  .comic-peek-btn.on { background:#222; }
+  .comic-peek { position:absolute; left:78px; top:50%; transform:translateY(-50%) translateX(-16px); display:flex; gap:10px; width:min(560px, 56vw); padding:10px; background:rgba(255,255,255,.96); border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,.25); opacity:0; visibility:hidden; pointer-events:none; transition:opacity .22s ease, transform .22s ease; z-index:29; }
+  .comic-peek.open { opacity:1; visibility:visible; pointer-events:auto; transform:translateY(-50%) translateX(0); }
+  .comic-peek img { flex:1 1 0; width:0; min-width:0; max-height:60vh; object-fit:contain; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,.15); }
+  .comic-peek.one img { flex:0 0 auto; width:auto; max-width:300px; }
+  /* 设定规范：点击展开 */
+  .info-fold-list { margin-top:18px; display:flex; flex-direction:column; gap:10px; }
+  .info-fold { background:rgba(255,255,255,.78); border:1px solid rgba(0,0,0,.14); border-radius:14px; overflow:hidden; }
+  .info-fold .fold-head { width:100%; display:flex; align-items:center; gap:12px; background:rgba(255,255,255,.94); border:none; padding:12px 16px; font-size:27px; font-weight:700; color:var(--text-1); cursor:pointer; text-align:left; }
+  .info-fold .fold-arrow { display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; font-size:12px; color:#fff; background:var(--accent, #b3452f); border-radius:50%; transition:transform .2s; flex:0 0 auto; }
+  .info-fold.open .fold-arrow { transform:rotate(90deg); }
+  .info-fold .fold-body { max-height:0; overflow:hidden; transition:max-height .32s ease; }
+  .info-fold.open .fold-body { max-height:420px; }
+  .info-fold .fold-body p { margin:0; padding:0 16px 14px; font-size:27px; line-height:1.5; color:var(--text-1); }
+  /* 涂鸦放大镜：框选 + 矩形放大浮层 */
+  .mag-select { position:fixed; z-index:9998; border:2px dashed #ff3b30; background:rgba(255,255,255,.10); box-shadow:0 0 0 9999px rgba(0,0,0,.10); display:none; pointer-events:none; }
+  .magnifier { position:fixed; z-index:10001; background:#fff; border-radius:16px; border:2px solid rgba(0,0,0,.22); box-shadow:0 16px 48px rgba(0,0,0,.35); overflow:hidden; display:none; }
+  .magnifier .mag-bar { display:flex; align-items:center; justify-content:space-between; background:#222; color:#fff; padding:6px 12px; font-size:14px; font-weight:700; }
+  .magnifier .mag-tools { display:flex; align-items:center; gap:6px; }
+  .magnifier .mag-btn { border:1px solid rgba(255,255,255,.3); background:rgba(255,255,255,.1); color:#fff; border-radius:6px; padding:2px 8px; font-size:12px; font-weight:400; cursor:pointer; line-height:1.5; }
+  .magnifier .mag-btn:hover { background:rgba(255,255,255,.25); }
+  .magnifier .mag-btn:active { transform:translateY(1px); }
+  .magnifier .mag-close { border:none; background:rgba(255,255,255,.18); color:#fff; border-radius:8px; padding:3px 12px; font-size:14px; font-weight:700; cursor:pointer; }
+  .magnifier .mag-close:hover { background:rgba(255,255,255,.32); }
+  .magnifier .mag-resize { position:absolute; right:0; bottom:0; width:20px; height:20px; z-index:2; cursor:nwse-resize; background:linear-gradient(135deg, transparent 50%, rgba(0,0,0,.35) 50%); border-bottom-right-radius:14px; touch-action:none; }
+  .magnifier canvas { display:block; width:100%; }
+  .magnifier .mag-view { overflow:hidden; position:relative; background:var(--bg,#fff); pointer-events:auto; cursor:move; touch-action:none; user-select:none; }
+  .magnifier .mag-view.dragging { cursor:grabbing; }
+  .magnifier .mag-pos { position:absolute; top:0; left:0; transform-origin:0 0; }
+  .magnifier .mag-pos, .magnifier .mag-pos * { pointer-events:none; }
+</style>
+</head>
+<body data-themes="sunset-warm,soft-pastel,aurora,editorial-serif,minimal-white,rainbow-gradient" data-theme-base="assets/themes/">
+<div class="deck">
+
+  <!-- 1. Cover -->
+  <section class="slide center tc" data-title="封面">
+    <div style="max-width:900px;margin:0 auto">
+      <p class="kicker">A Disney-Style Storyboard Comic · 14 Panels</p>
+      <h1 class="h1 anim-rise-in" data-anim="rise-in" style="font-size:64px;line-height:1.12">Anjali's <span class="gradient-text">Tabla</span> Dream</h1>
+      <p class="lede" style="margin:18px auto 8px;max-width:640px">一个 12 岁印度女孩 Anjali 在塔布拉鼓课堂上的成长故事 —— 从被嘲笑、自我怀疑，到被一句"性别不是障碍"点燃，最终在舞台上证明自己。</p>
+      <div style="margin-top:28px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <span class="emotion-tag">🎨 Modern Disney 2D</span>
+        <span class="emotion-tag">🥁 Music Classroom</span>
+        <span class="emotion-tag">💛 Courage &amp; Growth</span>
+      </div>
+      <p class="dim" style="margin-top:34px;font-size:13px">按 ← → 翻页 · T 切主题 · F 全屏 · O 概览</p>
+    </div>
+    <div class="notes">开场页：介绍漫画标题、风格与主题。</div>
+  </section>
+
+  <!-- 2. Characters & Setting -->
+  <section class="slide" data-title="角色与设定">
+    <p class="page-kicker">Global Style Guide</p>
+    <h2 class="h2">角色与设定 <span class="dim" style="font-size:15px">（全程统一）</span></h2>
+
+    <div class="grid g3 mt-l anim-stagger-list" data-anim-target>
+      <div class="char-card">
+        <h4><span class="char-swatch" style="background:#d9a441"></span>Anjali</h4>
+        <p class="dim" style="font-size:13.5px;line-height:1.65">12 岁印度女孩 · 深棕色大眼睛长睫毛 · 两条粗辫子系红丝带 · 芥末黄 salwar kameez 配金色刺绣</p>
+      </div>
+      <div class="char-card">
+        <h4><span class="char-swatch" style="background:#3e8e5a"></span>Deepak</h4>
+        <p class="dim" style="font-size:13.5px;line-height:1.65">12 岁印度男孩 · 大而深的眼睛 · 凌乱黑色短发 · 锐利眉毛 · 绿色 kurta 卷起袖子</p>
+      </div>
+      <div class="char-card">
+        <h4><span class="char-swatch" style="background:#b3452f"></span>Mr. Zakir</h4>
+        <p class="dim" style="font-size:13.5px;line-height:1.65">50 多岁印度男士 · 慈祥闪亮的眼睛 · 修剪整齐的灰胡子 · 白色 kurta 披红色披肩</p>
+      </div>
+    </div>
+
+    <div class="info-fold-list">
+      <div class="info-fold">
+        <button class="fold-head" type="button" aria-expanded="false">
+          <span class="fold-arrow">▶</span><b>场景设定</b>
+        </button>
+        <div class="fold-body"><p>温馨的印度音乐教室 —— 陶土色暖墙、木地板、编织地毯、塔布拉鼓、彩色海报，阳光透过拱形窗洒入。</p></div>
+      </div>
+      <div class="info-fold">
+        <button class="fold-head" type="button" aria-expanded="false">
+          <span class="fold-arrow">▶</span><b>对话泡泡规范</b>
+        </button>
+        <div class="fold-body"><p>对白＝白色椭圆 speech bubble（黑色手写体英文）；内心独白＝云朵形 thought bubble（浅蓝底色）；拟声词＝彩色艺术字 SFX。</p></div>
+      </div>
+      <div class="info-fold">
+        <button class="fold-head" type="button" aria-expanded="false">
+          <span class="fold-arrow">▶</span><b>Art Direction</b>
+        </button>
+        <div class="fold-body"><p>Modern Disney 2D animation（Moana / Coco / Raya 美学）—— 圆润角色、大而灵动的眼睛带高光、干净线条、暖体积光、浓郁和谐配色、电影感构图。</p></div>
+      </div>
+    </div>
+    <div class="notes">本页展示三主角与全局风格指南，后续所有分镜均沿用此设定。</div>
+  </section>
+
+  <!-- 3. Panel 1 -->
+  <section class="slide" data-title="Panel 1 · The Taunt">
+    <div class="comic-meta">
+      <span class="panel-badge"><span class="panel-num">1</span><span class="panel-title">The Taunt · 挑衅</span></span>
+      <span class="emotion-tag">Smugness / mockery</span>
+    </div>
+    <div class="panel-row two">
+      <div class="comic-img"><img src="images/panel-01.png" alt="Panel 1" loading="lazy"></div>
+      <div>
+        <div class="comic-stage">
+          <p class="scene-desc">教室全景镜头。学生们盘腿坐在编织地毯上，面前是各自的塔布拉鼓。Deepak 得意地坏笑着俯身靠近 Anjali，一手朝她比划。其他学生好奇地看过来，拱形窗外阳光温暖。</p>
+          <div class="bubble-wrap">
+            <div class="bubble speech"><small>Speech · Deepak</small>"I'll bet Anjali knows. Right, Anjali? Why don't you show us since you're the star student?"</div>
+          </div>
+          <div class="caption"><b>Caption：</b>Deepak's voice cut through the classroom like a sharp blade.</div>
+        </div>
+      </div>
+      <div class="prompt-box">
+        <span class="lbl">Image Prompt</span>Wide cinematic shot of a cozy Indian music classroom with terracotta walls, wooden floors, woven rugs, and warm sunlight streaming through arched windows. In Disney 2D animation style with soft rounded characters, large expressive eyes, smooth clean line art, and painterly backgrounds. A 12-year-old Indian boy with short messy black hair and sharp eyebrows in a green kurta leans toward a 12-year-old Indian girl with two thick dark braids tied with red ribbons in a mustard-yellow salwar kameez, sneering smugly and gesturing at her. Other students sit cross-legged with tabla drums, glancing over. A white oval speech bubble above the boy's head contains English text: "I'll bet Anjali knows. Right, Anjali? Why don't you show us since you're the star student?" Warm golden volumetric lighting, vibrant harmonious color palette, cinematic composition.
+      </div>
+    </div>
+    <div class="notes">分镜 1：Deepak 当众挑衅，让 Anjali "表演"给大家看。</div>
+  </section>
+
+  <!-- 4. Panel 2 -->
+  <section class="slide" data-title="Panel 2 · Confusion">
+    <div class="comic-meta">
+      <span class="panel-badge"><span class="panel-num">2</span><span class="panel-title">Confusion · 困惑</span></span>
+      <span class="emotion-tag">Bewilderment</span>
+    </div>
+    <div class="panel-row two">
+      <div class="comic-img"><img src="images/panel-02.png" alt="Panel 2" loading="lazy"></div>
+      <div>
+        <div class="comic-stage">
+          <p class="scene-desc">Anjali 中近景。她的大眼睛满是困惑，眉毛上扬，嘴微张，双手悬在鼓面上。轻柔的思绪气泡在她头顶飘浮，背景暖色光斑虚化。</p>
+          <div class="bubble-wrap">
+            <div class="bubble thought"><small>Thought · Anjali</small>"I wasn't trying to show off... I was just playing, like everyone else. Why is he being so mean?"</div>
+          </div>
+          <div class="caption"><b>Caption：</b>Anjali's heart sank. She had done nothing wrong.</div>
+        </div>
+      </div>
+      <div class="prompt-box">
+        <span class="lbl">Image Prompt</span>Medium close-up of a 12-year-old Indian girl with two thick dark braids tied with red ribbons in a mustard-yellow salwar kameez, in Disney 2D animation style with large expressive glossy eyes, soft rounded face, smooth clean line art, and painterly backgrounds. She sits cross-legged with a tabla drum, her large brown eyes wide with confusion, eyebrows raised, mouth slightly open, hands hovering over the drum surface. A cloud-shaped thought bubble in light blue above her head contains English text: "I wasn't trying to show off... I was just playing, like everyone else. Why is he being so mean?" Warm classroom background softly blurred with golden bokeh. Warm volumetric lighting, emotional expression.
+      </div>
+    </div>
+    <div class="notes">分镜 2：Anjali 内心困惑——她明明只是像大家一样在演奏。</div>
+  </section>
+
+  <!-- 5. Panel 3 -->
+  <section class="slide" data-title="Panel 3 · The Groan">
+    <div class="comic-meta">
+      <span class="panel-badge"><span class="panel-num">3</span><span class="panel-title">The Groan · 嘘声</span></span>
+      <span class="emotion-tag">Embarrassment</span>
+    </div>
+    <div class="panel-row two">
+      <div class="comic-img"><img src="images/panel-03.png" alt="Panel 3" loading="lazy"></div>
+      <div>
+        <div class="comic-stage">
+          <p class="scene-desc">Anjali 的手指慌乱地在鼓面上划过——手边带着运动线。前景中一名同学捂住耳朵、满脸烦躁地叹气。Anjali 僵住，双手停在半空，眼睛瞪大。</p>
+          <div class="sfx">TUK — TUK — CLACK...</div>
+          <div class="bubble-wrap">
+            <div class="bubble speech"><small>Speech · Classmate</small>"Ugh!"</div>
+          </div>
+          <div class="caption"><b>Caption：</b>The wrong note hung in the air. Anjali stopped playing at once.</div>
+        </div>
+      </div>
+      <div class="prompt-box">
+        <span class="lbl">Image Prompt</span>A 12-year-old Indian girl with two thick dark braids in a mustard-yellow salwar kameez freezes with her hands hovering over a tabla drum, large eyes wide with shock, in Disney 2D animation style with soft rounded characters, large expressive eyes, smooth clean line art, painterly backgrounds. Motion lines around her hands show she was just playing. In the blurred foreground, another young Indian student covers one ear and groans with an annoyed expression. A small white speech bubble near the foreground student contains English text: "Ugh!" Colorful stylized SFX art text floats near the tabla: "TUK — TUK — CLACK..." Warm classroom lighting, dynamic composition.
+      </div>
+    </div>
+    <div class="notes">分镜 3：错音响起，同学叹气，Anjali 当场停下。</div>
+  </section>
+
+  <!-- 6. Panel 4 -->
+  <section class="slide" data-title="Panel 4 · Sheepish">
+    <div class="comic-meta">
+      <span class="panel-badge"><span class="panel-num">4</span><span class="panel-title">Sheepish · 窘迫</span></span>
+      <span class="emotion-tag">Shame / self-doubt</span>
+    </div>
+    <div class="panel-row two">
+      <div class="comic-img"><img src="images/panel-04.png" alt="Panel 4" loading="lazy"></div>
+      <div>
+        <div class="comic-stage">
+          <p class="scene-desc">Anjali 低头看着鼓，脸颊泛红，一只手不好意思地摸着后颈，露出尴尬的微笑。Zakir 老师站在旁边，眉头微皱，正要开口——又停住，手捋着胡子。</p>
+          <div class="bubble-wrap">
+            <div class="bubble speech"><small>Speech · Anjali (quiet)</small>"I guess I don't know it that well after all..."</div>
+          </div>
+          <div class="caption"><b>Caption：</b>Her stomach was doing flip-flops. That wasn't true — not even a little.</div>
+        </div>
+      </div>
+      <div class="prompt-box">
+        <span class="lbl">Image Prompt</span>A 12-year-old Indian girl with two thick dark braids tied with red ribbons in a mustard-yellow salwar kameez looks down at her tabla drum, cheeks flushed pink, one hand rubbing the back of her neck sheepishly with a small awkward smile, in Disney 2D animation style with large expressive eyes, soft rounded face, smooth clean line art, painterly backgrounds. Beside her, a 50-year-old Indian man with a neatly trimmed grey beard and kind twinkling eyes in a white kurta with a red shawl stands with narrowed eyes, mouth slightly open as if hesitating to speak, one hand stroking his beard. A small white speech bubble near the girl contains quiet English text: "I guess I don't know it that well after all..." Warm classroom setting, gentle emotional body language.
+      </div>
+    </div>
+    <div class="notes">分镜 4：Anjali 自我怀疑——"我大概没那么会吧……"但旁白揭示这不是真的。</div>
+  </section>
+
+  <!-- 7. Panel 5 -->
+  <section class="slide" data-title="Panel 5 · The Announcement">
+    <div class="comic-meta">
+      <span class="panel-badge"><span class="panel-num">5</span><span class="panel-title">The Announcement · 公告</span></span>
+      <span class="emotion-tag">Hope / excitement</span>
+    </div>
+    <div class="panel-row two">
+      <div class="comic-img"><img src="images/panel-05.png" alt="Panel 5" loading="lazy"></div>
+      <div>
+        <div class="comic-stage">
+          <p class="scene-desc">Zakir 老师站在全班面前，一只手富有表现力地举起，眼里闪着光，带着温暖的笑容。学生们抬头专注地看着他。他举起的手边飘着小小魔法星光。前景中的 Anjali 眼中燃起希望。</p>
+          <div class="bubble-wrap">
+            <div class="bubble speech"><small>Speech · Mr. Zakir</small>"The recital is next week, everyone. Keep practicing. I will be announcing who will get to perform onstage with me at my next concert!"</div>
+          </div>
+          <div class="caption"><b>Caption：</b>Anjali's eyes lit up. She had dreamed of a moment like that.</div>
+        </div>
+      </div>
+      <div class="prompt-box">
+        <span class="lbl">Image Prompt</span>A 50-year-old Indian man with a neatly trimmed grey beard and kind twinkling eyes in a white kurta with a red shawl stands at the front of a cozy Indian music classroom, one hand raised expressively, eyes bright with excitement and a warm smile, in Disney 2D animation style with soft rounded characters, large expressive eyes, smooth clean line art, painterly backgrounds. Young Indian students sit cross-legged with tabla drums, looking up at him attentively with wide eyes. A 12-year-old girl with two braids in a mustard-yellow salwar kameez in the foreground has eyes lit up with hope. Small magical sparkles float near the man's raised hand. A large white speech bubble above him contains English text: "The recital is next week, everyone. Keep practicing. I will be announcing who will get to perform onstage with me at my next concert!" Colorful wall posters, warm golden sunlight, inspiring cinematic lighting.
+      </div>
+    </div>
+    <div class="notes">分镜 5：老师宣布下周汇演，将挑选一位学生同台演出——Anjali 燃起梦想。</div>
+  </section>
+
+  <!-- 8. Panel 6 -->
+  <section class="slide" data-title="Panel 6 · Ignored">
+    <div class="comic-meta">
+      <span class="panel-badge"><span class="panel-num">6</span><span class="panel-title">Ignored · 被无视</span></span>
+      <span class="emotion-tag">Rejection</span>
+    </div>
+    <div class="panel-row two">
+      <div class="comic-img"><img src="images/panel-06.png" alt="Panel 6" loading="lazy"></div>
+      <div>
+        <div class="comic-stage">
+          <p class="scene-desc">教室渐渐空了，学生们在背景里收拾东西。Anjali 追着 Deepak，伸出手想叫他。Deepak 故意别过头，眉头紧锁、肩膀绷紧，头也不回地走开。长长的影子铺在地板上。</p>
+          <div class="bubble-wrap">
+            <div class="bubble speech"><small>Speech · Anjali (trailing off)</small>"Deepak, can we—"</div>
+          </div>
+          <div class="caption"><b>Caption：</b>He wouldn't even look at her.</div>
+        </div>
+      </div>
+      <div class="prompt-box">
+        <span class="lbl">Image Prompt</span>A music classroom with students packing up and leaving in the background, long warm shadows stretching across the wooden floor, in Disney 2D animation style with soft rounded characters, large expressive eyes, smooth clean line art, painterly backgrounds. A 12-year-old Indian girl with two thick dark braids in a mustard-yellow salwar kameez hurries after a 12-year-old Indian boy with short messy black hair in a green kurta, reaching out one hand toward him, mouth open calling. The boy deliberately turns his head away with furrowed eyebrows and tense shoulders, walking off without looking back. A small white speech bubble near the girl contains English text: "Deepak, can we—" Warm fading afternoon light, body language showing rejection, emotional composition.
+      </div>
+    </div>
+    <div class="notes">分镜 6：Anjali 想和 Deepak 说话，却被他刻意无视。</div>
+  </section>
+
+  <!-- 9. Panel 7 -->
+  <section class="slide" data-title="Panel 7 · Overheard">
+    <div class="comic-meta">
+      <span class="panel-badge"><span class="panel-num">7</span><span class="panel-title">Overheard · 无意听到</span></span>
+      <span class="emotion-tag">Hurt / anger</span>
+    </div>
+    <div class="panel-row two">
+      <div class="comic-img"><img src="images/panel-07.png" alt="Panel 7" loading="lazy"></div>
+      <div>
+        <div class="comic-stage">
+          <p class="scene-desc">次日明亮的学校走廊。Anjali 半藏在打开的更衣柜门后，眼睛睁大、泛着受伤与愤怒的光，一只手按在胸口。背景里 Deepak 凑近扎高马尾、穿蓝裙的 Mary，捂着嘴低声说着刻薄的话。</p>
+          <div class="bubble-wrap">
+            <div class="bubble speech"><small>Whisper · Deepak</small>"People are only interested because she's the only girl in tabla class and they want her to feel special. She's not that good—"</div>
+          </div>
+          <div class="caption"><b>Caption：</b>The words struck Anjali like a physical blow.</div>
+        </div>
+      </div>
+      <div class="prompt-box">
+        <span class="lbl">Image Prompt</span>A bright school hallway with blue lockers and fluorescent lighting, in Disney 2D animation style with soft rounded characters, large expressive eyes, smooth clean line art, painterly backgrounds. A 12-year-old Indian girl with two thick dark braids in a mustard-yellow salwar kameez stands half-hidden behind an open locker door, large eyes wide and glistening with hurt and anger, one hand pressed to her chest. In the background, a 12-year-old Indian boy with short messy black hair in a green kurta leans close to a girl with a high ponytail in a blue dress, whispering behind his cupped hand with a mean expression. A small white speech bubble near the boy contains English text: "People are only interested because she's the only girl in tabla class and they want her to feel special. She's not that good—" Dramatic emotional tension, contrast between hidden girl and whispering boy.
+      </div>
+    </div>
+    <div class="notes">分镜 7：Anjali 无意间听到 Deepak 贬低她——"大家只是因为她特别才关注她"。</div>
+  </section>
+
+  <!-- 10. Panel 8 -->
+  <section class="slide" data-title="Panel 8 · The Bathroom">
+    <div class="comic-meta">
+      <span class="panel-badge"><span class="panel-num">8</span><span class="panel-title">The Bathroom · 洗手间</span></span>
+      <span class="emotion-tag">Rage / frustration</span>
+    </div>
+    <div class="panel-row two">
+      <div class="comic-img"><img src="images/panel-08.png" alt="Panel 8" loading="lazy"></div>
+      <div>
+        <div class="comic-stage">
+          <p class="scene-desc">Anjali 独自站在学校洗手间，靠在洗手台边，双拳紧握，脸因愤怒涨红，紧闭双眼深呼吸。镜中映出她愤怒颤抖的脸。冷色日光灯与她温暖色调的身影形成对比。</p>
+          <div class="bubble-wrap">
+            <div class="bubble thought"><small>Thought · Anjali</small>"It's not my fault that people make a big deal about a girl playing tabla. I make mistakes too, but I work really hard. Maybe he should too."</div>
+          </div>
+          <div class="caption"><b>Caption：</b>Her heart was pounding. She couldn't relax.</div>
+        </div>
+      </div>
+      <div class="prompt-box">
+        <span class="lbl">Image Prompt</span>A 12-year-old Indian girl with two thick dark braids in a mustard-yellow salwar kameez stands alone in a school bathroom, leaning against a white sink, fists clenched at her sides, face flushed with rage, large eyes squeezed shut taking deep breaths, in Disney 2D animation style with soft rounded face, large expressive eyes, smooth clean line art, painterly backgrounds. The bathroom mirror reflects her angry, trembling face. Tiled walls, harsh cool fluorescent lighting contrasting with her warm-toned figure. A cloud-shaped light blue thought bubble above her head contains English text: "It's not my fault that people make a big deal about a girl playing tabla. I make mistakes too, but I work really hard. Maybe he should too." Intense emotional close-up, dramatic shadows.
+      </div>
+    </div>
+    <div class="notes">分镜 8：Anjali 独自消化愤怒——"我也犯错，但我很努力，也许他该努力一点"。</div>
+  </section>
+
+  <!-- 11. Panel 9 -->
+  <section class="slide" data-title="Panel 9 · The Breaking Point">
+    <div class="comic-meta">
+      <span class="panel-badge"><span class="panel-num">9</span><span class="panel-title">The Breaking Point · 爆发</span></span>
+      <span class="emotion-tag">Despair</span>
+    </div>
+    <div class="panel-row two">
+      <div class="comic-img"><img src="images/panel-09.png" alt="Panel 9" loading="lazy"></div>
+      <div>
+        <div class="comic-stage">
+          <p class="scene-desc">Anjali 对着洗手间镜中的自己大喊，泪水顺着泛红的脸颊流下，嘴大张着发出挫败的哭喊，双手死死抓住洗手台边缘。镜中映出微微裂开、扭曲的倒影（隐喻）。黑暗压抑的色调，头顶一束刺眼的光。</p>
+          <div class="bubble-wrap">
+            <div class="bubble jagged"><small>Shout · Anjali</small>"I don't want to see a tabla or hear a tabla or play a tabla EVER AGAIN!!"</div>
+          </div>
+          <div class="caption"><b>Caption：</b>It was one of her darkest days ever.</div>
+        </div>
+      </div>
+      <div class="prompt-box">
+        <span class="lbl">Image Prompt</span>A 12-year-old Indian girl with two thick dark braids in a mustard-yellow salwar kameez shouts at her own reflection in a bathroom mirror, tears streaming down her flushed cheeks, mouth wide open in a cry of frustration, hands gripping the sink edge tightly, in Disney 2D animation style with large expressive tearful eyes, soft rounded face, smooth clean line art, painterly backgrounds. The mirror shows a slightly cracked, distorted reflection. Tiled bathroom walls, dark moody tones with a single harsh overhead light casting dramatic shadows. A jagged-edged white speech bubble near her mouth contains bold English text: "I don't want to see a tabla or hear a tabla or play a tabla EVER AGAIN!!" Raw emotional intensity, dark cinematic mood.
+      </div>
+    </div>
+    <div class="notes">分镜 9：情绪最低谷——Anjali 哭着大喊"再也不碰塔布拉鼓"。</div>
+  </section>
+
+  <!-- 12. Panel 10 -->
+  <section class="slide" data-title="Panel 10 · The Poster">
+    <div class="comic-meta">
+      <span class="panel-badge"><span class="panel-num">10</span><span class="panel-title">The Poster · 海报</span></span>
+      <span class="emotion-tag">Wonder / turning point</span>
+    </div>
+    <div class="panel-row two">
+      <div class="comic-img"><img src="images/panel-10.png" alt="Panel 10" loading="lazy"></div>
+      <div>
+        <div class="comic-stage">
+          <p class="scene-desc">Anjali（洗过脸后）走进温暖明亮的家中走廊，脚步一顿，大眼睛带着安静的惊奇向上望去，脸颊上还挂着一滴泪。墙上，一幅充满活力的海报泛着温暖金光——画着一位自信的年轻女性在打塔布拉鼓。柔和的光线从海报散发，照亮 Anjali 的脸。</p>
+          <div class="caption"><b>Caption：</b>Stepping out, something caught her eye — a poster that seemed to glow.</div>
+        </div>
+      </div>
+      <div class="prompt-box">
+        <span class="lbl">Image Prompt</span>A 12-year-old Indian girl with two thick dark braids in a mustard-yellow salwar kameez steps into a warmly lit home hallway and stops mid-step, her large brown eyes drawn upward with quiet wonder, a single tear still on her cheek, in Disney 2D animation style with large expressive eyes, soft rounded face, smooth clean line art, painterly backgrounds. On the wall, a vibrant colorful poster glows with warm golden light, depicting a confident young Indian woman playing tabla drums. Soft golden rays emanate from the poster, illuminating the girl's face with a hopeful glow. Cozy home hallway interior. Contrast between the girl's tired tearful face and the warm glowing poster. Hopeful warm cinematic lighting, emotional turning point composition.
+      </div>
+    </div>
+    <div class="notes">分镜 10：转折点——走廊里一幅闪闪发光的海报吸引了 Anjali。</div>
+  </section>
+
+  <!-- 13. Panel 11 -->
+  <section class="slide" data-title="Panel 11 · The Slogan">
+    <div class="comic-meta">
+      <span class="panel-badge"><span class="panel-num">11</span><span class="panel-title">The Slogan · 标语</span></span>
+      <span class="emotion-tag">Inspiration</span>
+    </div>
+    <div class="panel-row two">
+      <div class="comic-img"><img src="images/panel-11.png" alt="Panel 11" loading="lazy"></div>
+      <div>
+        <div class="comic-stage">
+          <p class="scene-desc">励志海报特写。一位自信的年轻印度女性长发飘逸，闭眼沉浸地打着塔布拉鼓，带着宁静的微笑。海报顶部以粗体印着标语，四周点缀小音符与暖橙色火焰图案，金色装饰边框。</p>
+          <div class="sfx" style="font-size:30px">GENDER IS NO BARRIER — SIMPLY GO AND PLAY!</div>
+          <div class="caption"><b>Caption：</b>Those powerful words reignited a blazing flame within her.</div>
+        </div>
+      </div>
+      <div class="prompt-box">
+        <span class="lbl">Image Prompt</span>Close-up of a vibrant inspirational poster on a warm wall, with a decorative golden border, in Disney 2D animation style with painterly textures and warm colors. The poster features a confident young Indian woman with flowing dark hair, eyes closed in bliss, a serene smile, playing tabla drums with both hands. Bold uppercase English text across the top of the poster reads: "GENDER IS NO BARRIER — SIMPLY GO AND PLAY!" in strong decorative lettering. Small decorative musical notes and warm orange-red flame motifs surround the woman's image. Warm fiery color palette, glowing light around the poster edges, hopeful and empowering mood.
+      </div>
+    </div>
+    <div class="notes">分镜 11：海报标语"性别不是障碍——去演奏吧！"重燃她心中的火焰。</div>
+  </section>
+
+  <!-- 14. Panel 12 -->
+  <section class="slide" data-title="Panel 12 · The Montage">
+    <div class="comic-meta">
+      <span class="panel-badge"><span class="panel-num">12</span><span class="panel-title">The Montage · 蒙太奇</span></span>
+      <span class="emotion-tag">Determination / growth</span>
+    </div>
+    <div class="panel-row two">
+      <div class="comic-img"><img src="images/panel-12.png" alt="Panel 12" loading="lazy"></div>
+      <div>
+        <div class="comic-stage">
+          <p class="scene-desc">三格分屏蒙太奇，以细金线分隔：(a) 深夜台灯下 Anjali 专注练鼓，乐谱摊开，头发微乱；(b) 手指在鼓面飞速移动的特写，运动模糊，音符发光；(c) 她擦去额头的汗，露出坚定自信的笑容，被清晨暖光逆光勾勒。角落的小日历一页页翻过。</p>
+          <div class="caption"><b>Caption：</b>Day after day, Anjali dedicated herself completely — honing her craft, inching ever closer to perfection.</div>
+        </div>
+      </div>
+      <div class="prompt-box">
+        <span class="lbl">Image Prompt</span>A three-scene split-panel montage separated by thin golden decorative lines, in Disney 2D animation style with soft rounded characters, large expressive eyes, smooth clean line art, painterly backgrounds, warm golden lighting throughout. Panel (a): A 12-year-old Indian girl with two thick dark braids in a mustard-yellow salwar kameez practices tabla late at night by a warm desk lamp, sheets of music spread out, hair slightly messy, focused determined expression. Panel (b): Extreme close-up of her fingers moving rapidly across a tabla drum surface, motion blur, glowing golden musical notes floating upward. Panel (c): The girl wipes sweat from her brow with a determined confident smile, backlit by warm morning light through a window. A small calendar icon in the corner shows pages flipping. Warm cohesive color palette, showing dedication and growth, cinematic montage composition.
+      </div>
+    </div>
+    <div class="notes">分镜 12：日复一日的刻苦练习，Anjali 不断精进。</div>
+  </section>
+
+  <!-- 15. Panel 13 -->
+  <section class="slide" data-title="Panel 13 · The Recital">
+    <div class="comic-meta">
+      <span class="panel-badge"><span class="panel-num">13</span><span class="panel-title">The Recital · 汇演</span></span>
+      <span class="emotion-tag">Triumph / passion</span>
+    </div>
+    <div class="panel-row two">
+      <div class="comic-img"><img src="images/panel-13.png" alt="Panel 13" loading="lazy"></div>
+      <div>
+        <div class="comic-stage">
+          <p class="scene-desc">汇演舞台中央，Anjali 坐在聚光灯下，以惊人的技艺与热情演奏塔布拉鼓，闭着双眼，带着宁静灿烂的笑容。金色光芒洒满舞台，发光音符从鼓面升起。暗处的观众席上 Zakir 老师骄傲地点头，其他学生惊叹地看着。Deepak 目瞪口呆，嘴微微张开。</p>
+          <div class="sfx">TIN — TIN — TA — TIN...</div>
+          <div class="caption"><b>Caption：</b>With exceptional skill and creative interpretation, Anjali easily outperformed the others.</div>
+        </div>
+      </div>
+      <div class="prompt-box">
+        <span class="lbl">Image Prompt</span>A 12-year-old Indian girl with two thick dark braids tied with red ribbons in a mustard-yellow salwar kameez sits center stage under a brilliant warm spotlight, playing tabla drums with breathtaking skill and passion, eyes closed, a serene radiant smile, in Disney 2D animation style with large expressive eyes, soft rounded face, smooth clean line art, painterly backgrounds. Golden light bathes the stage, small glowing musical notes rise from her drums. Flowing colorful SFX art text floats near the drums: "TIN — TIN — TA — TIN..." In the darkened audience, a 50-year-old Indian man with a grey beard in a white kurta nods approvingly with a proud smile, and other young students watch with awe and wide eyes. A 12-year-old boy in a green kurta in the audience looks stunned, mouth slightly open. Concert stage with rich curtains, dramatic spotlight lighting, triumphant cinematic mood.
+      </div>
+    </div>
+    <div class="notes">分镜 13：高光时刻——Anjali 以出色表现技惊四座。</div>
+  </section>
+
+  <!-- 16. Panel 14 -->
+  <section class="slide" data-title="Panel 14 · The Apology">
+    <div class="comic-meta">
+      <span class="panel-badge"><span class="panel-num">14</span><span class="panel-title">The Apology · 道歉</span></span>
+      <span class="emotion-tag">Forgiveness / reconciliation</span>
+    </div>
+    <div class="panel-row two">
+      <div class="comic-img"><img src="images/panel-14.png" alt="Panel 14" loading="lazy"></div>
+      <div>
+        <div class="comic-stage">
+          <p class="scene-desc">演出后台温暖的走廊，背景堆着塔布拉鼓箱。Deepak 走向 Anjali，羞愧地低着头，一贯的坏笑完全消失，一手局促地摸着后颈，脸颊因尴尬泛红。Anjali 站得笔直，起初双臂交叉，但神情柔和成宽容的微笑，一只手向他伸出。温暖的金光在他们之间流动。</p>
+          <div class="bubble-wrap">
+            <div class="bubble wobbly"><small>Deepak · stammering</small>"Your performance was truly remarkable... I regret my earlier words."</div>
+          </div>
+          <div class="caption"><b>Caption：</b>As Anjali accepted his apology with a forgiving smile, a warm current surged through her heart. She had proven that a girl could excel in anything she set her heart on.</div>
+        </div>
+      </div>
+      <div class="prompt-box">
+        <span class="lbl">Image Prompt</span>Classic Disney 2D animation style, exactly like a traditional Disney feature film still: soft rounded character shapes, smooth thick clean contour lines, painterly backgrounds, warm skin tones with soft gradient shading, large glossy expressive eyes, gentle volumetric golden lighting, vibrant harmonious color palette. A warmly lit backstage hallway after a concert, with tabla cases and instrument bags stacked in the background. Two 12-year-old Indian children of exactly the same age and nearly identical height stand facing each other at eye level, same stature, both standing on the same floor line. The boy Deepak: short messy black hair, sharp eyebrows, wearing the same green kurta over white pants as in the earlier classroom scene. The girl Anjali: two thick dark braids tied with red ribbons, wearing the same mustard-yellow salwar kameez with matching dupatta as in the earlier classroom scene. The boy is the one speaking: his mouth slightly open mid-apology, head bowed in shame, usual sneer completely gone, one hand rubbing the back of his neck awkwardly, cheeks flushed. A small wobbly white speech bubble with its tail pointing directly to the boy's mouth contains English text: "Your performance was truly remarkable... I regret my earlier words." The girl listens silently, lips closed in a gentle forgiving smile, arms unfolding, one hand reaching out toward him. Emotional reconciliation, hopeful cinematic lighting, soft painterly shadows.
+      </div>
+    </div>
+    <div class="notes">分镜 14：Deepak 真诚道歉，Anjali 微笑原谅——她证明了女孩也能在自己热爱的领域发光。</div>
+  </section>
+
+  <!-- 17. Quick Reference -->
+  <section class="slide" data-title="14-Panel 速查表">
+    <p class="page-kicker">Quick Reference</p>
+    <h2 class="h2">14 格分镜速查表</h2>
+    <table class="tiny-table mt-l">
+      <thead><tr><th>#</th><th>Panel</th><th>Dialogue Bubble</th><th>Key Emotion</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>The Taunt</td><td>Deepak speech bubble</td><td>Smugness / mockery</td></tr>
+        <tr><td>2</td><td>Confusion</td><td>Anjali thought bubble</td><td>Bewilderment</td></tr>
+        <tr><td>3</td><td>The Groan</td><td>Classmate "Ugh!" + SFX</td><td>Embarrassment</td></tr>
+        <tr><td>4</td><td>Sheepish</td><td>Anjali quiet speech</td><td>Shame / self-doubt</td></tr>
+        <tr><td>5</td><td>The Announcement</td><td>Mr. Zakir speech</td><td>Hope / excitement</td></tr>
+        <tr><td>6</td><td>Ignored</td><td>Anjali trailing off</td><td>Rejection</td></tr>
+        <tr><td>7</td><td>Overheard</td><td>Deepak whisper bubble</td><td>Hurt / anger</td></tr>
+        <tr><td>8</td><td>The Bathroom</td><td>Anjali thought bubble</td><td>Rage / frustration</td></tr>
+        <tr><td>9</td><td>Breaking Point</td><td>Anjali jagged shout bubble</td><td>Despair</td></tr>
+        <tr><td>10</td><td>The Poster</td><td>(no dialogue)</td><td>Wonder / turning point</td></tr>
+        <tr><td>11</td><td>The Slogan</td><td>Poster text</td><td>Inspiration</td></tr>
+        <tr><td>12</td><td>The Montage</td><td>(no dialogue)</td><td>Determination / growth</td></tr>
+        <tr><td>13</td><td>The Recital</td><td>SFX only</td><td>Triumph / passion</td></tr>
+        <tr><td>14</td><td>The Apology</td><td>Deepak wobbly bubble</td><td>Forgiveness / reconciliation</td></tr>
+      </tbody>
+    </table>
+    <div class="comic-stage mt-l" style="margin-bottom:0">
+      <p class="scene-desc"><b>故事弧线：</b>挑衅 → 困惑 → 嘘声 → 自我怀疑 → 希望 → 被无视 → 受伤 → 愤怒 → 绝望 → 转折（海报）→ 激励 → 苦练 → 凯旋 → 和解。这是一个关于勇气与成长的完整旅程。</p>
+    </div>
+    <div class="notes">速查表：14 格分镜的一句话索引。</div>
+  </section>
+
+  <!-- ===================== 续写讲评板块 ===================== -->
+
+  <!-- L1. 讲评导览 -->
+  <section class="slide center tc" data-title="续写讲评 · 导览">
+    <div>
+      <p class="kicker">Continuation Writing · Review</p>
+      <h1 class="h1 anim-rise-in" data-anim="rise-in" style="font-size:46px;line-height:1.18">续写讲评<br><span class="gradient-text">女孩坚持演奏印度鼓</span></h1>
+      <p class="lede" style="margin:18px auto;max-width:640px">从「故事理解」到「分段写作」再到「范文对比」——本讲评页整合 26 页课件核心，共 11 个讲评环节，配合上方漫画分镜辅助理解情节。</p>
+      <div class="crit-grid three" style="margin-top:26px;text-align:left">
+        <div class="crit-card"><b>① 任务与情节</b><br>续写任务总览 · 原文四段式梳理</div>
+        <div class="crit-card"><b>② 分段写作讲评</b><br>海报 → 训练 → 表演 → 道歉 → 主旨</div>
+        <div class="crit-card"><b>③ 范文与自查</b><br>ChatGPT 范文 · 学生佳作 · 自查清单</div>
+      </div>
+    </div>
+    <div class="notes">讲评导览：本次续写讲评的三个环节。</div>
+  </section>
+
+  <!-- L2. 续写任务总览 -->
+  <section class="slide" data-title="续写任务总览">
+    <p class="page-kicker">Task Overview</p>
+    <h2 class="h2">续写任务总览</h2>
+    <div class="crit-grid two" style="margin-top:14px">
+      <div class="crit-card">
+        <h3>两个段落开头句</h3>
+        <p class="scene-desc"><b>Para.1：</b>Stepping out of the bathroom, Anjali saw some inspiring posters on the wall.</p>
+        <p class="scene-desc"><b>Para.2：</b>After the recital, Deepak walked up to Anjali.</p>
+      </div>
+      <div class="crit-card">
+        <h3>写作提示</h3>
+        <ul style="margin:0;padding-left:18px">
+          <li>第一段或第二段结尾可写「得知入选 concert」，也可不写</li>
+          <li>Mr. Zakir 可以出现，也可以不出现</li>
+        </ul>
+      </div>
+    </div>
+    <table class="tiny-table cell-table mt-l">
+      <thead><tr><th>情节要点</th><th>A 线（Para.1）</th><th>B 线（Para.2）</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>A1 / B1</td>
+          <td><div class="cell-body">[inspiring posters] 的内容 + Anjali 看到后的反应</div><span class="cell-hint">点击展开</span></td>
+          <td><div class="cell-body">[Deepak] 道歉，表达钦佩</div><span class="cell-hint">点击展开</span></td>
+        </tr>
+        <tr>
+          <td>A2 / B2</td>
+          <td><div class="cell-body">[Anjali] 态度转变，认真训练</div><span class="cell-hint">点击展开</span></td>
+          <td><div class="cell-body">[Anjali] 的反应</div><span class="cell-hint">点击展开</span></td>
+        </tr>
+        <tr>
+          <td>A3 / B3</td>
+          <td><div class="cell-body">[recital] 到来，她表演非常成功（获得机会）</div><span class="cell-hint">点击展开</span></td>
+          <td><div class="cell-body">[主旨升华] 相信自己，坚持梦想 / 女孩子可以做成功自己想做的任何事情</div><span class="cell-hint">点击展开</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="notes">任务总览：两段开头句 + A/B 双线情节要点。</div>
+  </section>
+
+  <!-- L3. 原文情节梳理 -->
+  <section class="slide" data-title="原文情节梳理">
+    <p class="page-kicker">Plot Map</p>
+    <h2 class="h2">原文情节梳理 · 四段式导图</h2>
+    <div class="mindmap" style="margin-top:16px">
+      <div class="hub">原文情节<br>四段式</div>
+      <div class="branches">
+        <div class="branch"><b>① 矛盾起因</b> — Deepak 当众挑衅：「tabla is a boy's thing」，Anjali 困惑不解</div>
+        <div class="branch"><b>② 妥协退缩</b> — 听到嘘声后自我怀疑：「I guess I don't know it that well after all」</div>
+        <div class="branch"><b>③ 冲突激化</b> — 想找 Deepak 说清楚却被无视；偷听到恶语中伤，Anjali 怒不可遏</div>
+        <div class="branch"><b>④ 情绪崩溃</b> — 躲进洗手间无法冷静：「If I play in this concert, no one will talk to me again」</div>
+      </div>
+    </div>
+    <div class="comic-stage mt-l" style="margin-bottom:0">
+      <p class="scene-desc"><b>关键伏笔：</b>鼓乐不分性别，只关乎努力与汗水（<span class="en">Anjali knew there was no such thing</span>）——续写海报标语与主旨必须回扣这一点。</p>
+    </div>
+    <div class="notes">情节梳理：四段式导图帮助定位续写的情感转折点。</div>
+  </section>
+
+  <!-- L3.5 人物关系图 -->
+  <section class="slide" data-title="人物关系图">
+    <p class="page-kicker">Character Map</p>
+    <h2 class="h2">人物关系图</h2>
+    <div class="mindmap" style="margin-top:16px">
+      <div class="hub" style="width:172px">Anjali<br><span style="display:inline-block;font-weight:600;font-size:15px;opacity:.9">主角 · 塔布拉鼓手</span></div>
+      <div class="branches">
+        <div class="branch"><b>Deepak（男同学）</b><br>当众挑衅 → 嫉妒 → 赛后道歉、由衷钦佩；与 Anjali 的冲突推动全文</div>
+        <div class="branch"><b>Mr. Zakir（音乐老师）</b><br>赏识 Anjali 天赋；主持 recital、宣布入选；见证她的成长与和解</div>
+      </div>
+    </div>
+    <div class="comic-stage mt-l" style="margin-bottom:0">
+      <p class="scene-desc"><b>关系说明：</b>Anjali 是核心人物。与 <b>Deepak</b> 的关系从「被质疑 → 和解互敬」，与 <b>Mr. Zakir</b> 是「师生 · 伯乐」关系。续写中两人的互动与老师的安排都是情节关键，海报标语与道歉场景需与人物动机一致。</p>
+    </div>
+    <div class="notes">人物关系图：理清角色动机，续写时不跑偏人设。</div>
+  </section>
+
+  <!-- L4. 讲评① 海报内容与反应 -->
+  <section class="slide" data-title="讲评① · 海报与反应">
+    <p class="page-kicker">Writing Clinic 1</p>
+    <h2 class="h2">讲评① 海报内容 + Anjali 的反应</h2>
+    <div class="crit-grid two" style="margin-top:14px">
+      <div class="crit-card">
+        <h3>海报标语：必须扣牢文章</h3>
+        <p>反思：Anjali 情绪低落的真正原因是<b>因性别被质疑、被偏见而自我怀疑</b>，而不是对自己没有信心。因此标语不能泛泛鼓励「加油 / 坚持」。</p>
+        <p><b>推荐标语：</b>Play for yourself. / Never dim your light. / Follow your heart. / Be yourself and shine on. / Music knows no gender.</p>
+        <p><b>画面选择：</b>打破被质疑、被偏见的视觉符号——女性在音乐舞台自信绽放（闪耀）。</p>
+      </div>
+      <div class="crit-card">
+        <h3>反应描写：不要空洞的情绪堆砌</h3>
+        <ul style="margin:0;padding-left:18px">
+          <li><b>体态：</b>背挺直、眼睛闪闪发亮（hunched shoulders relaxed, spine straightened）</li>
+          <li><b>内心：</b>决心不让 Deepak 影响自己，要靠能力而非性别赢得机会</li>
+          <li><b>回忆：</b>与 tabla 的相遇之旅——指尖起泡、清晨练习、掌握第一个复杂节拍的喜悦</li>
+        </ul>
+      </div>
+    </div>
+    <div class="crit-grid two" style="margin-top:14px">
+      <div class="crit-card">
+        <h3>范文 · 标语 quote 版</h3>
+        <div class="model-passage">One of them was illustrated with a quote, "Never dim your light." For that moment, Anjali was transported back to her first encounter with the tabla. She remembered how she was mesmerized by the beautiful sounds, created by dancing fingers. She knew that tabla was meant for her.</div>
+      </div>
+      <div class="crit-card">
+        <h3>范文 · 图像版</h3>
+        <div class="model-passage">With a closer look, her eyes were fixed on one particular poster featuring a girl highlighted in the spotlight. Though facing away from the audience, her silhouette still conveyed a strong sense of determination. Instantly, Anjali felt a surge of power rushing through her veins. "What if I were on the stage, playing tabla and immersed in the breathtaking rhythm of every strike?" she found herself wondering irresistibly.</div>
+      </div>
+    </div>
+    <div class="teacher-note-label">【文本框】课堂批注</div>
+    <div class="teacher-note" contenteditable="true" data-key="clinic1" data-placeholder="点击此处输入批注…"></div>
+    <div class="notes">讲评①：标语扣牢「音乐无性别」，反应写具体——体态 / 内心 / 回忆。</div>
+    <button class="comic-peek-btn" data-target="peek1" title="查看分镜漫画">✏️</button>
+    <div class="comic-peek" id="peek1">
+      <img src="images/panel-10.png" alt="Panel 10 · The Poster">
+      <img src="images/panel-11.png" alt="Panel 11 · The Slogan">
+    </div>
+  </section>
+
+  <!-- L5. 讲评② 态度转变认真训练 -->
+  <section class="slide" data-title="讲评② · 态度转变与训练">
+    <p class="page-kicker">Writing Clinic 2</p>
+    <h2 class="h2">讲评② 态度转变 · 认真训练</h2>
+    <div class="crit-grid two" style="margin-top:14px">
+      <div class="crit-card">
+        <h3>过渡总起句（时间流逝）</h3>
+        <p class="scene-desc">In the days that followed / In the following days / With each passing day / As time slipped away / As time ticked away unnoticed / Day in, day out / As days merged into weeks</p>
+        <h3 style="margin-top:12px">训练动作表达</h3>
+        <p class="scene-desc">throw herself heart and soul into practice / immerse herself completely in the practice / bury herself in endless practice / pour all her passion into tireless practice / redouble her efforts into endless practice / go all out for the recital</p>
+      </div>
+      <div class="crit-card">
+        <h3>关键提醒：除了坚持，还要「无视偏见」</h3>
+        <p>对他人质疑置之不理、不分心——这是本段区别于泛泛而谈的关键：</p>
+        <p class="scene-desc">… deaf to all outside noise. / ignoring all the prejudice and bias. / all the noise faded into the background. / completely absorbed in her own musical world.</p>
+        <div class="model-passage" style="margin-top:10px">As days slipped away, she buried herself in the realm of rhythm, leaving only sweat (and callouses) to bear witness to her devotion.</div>
+      </div>
+    </div>
+    <div class="teacher-note-label">【文本框】课堂批注</div>
+    <div class="teacher-note" contenteditable="true" data-key="clinic2" data-placeholder="点击此处输入批注…"></div>
+    <div class="notes">讲评②：过渡句 + 训练表达 + 「无视偏见」结合文本。</div>
+    <button class="comic-peek-btn" data-target="peek2" title="查看分镜漫画">✏️</button>
+    <div class="comic-peek one" id="peek2">
+      <img src="images/panel-12.png" alt="Panel 12 · The Montage">
+    </div>
+  </section>
+
+  <!-- L6. 讲评③ 表演成功 -->
+  <section class="slide" data-title="讲评③ · 表演成功">
+    <p class="page-kicker">Writing Clinic 3</p>
+    <h2 class="h2">讲评③ recital 到来 · 表演成功</h2>
+    <div class="crit-grid two" style="margin-top:14px">
+      <div class="crit-card">
+        <h3>转场句（训练 → 演出）</h3>
+        <p class="scene-desc">The day finally came. / Finally came the big day. / Finally came her long-awaited day. / Sweat and calluses bore witness to her dedication. / Before she even realized it, the long-awaited recital arrived, and it was her time to shine.</p>
+      </div>
+      <div class="crit-card">
+        <h3>要点</h3>
+        <ul style="margin:0;padding-left:18px">
+          <li>如果笔墨够，不写观众也可以</li>
+          <li><b>但一定要写表演成功</b></li>
+          <li>可写：登台前的深呼吸 / 指尖流淌的美妙乐音 / 观众惊叹</li>
+        </ul>
+      </div>
+    </div>
+    <div class="model-passage mt-l" style="margin-top:14px">Finally came the big day. Standing on stage, she took a deep breath to get rid of lingering doubts and raised her hands in mid-air. The next second, everyone was captivated by the beautiful sounds flowing from her fingers. On the decisive stage, every single strike of hers blossomed into a breathless, flawless performance, leaving everyone present in awe.</div>
+    <div class="teacher-note-label">【文本框】课堂批注</div>
+    <div class="teacher-note" contenteditable="true" data-key="clinic3" data-placeholder="点击此处输入批注…"></div>
+    <div class="notes">讲评③：转场自然，表演成功必写。</div>
+    <button class="comic-peek-btn" data-target="peek3" title="查看分镜漫画">✏️</button>
+    <div class="comic-peek one" id="peek3">
+      <img src="images/panel-13.png" alt="Panel 13 · The Recital">
+    </div>
+  </section>
+
+  <!-- L7. 讲评④ Deepak道歉与Anjali反应 -->
+  <section class="slide" data-title="讲评④ · 道歉与反应">
+    <p class="page-kicker">Writing Clinic 4</p>
+    <h2 class="h2">讲评④ Deepak 道歉 + Anjali 的反应</h2>
+    <div class="crit-grid two" style="margin-top:14px">
+      <div class="crit-card">
+        <h3>互动设计要点</h3>
+        <ul style="margin:0;padding-left:18px">
+          <li>两人的互动是否需要详细描写？——可详可略，视笔墨而定</li>
+          <li>Anjali 的反应：惊讶或困惑？两人之间的坚冰融化</li>
+          <li>老师挑选她参加音乐会、音乐会表演是否是重点？——不是，重点在和解与成长</li>
+          <li><b>妙招：呼应第一段海报标语</b></li>
+        </ul>
+      </div>
+      <div class="crit-card">
+        <h3>范文</h3>
+        <div class="model-passage">"Very impressive," he remarked awkwardly, admitting "I was just jealous because tabla should be a boy's thing." Anjali shrugged, "You know there is no such thing." … Under the spotlight, the set of tabla gleamed on the stage, mirroring her own radiant performance just minutes earlier. [呼应 poster]</div>
+      </div>
+    </div>
+    <div class="comic-stage mt-l" style="margin-bottom:0">
+      <p class="scene-desc"><b>点睛：</b>Anjali's heart swelled. Looking back at Deepak and the rest of the boys, she read genuine admiration in their silent eyes. Her victory was not merely securing a spot in Mr. Zakir's concert—it was showing them all that <b>music knew no gender, belonging only to those who gave it their sweat and soul</b>.</p>
+    </div>
+    <div class="teacher-note-label">【文本框】课堂批注</div>
+    <div class="teacher-note" contenteditable="true" data-key="clinic4" data-placeholder="点击此处输入批注…"></div>
+    <div class="notes">讲评④：道歉互动可详可略，主旨回扣海报「音乐无性别」。</div>
+    <button class="comic-peek-btn" data-target="peek4" title="查看分镜漫画">✏️</button>
+    <div class="comic-peek one" id="peek4">
+      <img src="images/panel-14.png" alt="Panel 14 · The Apology">
+    </div>
+  </section>
+
+  <!-- L8. 讲评⑤ 主旨升华 -->
+  <section class="slide" data-title="讲评⑤ · 主旨升华">
+    <p class="page-kicker">Writing Clinic 5</p>
+    <h2 class="h2">讲评⑤ 主旨升华</h2>
+    <div class="crit-grid two" style="margin-top:14px">
+      <div class="crit-card">
+        <h3>主旨是什么？</h3>
+        <ul style="margin:0;padding-left:18px">
+          <li>不是弥合两人的关系</li>
+          <li>是<b>相信自己，坚持梦想</b></li>
+          <li>是<b>女孩子可以做成功自己想做的任何事情</b></li>
+          <li>必须<b>回扣第一段的海报</b></li>
+        </ul>
+      </div>
+      <div class="crit-card">
+        <h3>范文（女孩可以做任何事）</h3>
+        <div class="model-passage">Anjali's outstanding performance left no one surprised when they heard Mr. Zakir's pick — Anjali, the girl, the star student — for his next concert. Since then, whenever Mr. Zakir asked questions in class, Anjali was the first to respond confidently. The once self-doubting girl had vanished and was replaced by a brand-new Anjali, who firmly believed that girls could achieve anything they set their minds to.</div>
+      </div>
+    </div>
+    <div class="comic-stage mt-l" style="margin-bottom:0">
+      <p class="scene-desc"><b>范文（相信自己）：</b>Among countless compliments, Anjali heard a little sweet voice, "Bravo, Anjali!" A little girl looked up at her, eyes wide with surprise: "I didn't know girls could play tabla." "Girls can do everything boys do," Anjali beamed, "Never dim your light."</p>
+    </div>
+    <div class="teacher-note-label">【文本框】课堂批注</div>
+    <div class="teacher-note" contenteditable="true" data-key="clinic5" data-placeholder="点击此处输入批注…"></div>
+    <div class="notes">讲评⑤：主旨 = 相信自己 + 女孩能做任何事，回扣海报。</div>
+    <button class="comic-peek-btn" data-target="peek5" title="查看分镜漫画">✏️</button>
+    <div class="comic-peek" id="peek5">
+      <img src="images/panel-11.png" alt="Panel 11 · The Slogan">
+      <img src="images/panel-01.png" alt="Panel 1 · The Taunt">
+    </div>
+  </section>
+
+  <!-- L9. ChatGPT 范文 -->
+  <section class="slide" data-title="ChatGPT 范文">
+    <p class="page-kicker">Model · ChatGPT</p>
+    <h2 class="h2">ChatGPT 完整范文（两段）</h2>
+    <div class="crit-grid two" style="margin-top:14px">
+      <div class="crit-card">
+        <h3>Para.1 · 海报与蜕变</h3>
+        <div class="model-passage">Stepping out of the bathroom, Anjali saw some inspiring posters on the wall. One depicted a young woman holding a tabla with the words, "Rhythm is not gendered — perseverance crafts the artist." The message resonated deeply with her, washing away her doubts and fears. Anjali's spirit rekindled; she straightened her back, her resolve hardening. She decided then and there that her performance at the recital would speak for her dedication and talent. With each beat she practiced, her confidence grew. By the day of the recital, Anjali was more prepared than ever, turning her anxiety into an electrifying performance that captivated everyone in the audience.</div>
+      </div>
+      <div class="crit-card">
+        <h3>Para.2 · 道歉与升华</h3>
+        <div class="model-passage">After the recital, Deepak walked up to Anjali. His expression was one of awe and remorse. "Anjali, I was wrong," he said earnestly. "Your playing was the highlight of the evening. I'm sorry for how I treated you; you truly are a remarkable musician." Anjali nodded, accepting his apology with a gracious smile. "Thank you, Deepak. Let's both keep pushing ourselves and support each other as musicians, regardless of anything else," she responded. This moment was more than a personal victory; it was a testament to her belief that with hard work and belief in oneself, any barrier could be overcome.</div>
+      </div>
+    </div>
+    <div class="notes">ChatGPT 范文：结构完整，两段分别完成 A 线与 B 线。</div>
+  </section>
+
+  <!-- L10. 学生佳作 -->
+  <section class="slide" data-title="学生佳作对比">
+    <p class="page-kicker">Student Work</p>
+    <h2 class="h2">学生佳作 · 对比讲评</h2>
+    <div class="crit-grid three" style="margin-top:14px">
+      <div class="crit-card">
+        <h3>佳作 1</h3>
+        <p class="scene-desc"><b>Para.1：</b>Among them, one dazzling tabla poster stood out with a bold slogan reading "Play for yourself." At these uplifting words, Anjali felt a blazing flame of determination ignited in her chest: She will secure the concert opportunity, not by her gender but by her competence. Ultimately, the decisive recital came. Anjali, who left the taunts and teases aside, braved the stage and played the tabla freely and fluidly. Mr. Zakir announced the winner — Anjali! She made it!</p>
+        <p class="scene-desc"><b>Para.2：</b>After the recital, Deepak walked up to Anjali. Instead of wearing the usual mean expression, he drooped his head in shame, murmuring, "Your performance deserves the honor." Hearing the heartfelt praise, Anjali couldn't help but curve her lips. Heart brimming with a new dose of confidence, Anjali dedicated herself to the demanding practice sessions with Mr. Zakir. She now was fully convinced that music offers equality for all, regardless of gender.</p>
+      </div>
+      <div class="crit-card">
+        <h3>佳作 2</h3>
+        <p class="scene-desc"><b>Para.1：</b>One striking image caught her eye: a young woman, immersed in playing the tabla, beneath the bold slogan "Gender is no barrier, simply go and play!" These powerful words reignited a blazing flame of determination within her. Rather than surrender to doubt, she resolved to redouble her efforts and fight back, proving that her skill, not her gender, should define her success. In the days that followed, Anjali dedicated herself completely, sharpening her craft and inching ever closer to perfection.</p>
+        <p class="scene-desc"><b>Para.2：</b>After the recital, Deepak walked up to Anjali. His sudden presence took Anjali off guard, prompting her to assume a defensive posture. But this time, she saw a change in him. Gone was his usual mean sneer; his head was bowed in shame. "Your performance was truly remarkable—I regret my earlier words," he stammered, visibly embarrassed. As Anjali accepted his apology with a forgiving smile, a warm current surged through her heart. Indeed, she had proven that a girl could excel in anything she set her heart on.</p>
+      </div>
+      <div class="crit-card">
+        <h3>佳作 3</h3>
+        <p class="scene-desc"><b>Para.1：</b>"Music knows no gender." "Savor the charm of music!" She roamed her gaze on them. The energetic words somehow put a bandage on her broken heart, mutely telling her, "you should give it another try." And so she did. Anjali channelled double efforts into practice and her efforts paid off.</p>
+        <p class="scene-desc"><b>点评：</b>标语直接点题「音乐无性别」；「put a bandage on her broken heart」比喻新颖，情感过渡自然。篇幅略短，若补足表演细节与 Deepak 互动更完整。</p>
+      </div>
+    </div>
+    <div class="notes">学生佳作：三篇对比，观察标语扣题、体态与内心描写、主旨回扣的差异。</div>
+  </section>
+
+  <!-- L11. 自查清单 -->
+  <section class="slide" data-title="续写自查清单">
+    <p class="page-kicker">Self-check</p>
+    <h2 class="h2">续写自查清单 <span style="font-size:16px;font-weight:700" id="check-count"></span></h2>
+    <div class="crit-grid two" style="margin-top:14px">
+      <ul class="check-list">
+        <li><label><input type="checkbox"> Para.1 以海报开头，标语扣牢「音乐无性别 / 做自己」而非泛泛鼓励</label></li>
+        <li><label><input type="checkbox"> Anjali 反应写具体：体态 / 内心活动 / 与 tabla 的回忆，至少两类</label></li>
+        <li><label><input type="checkbox"> 训练段有过渡句 + 「无视偏见」的表述</label></li>
+        <li><label><input type="checkbox"> 演出段明确写到表演成功（可写观众反应）</label></li>
+      </ul>
+      <ul class="check-list">
+        <li><label><input type="checkbox"> Deepak 道歉自然（羞愧神态 / 真心话），Anjali 反应不落俗套</label></li>
+        <li><label><input type="checkbox"> 主旨回扣海报：相信自己 / 女孩能做任何事</label></li>
+        <li><label><input type="checkbox"> 情节完整：A1-A3 与 B1-B3 要点全部覆盖</label></li>
+        <li><label><input type="checkbox"> 语言表达：有地道短语，无中式英语</label></li>
+      </ul>
+    </div>
+    <div class="comic-stage mt-l" style="margin-bottom:0">
+      <p class="scene-desc"><b>满分口诀：</b>海报扣题 → 反应具体 → 训练无视偏见 → 表演必成功 → 道歉显真诚 → 主旨回扣海报。</p>
+    </div>
+    <div class="notes">自查清单：讲评后逐项勾选，快速定位失分点。</div>
+  </section>
+
+  <!-- 18. Thanks -->
+  <section class="slide center tc" data-title="结尾">
+    <div>
+      <p class="kicker">The End</p>
+      <h1 class="h1 anim-rise-in" data-anim="rise-in" style="font-size:52px;line-height:1.15">GENDER IS NO BARRIER —<br><span class="gradient-text">SIMPLY GO AND PLAY!</span></h1>
+      <p class="lede" style="margin:20px auto;max-width:560px">Anjali's Tabla Dream · 14-Panel Disney-Style Storyboard</p>
+      <p class="dim" style="font-size:13px">按 ← → 翻页 · T 切换主题 · A 切换动效 · F 全屏 · S 演讲者模式 · O 概览</p>
+    </div>
+    <div class="notes">结尾页：点题标语与操作提示。</div>
+  </section>
+
+</div>
+
+<button class="import-fab" id="import-fab" title="导入文档，自动生成讲评">＋ 导入</button>
+<div class="import-modal" id="import-modal">
+  <div class="import-box">
+    <div class="import-head"><span>导入文档 · 自动生成讲评</span><button class="import-close" id="import-close">✕ 关闭</button></div>
+    <div class="import-body">
+      <div class="import-drop" id="import-drop">
+        <div>拖入 Word（.docx）/ PDF / TXT 文件到这里</div>
+        <button type="button" id="import-file-btn">或点击选择文件</button>
+        <input type="file" id="import-file" accept=".docx,.pdf,.txt,.md" hidden>
+      </div>
+      <div class="import-or">— 或直接粘贴文本 —</div>
+      <textarea id="import-paste" placeholder="把文章 / 课件原文粘贴到这里，或先导入文件自动提取文本..."></textarea>
+      <div class="import-status" id="import-status"></div>
+      <div class="import-preview-label">提取结果预览（可编辑）</div>
+      <textarea id="import-preview" placeholder="解析出的文本会显示在这里，可手动修改补充"></textarea>
+      <div class="import-actions">
+        <button class="import-gen" id="import-gen">复制文本 · 发送给 Marvis 自动生成讲评</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="doodle-toolbar" id="doodle-toolbar">
+  <div class="doodle-colors" id="doodle-colors">
+    <button class="dc on" data-color="#e74c3c" style="background:#e74c3c" title="红"></button>
+    <button class="dc" data-color="#222222" style="background:#222" title="黑"></button>
+    <button class="dc" data-color="#2e86de" style="background:#2e86de" title="蓝"></button>
+    <button class="dc" data-color="#27ae60" style="background:#27ae60" title="绿"></button>
+    <button class="dc" data-color="#f39c12" style="background:#f39c12" title="橙"></button>
+  </div>
+  <div class="doodle-sizes" id="doodle-sizes">
+    <button class="ds on" data-size="3" title="细">细</button>
+    <button class="ds" data-size="8" title="中">中</button>
+    <button class="ds" data-size="16" title="粗">粗</button>
+  </div>
+  <button class="d-btn" id="doodle-rect">矩形</button>
+  <button class="d-btn" id="doodle-ellipse">椭圆</button>
+  <button class="d-btn" id="doodle-magnify">放大镜</button>
+  <button class="d-btn" id="doodle-pen">画笔</button>
+  <button class="d-btn" id="doodle-eraser">橡皮</button>
+  <button class="d-btn" id="doodle-clear">清空</button>
+  <button class="d-btn" id="doodle-close">关闭</button>
+</div>
+<div class="page-nav" id="page-nav">
+  <span class="slide-number" data-current="1" data-total="30">01/30</span>
+  <select id="page-jump" title="跳转到指定页"></select>
+</div>
+<canvas id="doodle-canvas"></canvas>
+<div class="mag-select" id="mag-select"></div>
+<div class="magnifier" id="magnifier">
+  <div class="mag-bar"><span class="mag-title" id="mag-title">🔍 放大镜</span><span class="mag-tools"><button class="mag-btn" id="mag-win-out" title="缩小窗口">－窗口</button><button class="mag-btn" id="mag-win-in" title="放大窗口">＋窗口</button><button class="mag-close" id="mag-close">✕ 关闭</button></span></div>
+  <div class="mag-view" id="mag-view"><div class="mag-pos" id="mag-pos"></div></div>
+  <div class="mag-resize" id="mag-resize" title="拖动调整大小"></div>
+</div>
+<div class="doodle-tip" id="doodle-tip"></div>
+
+<script>
+(function(){
+  // Tab 切换
+  document.addEventListener('click', function(e){
+    var btn = e.target.closest('.tab-btn');
+    if(!btn) return;
+    var wrap = btn.closest('[data-tabs]');
+    wrap.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    wrap.querySelectorAll('.tab-panel').forEach(function(p){
+      p.classList.toggle('active', p.dataset.tab === btn.dataset.tab);
+    });
+  });
+  // 自查清单计数
+  var checks = document.querySelectorAll('.check-list input');
+  var counter = document.getElementById('check-count');
+  if(counter){
+    var upd = function(){
+      var n = document.querySelectorAll('.check-list input:checked').length;
+      counter.textContent = '（已勾选 ' + n + ' / ' + checks.length + '）';
+    };
+    checks.forEach(function(c){ c.addEventListener('change', upd); });
+    upd();
+  }
+})();
+
+// ===== 每页智能字号：确保所有文字可见 =====
+function fitText(scope){
+  if(!scope) return;
+  var textSel = 'p,li,td,th,label,blockquote,pre,b,small,.bubble,.caption,.scene-desc,.spec-list,.prompt-box,.crit-card h3,.tab-btn,.flow-arrow,.emotion-tag,.sfx,.char-card h4,.check-list label,.model-passage,.tiny-table td,.tiny-table th,.comic-stage .scene-desc,.lbl,.panel-title';
+  var els = Array.prototype.slice.call(scope.querySelectorAll(textSel));
+  var minMap = { H1:30, H2:26, H3:22, H4:19, H5:17, B:16, SMALL:16, P:15, LI:15, TD:15, TH:15 };
+  var loops = 0;
+  while(loops < 8){
+    if(scope.scrollHeight <= scope.clientHeight + 1) break;
+    var ratio = Math.min(0.9, scope.clientHeight / scope.scrollHeight);
+    var changed = false;
+    els.forEach(function(el){
+      var cur = parseFloat(getComputedStyle(el).fontSize) || 16;
+      var floor = minMap[el.tagName] || 15;
+      var next = Math.max(floor, cur * ratio);
+      if(next < cur - 0.3){ el.style.fontSize = next.toFixed(1) + 'px'; changed = true; }
+    });
+    loops++;
+    if(!changed) break;
+  }
+  // 兜底：文字缩到下限仍溢出时，整体等比缩小 slide 内容（循环收敛，保证所有内容可见）
+  if(scope.scrollHeight > scope.clientHeight + 1){
+    var curZoom = parseFloat(scope.style.zoom) || 1;
+    for(var z = 0; z < 6; z++){
+      var target = Math.max(0.45, Math.min(0.92, scope.clientHeight / scope.scrollHeight) * curZoom);
+      if(target >= curZoom - 0.001) break;
+      scope.style.zoom = target.toFixed(3);
+      curZoom = target;
+      if(scope.scrollHeight <= scope.clientHeight + 1) break;
+    }
+  }
+}
+function fitAllSlides(){
+  document.querySelectorAll('section.slide').forEach(function(s){ fitText(s); });
+}
+if(document.fonts && document.fonts.ready){
+  document.fonts.ready.then(fitAllSlides);
+}else{
+  fitAllSlides();
+}
+window.addEventListener('load', fitAllSlides);
+
+// ===== 讲评板块：标题进入 + 逐框点击展开 =====
+(function(){
+  var titles = ['续写任务总览','原文情节梳理','人物关系图','讲评','ChatGPT 范文','学生佳作对比','续写自查清单'];
+  function labelOf(el){
+    if(el.classList.contains('model-passage')) return '范文内容';
+    if(el.classList.contains('tiny-table') || el.tagName === 'TABLE') return '表格内容';
+    if(el.classList.contains('check-list')) return '自查清单';
+    if(el.classList.contains('comic-stage')) return '情节要点';
+    if(el.classList.contains('prompt-box')) return '提示词';
+    if(el.hasAttribute('data-tabs')){
+      var btns = el.querySelectorAll('.tab-btn');
+      if(btns.length) return Array.prototype.map.call(btns, function(b){ return b.textContent.trim(); }).join(' / ');
+    }
+    var h = el.querySelector('h3, b');
+    if(h && h.textContent.trim()) return h.textContent.trim().split('\n')[0].trim();
+    return '内容';
+  }
+  function makeBox(el){
+    if(el.dataset.boxed) return;
+    el.dataset.boxed = '1';
+    el.classList.add('box-item');
+    var isTable = el.tagName === 'TABLE';
+    var isList = el.classList.contains('check-list');
+    var host = el;
+    if(isTable || isList){
+      var wrap = document.createElement('div');
+      wrap.className = 'box-wrap';
+      el.parentNode.insertBefore(wrap, el);
+      wrap.appendChild(el);
+      host = wrap;
+    }
+    var head = document.createElement('div');
+    head.className = 'box-head';
+    var arrow = document.createElement('span');
+    arrow.className = 'box-arrow';
+    arrow.textContent = '▸';
+    var label = document.createElement('span');
+    label.className = 'box-label';
+    label.textContent = labelOf(el);
+    var hint = document.createElement('span');
+    hint.className = 'box-hint';
+    hint.textContent = '点击展开';
+    head.appendChild(arrow);
+    head.appendChild(label);
+    head.appendChild(hint);
+    host.insertBefore(head, host.firstChild);
+    var bd = document.createElement('div');
+    bd.className = 'box-body';
+    var child;
+    // 先把所有子节点（含 head）全部移入 bd，再按 [head, bd] 顺序放回 host
+    while((child = host.firstChild)){
+      bd.appendChild(child);
+    }
+    host.appendChild(head);
+    host.appendChild(bd);
+    head.addEventListener('click', function(){
+      var open = host.classList.toggle('box-open');
+      head.classList.toggle('open', open);
+      fitText(host.closest('section.slide'));
+    });
+  }
+  function boxify(scope){
+    var boxes = [];
+    scope.querySelectorAll('.crit-card').forEach(function(el){ boxes.push(el); });
+    scope.querySelectorAll('.model-passage').forEach(function(el){
+      if(!el.closest('.crit-card')) boxes.push(el);
+    });
+    scope.querySelectorAll('[data-tabs]').forEach(function(el){ boxes.push(el); });
+    scope.querySelectorAll('table.tiny-table:not(.cell-table)').forEach(function(el){ boxes.push(el); });
+    scope.querySelectorAll('ul.check-list').forEach(function(el){ boxes.push(el); });
+    scope.querySelectorAll('.comic-stage').forEach(function(el){ boxes.push(el); });
+    scope.querySelectorAll('.prompt-box').forEach(function(el){ boxes.push(el); });
+    boxes.forEach(makeBox);
+  }
+  document.querySelectorAll('section.slide').forEach(function(sec){
+    var t = sec.getAttribute('data-title') || '';
+    var matched = titles.some(function(k){ return t.indexOf(k) > -1; });
+    if(!matched || t.indexOf('导览') > -1) return;
+    var h2 = sec.querySelector('h2');
+    if(!h2) return;
+    sec.classList.add('lesson-reveal');
+    // 将 h2 之后的全部内容移入 reveal-body
+    var body = document.createElement('div');
+    body.className = 'reveal-body';
+    var node = h2.nextSibling;
+    while(node){
+      var nx = node.nextSibling;
+      body.appendChild(node);
+      node = nx;
+    }
+    sec.appendChild(body);
+    // 构造可点击头部：h2 + 箭头 + 提示
+    var head = document.createElement('div');
+    head.className = 'reveal-head';
+    var arrow = document.createElement('span');
+    arrow.className = 'reveal-arrow';
+    arrow.textContent = '▶';
+    var hint = document.createElement('span');
+    hint.className = 'reveal-hint';
+    hint.textContent = '点击进入 · 逐框展开';
+    head.appendChild(h2);
+    head.appendChild(arrow);
+    head.appendChild(hint);
+    sec.insertBefore(head, body);
+    head.addEventListener('click', function(){
+      sec.classList.toggle('open');
+      fitText(sec);
+    });
+    // 每个内容框独立折叠，点击各自展开（人物关系图整页展开即可，内部不再拆框）
+    if(t.indexOf('人物关系图') < 0) boxify(body);
+  });
+})();
+
+// ===== 总览表格：点击格子展开内容 =====
+(function(){
+  document.querySelectorAll('table.cell-table td').forEach(function(td){
+    td.addEventListener('click', function(e){
+      e.stopPropagation();
+      td.classList.toggle('open');
+      var sec = td.closest('section.slide');
+      if(sec && window.fitText) fitText(sec);
+    });
+  });
+})();
+
+// ===== 讲评文本框：直接打字 + localStorage 持久化 =====
+(function(){
+  document.querySelectorAll('.teacher-note').forEach(function(el){
+    var key = 'tn_' + el.getAttribute('data-key');
+    var saved = null;
+    try { saved = localStorage.getItem(key); } catch(err) {}
+    if(saved) el.innerHTML = saved;
+    el.addEventListener('input', function(){
+      try { localStorage.setItem(key, el.innerHTML); } catch(err) {}
+    });
+  });
+})();
+
+// ===== 涂鸦：画笔 / 橡皮 / 形状（矩形·椭圆）/ 5色 / 3粗细 / 清空 =====
+(function(){
+  var canvas = document.getElementById('doodle-canvas');
+  var tip = document.getElementById('doodle-tip');
+  var penBtn = document.getElementById('doodle-pen');
+  var eraserBtn = document.getElementById('doodle-eraser');
+  var rectBtn = document.getElementById('doodle-rect');
+  var ellipseBtn = document.getElementById('doodle-ellipse');
+  var magnifyBtn = document.getElementById('doodle-magnify');
+  var clearBtn = document.getElementById('doodle-clear');
+  var closeBtn = document.getElementById('doodle-close');
+  var magSelect = document.getElementById('mag-select');
+  var magBox = document.getElementById('magnifier');
+  var magView = document.getElementById('mag-view');
+  var magPos = document.getElementById('mag-pos');
+  var magTitle = document.getElementById('mag-title');
+  var magClose = document.getElementById('mag-close');
+  var colors = document.getElementById('doodle-colors');
+  var sizes = document.getElementById('doodle-sizes');
+  var ctx = canvas.getContext('2d');
+  var snap = document.createElement('canvas');
+  var mode = 'pen';
+  var color = '#e74c3c';
+  var size = 3;
+  var drawing = false;
+  var pressTimer = null;
+  var pressGrowth = 0;
+  var last = null;
+  var start = null;
+  var curRect = null, magScale = 2, curViewW = 0, curViewH = 0, magTx = 0, magTy = 0, dragStart = null, resizeStart = null, gestureBase = null;
+
+  function resize(){
+    var dpr = window.devicePixelRatio || 1;
+    var w = Math.floor(window.innerWidth * dpr);
+    var h = Math.floor(window.innerHeight * dpr);
+    if(canvas.width === w && canvas.height === h) return;
+    var tmp = document.createElement('canvas');
+    tmp.width = canvas.width; tmp.height = canvas.height;
+    if(canvas.width > 0 && canvas.height > 0){
+      tmp.getContext('2d').drawImage(canvas, 0, 0);
+    }
+    canvas.width = w; canvas.height = h;
+    snap.width = w; snap.height = h;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.lineWidth = size;
+    ctx.strokeStyle = color;
+    ctx.fillStyle = color;
+    ctx.globalCompositeOperation = 'source-over';
+    if(canvas.width > 0 && canvas.height > 0 && tmp.width > 0){
+      ctx.drawImage(tmp, 0, 0, tmp.width, tmp.height);
+    }
+    if(mode === 'eraser') ctx.globalCompositeOperation = 'destination-out';
+  }
+
+  function showTip(msg){
+    tip.textContent = msg;
+    tip.classList.add('show');
+    clearTimeout(showTip._t);
+    showTip._t = setTimeout(function(){ tip.classList.remove('show'); }, 1700);
+  }
+
+  function setMode(m){
+    mode = m;
+    penBtn.classList.toggle('on', m === 'pen');
+    eraserBtn.classList.toggle('on', m === 'eraser');
+    rectBtn.classList.toggle('on', m === 'rect');
+    ellipseBtn.classList.toggle('on', m === 'ellipse');
+    magnifyBtn.classList.toggle('on', m === 'magnify');
+    colors.style.display = (m === 'eraser' || m === 'magnify') ? 'none' : 'flex';
+    sizes.style.display = (m === 'eraser' || m === 'magnify') ? 'none' : 'flex';
+    canvas.style.cursor = m === 'eraser' ? 'cell' : 'crosshair';
+    if(m !== 'magnify') hideMagSelect();
+    ctx.globalCompositeOperation = m === 'eraser' ? 'destination-out' : 'source-over';
+    ctx.fillStyle = color;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = size;
+    if(m === 'pen') showTip('画笔：按住拖动连线，长按持续出墨');
+    else if(m === 'eraser') showTip('橡皮：按住涂抹擦除');
+    else if(m === 'rect') showTip('矩形：按住拖动画出矩形');
+    else if(m === 'ellipse') showTip('椭圆：按住拖动画出椭圆');
+    else if(m === 'magnify') showTip('放大镜：按住拖动框选矩形区域进行放大');
+  }
+
+  function hideMagSelect(){
+    magSelect.style.display = 'none';
+  }
+  function updateMagSelect(p0, p1){
+    var x = Math.min(p0.x, p1.x), y = Math.min(p0.y, p1.y);
+    var w = Math.abs(p1.x - p0.x), h = Math.abs(p1.y - p0.y);
+    magSelect.style.display = 'block';
+    magSelect.style.left = x + 'px';
+    magSelect.style.top = y + 'px';
+    magSelect.style.width = w + 'px';
+    magSelect.style.height = h + 'px';
+  }
+  function applyMagTransform(){
+    if(!curRect) return;
+    magPos.style.transform = 'scale(' + magScale + ') translate(' + magTx + 'px,' + magTy + 'px)';
+  }
+  function clampTransform(){
+    if(!curRect) return;
+    magTx = Math.max(curViewW - magScale * window.innerWidth, Math.min(0, magTx));
+    magTy = Math.max(curViewH - magScale * window.innerHeight, Math.min(0, magTy));
+  }
+  function zoomAt(factor){
+    if(!curRect) return;
+    var sOld = magScale;
+    var sNew = Math.max(1, Math.min(8, sOld * factor));
+    if(Math.abs(sNew - sOld) < 0.0005) return;
+    var cx = (-magTx) / sOld + curViewW / (2 * sOld);
+    var cy = (-magTy) / sOld + curViewH / (2 * sOld);
+    magScale = sNew;
+    magTx = -cx * sNew + curViewW / 2;
+    magTy = -cy * sNew + curViewH / 2;
+    clampTransform();
+    applyMagTransform();
+    magTitle.textContent = '🔍 放大镜 ×' + (Math.round(magScale * 10) / 10);
+  }
+  function setMagSize(w, h){
+    w = Math.max(180, Math.min(Math.round(window.innerWidth * 0.95), Math.round(w)));
+    h = Math.max(120, Math.min(Math.round(window.innerHeight * 0.85), Math.round(h)));
+    curViewW = w; curViewH = h;
+    magView.style.width = w + 'px';
+    magView.style.height = h + 'px';
+    magBox.style.width = w + 'px';
+    magBox.style.height = (h + 34) + 'px';
+    clampTransform();
+    applyMagTransform();
+  }
+  function showMagnifier(r){
+    if(r.w < 8 || r.h < 8) return;
+    var slide = document.querySelector('.deck .slide.is-active') || document.querySelector('.deck .slide');
+    if(!slide) return;
+    var scale = 2;
+    var maxW = window.innerWidth * 0.9, maxH = window.innerHeight * 0.72;
+    var viewW = Math.round(r.w * scale), viewH = Math.round(r.h * scale);
+    if(viewW > maxW){ scale = maxW / r.w; viewW = Math.round(r.w * scale); viewH = Math.round(r.h * scale); }
+    if(viewH > maxH){ scale = Math.min(scale, maxH / r.h); viewW = Math.round(r.w * scale); viewH = Math.round(r.h * scale); }
+    var clone = slide.cloneNode(true);
+    magPos.innerHTML = '';
+    magPos.appendChild(clone);
+    if(canvas.width > 0){
+      var overlay = document.createElement('canvas');
+      overlay.width = canvas.width;
+      overlay.height = canvas.height;
+      overlay.style.position = 'absolute';
+      overlay.style.left = '0';
+      overlay.style.top = '0';
+      overlay.style.width = '100%';
+      overlay.style.height = '100%';
+      overlay.style.pointerEvents = 'none';
+      overlay.getContext('2d').drawImage(canvas, 0, 0);
+      magPos.appendChild(overlay);
+    }
+    magPos.style.width = window.innerWidth + 'px';
+    magPos.style.height = window.innerHeight + 'px';
+    curRect = r; magScale = scale; curViewW = viewW; curViewH = viewH; magTx = -r.x; magTy = -r.y;
+    applyMagTransform();
+    var barH = 34;
+    magView.style.width = viewW + 'px';
+    magView.style.height = viewH + 'px';
+    magBox.style.display = 'block';
+    magBox.style.width = viewW + 'px';
+    magBox.style.height = (viewH + barH) + 'px';
+    magBox.style.left = Math.max(8, Math.round((window.innerWidth - viewW) / 2)) + 'px';
+    magBox.style.top = Math.max(8, Math.round((window.innerHeight - viewH - barH) / 2)) + 'px';
+    magTitle.textContent = '🔍 放大镜 ×' + (Math.round(scale * 10) / 10);
+    showTip('放大镜已生成：拖动画面移动，双指捏合缩放内容，右下角可拖动调整窗口大小');
+  }
+  magView.addEventListener('pointerdown', function(e){
+    if(!curRect) return;
+    dragStart = { x: e.clientX, y: e.clientY, tx: magTx, ty: magTy };
+    try { magView.setPointerCapture(e.pointerId); } catch(err) {}
+    magView.classList.add('dragging');
+  });
+  magView.addEventListener('pointermove', function(e){
+    if(!dragStart) return;
+    magTx = dragStart.tx + (e.clientX - dragStart.x);
+    magTy = dragStart.ty + (e.clientY - dragStart.y);
+    clampTransform();
+    applyMagTransform();
+  });
+  magView.addEventListener('pointerup', function(){
+    dragStart = null;
+    magView.classList.remove('dragging');
+  });
+  magView.addEventListener('pointercancel', function(){
+    dragStart = null;
+    magView.classList.remove('dragging');
+  });
+  magView.addEventListener('wheel', function(e){
+    if(!curRect || !e.ctrlKey) return;
+    e.preventDefault();
+    zoomAt(Math.exp(-e.deltaY * 0.005));
+  }, { passive: false });
+  magView.addEventListener('gesturestart', function(e){
+    if(!curRect) return;
+    e.preventDefault();
+    gestureBase = magScale;
+  });
+  magView.addEventListener('gesturechange', function(e){
+    if(!curRect || gestureBase === null) return;
+    e.preventDefault();
+    zoomAt((gestureBase * e.scale) / magScale);
+  });
+  magView.addEventListener('gestureend', function(){
+    gestureBase = null;
+  });
+  var magResize = document.getElementById('mag-resize');
+  var magWinOut = document.getElementById('mag-win-out');
+  var magWinIn = document.getElementById('mag-win-in');
+  magResize.addEventListener('pointerdown', function(e){
+    if(!curRect) return;
+    resizeStart = { x: e.clientX, y: e.clientY, w: curViewW, h: curViewH };
+    try { magResize.setPointerCapture(e.pointerId); } catch(err) {}
+  });
+  magResize.addEventListener('pointermove', function(e){
+    if(!resizeStart) return;
+    setMagSize(resizeStart.w + (e.clientX - resizeStart.x), resizeStart.h + (e.clientY - resizeStart.y));
+  });
+  magResize.addEventListener('pointerup', function(){ resizeStart = null; });
+  magResize.addEventListener('pointercancel', function(){ resizeStart = null; });
+  magWinOut.addEventListener('click', function(){
+    if(!curRect) return;
+    setMagSize(curViewW * 0.85, curViewH * 0.85);
+    showTip('放大镜窗口已缩小');
+  });
+  magWinIn.addEventListener('click', function(){
+    if(!curRect) return;
+    setMagSize(curViewW * 1.18, curViewH * 1.18);
+    showTip('放大镜窗口已扩大');
+  });
+
+  function openDoodle(){
+    canvas.classList.add('on');
+    canvas.style.pointerEvents = 'auto';
+    resize();
+  }
+
+  penBtn.addEventListener('click', function(){ openDoodle(); setMode('pen'); });
+  eraserBtn.addEventListener('click', function(){ openDoodle(); setMode('eraser'); });
+  rectBtn.addEventListener('click', function(){ openDoodle(); setMode('rect'); });
+  ellipseBtn.addEventListener('click', function(){ openDoodle(); setMode('ellipse'); });
+  magnifyBtn.addEventListener('click', function(){ openDoodle(); setMode('magnify'); });
+  magClose.addEventListener('click', function(){
+    magPos.innerHTML = '';
+    magBox.style.display = 'none';
+    gestureBase = null; dragStart = null; resizeStart = null;
+    showTip('放大镜已关闭');
+  });
+  closeBtn.addEventListener('click', function(){
+    canvas.classList.remove('on');
+    canvas.style.pointerEvents = 'none';
+    magPos.innerHTML = '';
+    magBox.style.display = 'none';
+    gestureBase = null; dragStart = null; resizeStart = null;
+    hideMagSelect();
+    showTip('涂鸦已关闭');
+  });
+  clearBtn.addEventListener('click', function(){
+    ctx.save();
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.restore();
+    resize();
+    showTip('已清空涂鸦');
+  });
+  sizes.querySelectorAll('.ds').forEach(function(b){
+    b.addEventListener('click', function(){
+      sizes.querySelectorAll('.ds').forEach(function(x){ x.classList.remove('on'); });
+      b.classList.add('on');
+      size = parseInt(b.dataset.size, 10) || 3;
+      ctx.lineWidth = size;
+      showTip('画笔粗细：' + b.textContent);
+    });
+  });
+  colors.querySelectorAll('.dc').forEach(function(b){
+    b.addEventListener('click', function(){
+      colors.querySelectorAll('.dc').forEach(function(x){ x.classList.remove('on'); });
+      b.classList.add('on');
+      color = b.dataset.color;
+      ctx.strokeStyle = color;
+      ctx.fillStyle = color;
+      if(mode === 'eraser') setMode('pen'); else showTip('已切换画笔颜色');
+    });
+  });
+
+  function pos(e){
+    var r = canvas.getBoundingClientRect();
+    return { x: e.clientX - r.left, y: e.clientY - r.top };
+  }
+  function paintDot(p, r){
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  function eraseDot(p, r){
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+  function pressMark(p){
+    if(mode === 'eraser'){
+      eraseDot(p, size);
+    }else{
+      pressGrowth = Math.min(pressGrowth + 0.8, 16);
+      paintDot(p, size / 2 + pressGrowth);
+    }
+  }
+  // ---- 形状绘制 ----
+  function drawShape(p0, p1){
+    ctx.save();
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.lineWidth = size;
+    ctx.strokeStyle = color;
+    ctx.beginPath();
+    if(mode === 'rect'){
+      ctx.rect(Math.min(p0.x, p1.x), Math.min(p0.y, p1.y), Math.abs(p1.x - p0.x), Math.abs(p1.y - p0.y));
+    }else{
+      ctx.ellipse((p0.x + p1.x) / 2, (p0.y + p1.y) / 2, Math.abs(p1.x - p0.x) / 2, Math.abs(p1.y - p0.y) / 2, 0, 0, Math.PI * 2);
+    }
+    ctx.stroke();
+    ctx.restore();
+  }
+  function restoreSnap(){
+    ctx.save();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(snap, 0, 0);
+    ctx.restore();
+  }
+  canvas.addEventListener('pointerdown', function(e){
+    e.preventDefault();
+    drawing = true;
+    var p = pos(e);
+    last = p;
+    if(mode === 'magnify'){
+      start = p;
+      updateMagSelect(p, p);
+      return;
+    }
+    if(mode === 'rect' || mode === 'ellipse'){
+      start = p;
+      var sctx = snap.getContext('2d');
+      sctx.setTransform(1, 0, 0, 1, 0, 0);
+      sctx.clearRect(0, 0, snap.width, snap.height);
+      sctx.drawImage(canvas, 0, 0);
+      return;
+    }
+    pressGrowth = 0;
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y);
+    ctx.lineTo(p.x + 0.01, p.y + 0.01);
+    ctx.stroke();
+    // 按下即留痕：画实心圆点，长按持续出墨
+    if(mode === 'eraser') eraseDot(p, size); else paintDot(p, size / 2);
+    clearInterval(pressTimer);
+    pressTimer = setInterval(function(){
+      if(!drawing || !last) return;
+      pressMark(last);
+    }, 120);
+    try { canvas.setPointerCapture(e.pointerId); } catch(err){}
+  });
+  canvas.addEventListener('pointermove', function(e){
+    if(!drawing) return;
+    var p = pos(e);
+    last = p;
+    if(mode === 'magnify'){
+      if(start) updateMagSelect(start, p);
+      return;
+    }
+    if(mode === 'rect' || mode === 'ellipse'){
+      if(!start) return;
+      restoreSnap();
+      drawShape(start, p);
+      return;
+    }
+    pressGrowth = 0;
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+  });
+  ['pointerup','pointercancel'].forEach(function(ev){
+    canvas.addEventListener(ev, function(){
+      if(mode === 'magnify'){
+        if(drawing && start && last){
+          var x = Math.min(start.x, last.x), y = Math.min(start.y, last.y);
+          var w = Math.abs(last.x - start.x), h = Math.abs(last.y - start.y);
+          hideMagSelect();
+          showMagnifier({ x: x, y: y, w: w, h: h });
+        }else{
+          hideMagSelect();
+        }
+        drawing = false;
+        start = null;
+        last = null;
+        return;
+      }
+      if(mode === 'rect' || mode === 'ellipse'){
+        if(drawing && start){
+          restoreSnap();
+          drawShape(start, last || start);
+        }
+        drawing = false;
+        start = null;
+        last = null;
+        return;
+      }
+      drawing = false;
+      clearInterval(pressTimer);
+      pressTimer = null;
+      last = null;
+    });
+  });
+  window.addEventListener('resize', resize);
+  resize();
+  setMode('pen');
+})();
+
+// ===== 底部页码：显示当前/总页 + 下拉跳转 =====
+(function(){
+  var sel = document.getElementById('page-jump');
+  if(!sel) return;
+  var slides = document.querySelectorAll('.deck .slide');
+  var total = slides.length;
+  var numEl = document.querySelector('.slide-number');
+  if(numEl){
+    numEl.setAttribute('data-current', '1');
+    numEl.setAttribute('data-total', total);
+    numEl.textContent = '01/' + String(total).padStart(2, '0');
+  }
+  slides.forEach(function(s, i){
+    var opt = document.createElement('option');
+    opt.value = i + 1;
+    var title = (s.getAttribute('data-title') || ('第 ' + (i + 1) + ' 页')).replace(/\s+/g, ' ');
+    opt.textContent = (i + 1) + ' · ' + title.slice(0, 24);
+    sel.appendChild(opt);
+  });
+  sel.addEventListener('change', function(){
+    var n = parseInt(sel.value, 10);
+    if(n >= 1 && n <= total){
+      location.hash = '#/' + n;
+    }
+    sel.blur();
+  });
+  window.addEventListener('hashchange', function(){
+    var m = /^#\/(\d+)/.exec(location.hash || '');
+    if(m){
+      sel.value = m[1];
+      if(numEl){
+        var nn = parseInt(m[1], 10);
+        numEl.setAttribute('data-current', nn);
+        numEl.textContent = String(nn).padStart(2, '0') + '/' + String(total).padStart(2, '0');
+      }
+    }
+  });
+})();
+
+// ===== 设定规范：点击展开 / 再点收起 =====
+(function(){
+  document.querySelectorAll('.info-fold .fold-head').forEach(function(head){
+    head.addEventListener('click', function(){
+      var fold = head.closest('.info-fold');
+      var open = fold.classList.toggle('open');
+      head.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  });
+})();
+
+// ===== 讲评页左侧分镜漫画：点击画笔展开 / 再点收起 =====
+(function(){
+  document.querySelectorAll('.comic-peek-btn').forEach(function(btn){
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      var target = document.getElementById(btn.getAttribute('data-target'));
+      if(!target) return;
+      var open = target.classList.toggle('open');
+      btn.classList.toggle('on', open);
+      btn.setAttribute('title', open ? '收起分镜漫画' : '查看分镜漫画');
+      var sec = btn.closest('section.slide');
+      if(sec && window.fitText) fitText(sec);
+    });
+  });
+})();
+
+// ===== 导入文档：拖入/上传/粘贴 → 提取文本 → 交给 Marvis 生成讲评 =====
+(function(){
+  var fab = document.getElementById('import-fab');
+  var modal = document.getElementById('import-modal');
+  var closeBtn = document.getElementById('import-close');
+  var drop = document.getElementById('import-drop');
+  var fileBtn = document.getElementById('import-file-btn');
+  var fileInput = document.getElementById('import-file');
+  var paste = document.getElementById('import-paste');
+  var preview = document.getElementById('import-preview');
+  var status = document.getElementById('import-status');
+  var genBtn = document.getElementById('import-gen');
+  var libCache = {};
+
+  function setStatus(msg){ status.textContent = msg || ''; }
+  function ensureLib(key, src){
+    if(window[key]) return Promise.resolve();
+    if(libCache[key]) return libCache[key];
+    libCache[key] = new Promise(function(res, rej){
+      var s = document.createElement('script');
+      s.src = src;
+      s.onload = function(){ res(); };
+      s.onerror = function(){ rej(new Error('load ' + src)); };
+      document.head.appendChild(s);
+    });
+    return libCache[key];
+  }
+  function setPreview(text){
+    preview.value = text;
+    setStatus('解析完成，共 ' + text.length + ' 字符，可编辑后生成讲评');
+  }
+  function parseFile(file){
+    var name = (file.name || '').toLowerCase();
+    var ext = name.split('.').pop();
+    if(!ext){ setStatus('无法识别文件类型'); return; }
+    setStatus('正在解析 ' + file.name + ' ...');
+    if(ext === 'txt' || ext === 'md'){
+      var r = new FileReader();
+      r.onload = function(){ setPreview(r.result || ''); };
+      r.onerror = function(){ setStatus('读取文件失败'); };
+      r.readAsText(file, 'utf-8');
+      return;
+    }
+    if(ext === 'docx'){
+      ensureLib('mammoth', 'https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js').then(function(){
+        return file.arrayBuffer();
+      }).then(function(buf){
+        return window.mammoth.extractRawText({ arrayBuffer: buf });
+      }).then(function(res){
+        setPreview(res.value || '(未提取到文本，请检查文档内容)');
+      }).catch(function(e){
+        setStatus('解析 docx 失败：' + e.message + '（需联网加载解析库）');
+      });
+      return;
+    }
+    if(ext === 'pdf'){
+      ensureLib('pdfjsLib', 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js').then(function(){
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        return file.arrayBuffer();
+      }).then(function(buf){
+        return window.pdfjsLib.getDocument({ data: buf }).promise;
+      }).then(function(pdf){
+        var tasks = [];
+        for(var i = 1; i <= pdf.numPages; i++){
+          (function(pageNum){
+            tasks.push(pdf.getPage(pageNum).then(function(pg){ return pg.getTextContent(); }).then(function(tc){
+              return tc.items.map(function(it){ return it.str; }).join(' ');
+            }));
+          })(i);
+        }
+        return Promise.all(tasks);
+      }).then(function(pages){
+        setPreview(pages.join('\n\n'));
+      }).catch(function(e){
+        setStatus('解析 pdf 失败：' + e.message + '（需联网加载解析库）');
+      });
+      return;
+    }
+    setStatus('不支持的文件类型：' + ext + '（支持 .docx / .pdf / .txt / .md）');
+  }
+
+  fab.addEventListener('click', function(){ modal.classList.add('open'); });
+  closeBtn.addEventListener('click', function(){ modal.classList.remove('open'); });
+  modal.addEventListener('click', function(e){ if(e.target === modal) modal.classList.remove('open'); });
+  fileBtn.addEventListener('click', function(){ fileInput.click(); });
+  fileInput.addEventListener('change', function(){
+    if(fileInput.files && fileInput.files[0]) parseFile(fileInput.files[0]);
+    fileInput.value = '';
+  });
+  drop.addEventListener('dragover', function(e){ e.preventDefault(); drop.classList.add('over'); });
+  drop.addEventListener('dragleave', function(){ drop.classList.remove('over'); });
+  drop.addEventListener('drop', function(e){
+    e.preventDefault();
+    drop.classList.remove('over');
+    var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if(f) parseFile(f);
+  });
+  genBtn.addEventListener('click', function(){
+    var text = (preview.value || paste.value || '').trim();
+    if(!text){ setStatus('请先导入文件或粘贴文本'); return; }
+    var msg = '请根据以下文本，参照通用讲评模板（任务总览表格、四段式情节导图、人物关系图、逐段讲评①②③④⑤、范文、学生佳作对比、自查清单等结构，正文不小于27px，每框点击展开）自动生成一份新的讲评页面：\n\n' + text;
+    function done(){
+      setStatus('已复制到剪贴板，请直接粘贴发送给 Marvis，将自动生成新讲评页面');
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(msg).then(done, function(){ fallbackCopy(msg); done(); });
+    } else { fallbackCopy(msg); done(); }
+  });
+  function fallbackCopy(text){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); } catch(e){}
+    document.body.removeChild(ta);
+  }
+})();
+</script>
+<script src="assets/runtime.js"></script>
+</body></html>
