@@ -1,0 +1,338 @@
+<!-- ============================================================
+  通用讲评生成模板 (lesson-sections template)
+  说明: 本文件是从 index.html 抽取的"讲评板块"结构参考。
+  当用户提供新文档(Word/PDF/文本)时, 按此结构自动生成讲评 sections,
+  替换 index.html 中对应的讲评部分即可得到新讲评页面。
+
+  讲评板块组成(共12页, data-title 为页面标题):
+  1. 讲评导览        center tc 过渡页
+  2. 任务总览        cell-table 总览表格, 每格点击展开
+  3. 原文情节梳理    四段式思维导图 mindmap (hub + branches)
+  4. 人物关系图      character-map
+  5-9. 讲评①~⑤      lesson-reveal > reveal-head/reveal-body > box-item/box-wrap
+                     每框点击展开; 含 teacher-note 可打字文本框
+  10. ChatGPT 范文   model-passage
+  11. 学生佳作对比    crit-grid three 三栏并列
+  12. 续写自查清单    check-list 勾选
+
+  关键交互类名: lesson-reveal / box-item / box-wrap / cell-table / mindmap
+                / teacher-note / crit-grid.two / crit-grid.three / check-list
+  JS 依赖: runtime.js 的 reveal 展开、fitText 字号自适应、Tab 切换
+============================================================ -->
+
+  <section class="slide center tc" data-title="续写讲评 · 导览">
+    <div>
+      <p class="kicker">Continuation Writing · Review</p>
+      <h1 class="h1 anim-rise-in" data-anim="rise-in" style="font-size:46px;line-height:1.18">续写讲评<br><span class="gradient-text">女孩坚持演奏印度鼓</span></h1>
+      <p class="lede" style="margin:18px auto;max-width:640px">从「故事理解」到「分段写作」再到「范文对比」——本讲评页整合 26 页课件核心，共 11 个讲评环节，配合上方漫画分镜辅助理解情节。</p>
+      <div class="crit-grid three" style="margin-top:26px;text-align:left">
+        <div class="crit-card"><b>① 任务与情节</b><br>续写任务总览 · 原文四段式梳理</div>
+        <div class="crit-card"><b>② 分段写作讲评</b><br>海报 → 训练 → 表演 → 道歉 → 主旨</div>
+        <div class="crit-card"><b>③ 范文与自查</b><br>ChatGPT 范文 · 学生佳作 · 自查清单</div>
+      </div>
+    </div>
+    <div class="notes">讲评导览：本次续写讲评的三个环节。</div>
+  </section>
+
+  <!-- L2. 续写任务总览 -->
+  <section class="slide" data-title="续写任务总览">
+    <p class="page-kicker">Task Overview</p>
+    <h2 class="h2">续写任务总览</h2>
+    <div class="crit-grid two" style="margin-top:14px">
+      <div class="crit-card">
+        <h3>两个段落开头句</h3>
+        <p class="scene-desc"><b>Para.1：</b>Stepping out of the bathroom, Anjali saw some inspiring posters on the wall.</p>
+        <p class="scene-desc"><b>Para.2：</b>After the recital, Deepak walked up to Anjali.</p>
+      </div>
+      <div class="crit-card">
+        <h3>写作提示</h3>
+        <ul style="margin:0;padding-left:18px">
+          <li>第一段或第二段结尾可写「得知入选 concert」，也可不写</li>
+          <li>Mr. Zakir 可以出现，也可以不出现</li>
+        </ul>
+      </div>
+    </div>
+    <table class="tiny-table cell-table mt-l">
+      <thead><tr><th>情节要点</th><th>A 线（Para.1）</th><th>B 线（Para.2）</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>A1 / B1</td>
+          <td><div class="cell-body">[inspiring posters] 的内容 + Anjali 看到后的反应</div><span class="cell-hint">点击展开</span></td>
+          <td><div class="cell-body">[Deepak] 道歉，表达钦佩</div><span class="cell-hint">点击展开</span></td>
+        </tr>
+        <tr>
+          <td>A2 / B2</td>
+          <td><div class="cell-body">[Anjali] 态度转变，认真训练</div><span class="cell-hint">点击展开</span></td>
+          <td><div class="cell-body">[Anjali] 的反应</div><span class="cell-hint">点击展开</span></td>
+        </tr>
+        <tr>
+          <td>A3 / B3</td>
+          <td><div class="cell-body">[recital] 到来，她表演非常成功（获得机会）</div><span class="cell-hint">点击展开</span></td>
+          <td><div class="cell-body">[主旨升华] 相信自己，坚持梦想 / 女孩子可以做成功自己想做的任何事情</div><span class="cell-hint">点击展开</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="notes">任务总览：两段开头句 + A/B 双线情节要点。</div>
+  </section>
+
+  <!-- L3. 原文情节梳理 -->
+  <section class="slide" data-title="原文情节梳理">
+    <p class="page-kicker">Plot Map</p>
+    <h2 class="h2">原文情节梳理 · 四段式导图</h2>
+    <div class="mindmap" style="margin-top:16px">
+      <div class="hub">原文情节<br>四段式</div>
+      <div class="branches">
+        <div class="branch"><b>① 矛盾起因</b> — Deepak 当众挑衅：「tabla is a boy's thing」，Anjali 困惑不解</div>
+        <div class="branch"><b>② 妥协退缩</b> — 听到嘘声后自我怀疑：「I guess I don't know it that well after all」</div>
+        <div class="branch"><b>③ 冲突激化</b> — 想找 Deepak 说清楚却被无视；偷听到恶语中伤，Anjali 怒不可遏</div>
+        <div class="branch"><b>④ 情绪崩溃</b> — 躲进洗手间无法冷静：「If I play in this concert, no one will talk to me again」</div>
+      </div>
+    </div>
+    <div class="comic-stage mt-l" style="margin-bottom:0">
+      <p class="scene-desc"><b>关键伏笔：</b>鼓乐不分性别，只关乎努力与汗水（<span class="en">Anjali knew there was no such thing</span>）——续写海报标语与主旨必须回扣这一点。</p>
+    </div>
+    <div class="notes">情节梳理：四段式导图帮助定位续写的情感转折点。</div>
+  </section>
+
+  <!-- L3.5 人物关系图 -->
+  <section class="slide" data-title="人物关系图">
+    <p class="page-kicker">Character Map</p>
+    <h2 class="h2">人物关系图</h2>
+    <div class="mindmap" style="margin-top:16px">
+      <div class="hub" style="width:172px">Anjali<br><span style="display:inline-block;font-weight:600;font-size:15px;opacity:.9">主角 · 塔布拉鼓手</span></div>
+      <div class="branches">
+        <div class="branch"><b>Deepak（男同学）</b><br>当众挑衅 → 嫉妒 → 赛后道歉、由衷钦佩；与 Anjali 的冲突推动全文</div>
+        <div class="branch"><b>Mr. Zakir（音乐老师）</b><br>赏识 Anjali 天赋；主持 recital、宣布入选；见证她的成长与和解</div>
+      </div>
+    </div>
+    <div class="comic-stage mt-l" style="margin-bottom:0">
+      <p class="scene-desc"><b>关系说明：</b>Anjali 是核心人物。与 <b>Deepak</b> 的关系从「被质疑 → 和解互敬」，与 <b>Mr. Zakir</b> 是「师生 · 伯乐」关系。续写中两人的互动与老师的安排都是情节关键，海报标语与道歉场景需与人物动机一致。</p>
+    </div>
+    <div class="notes">人物关系图：理清角色动机，续写时不跑偏人设。</div>
+  </section>
+
+  <!-- L4. 讲评① 海报内容与反应 -->
+  <section class="slide" data-title="讲评① · 海报与反应">
+    <p class="page-kicker">Writing Clinic 1</p>
+    <h2 class="h2">讲评① 海报内容 + Anjali 的反应</h2>
+    <div class="crit-grid two" style="margin-top:14px">
+      <div class="crit-card">
+        <h3>海报标语：必须扣牢文章</h3>
+        <p>反思：Anjali 情绪低落的真正原因是<b>因性别被质疑、被偏见而自我怀疑</b>，而不是对自己没有信心。因此标语不能泛泛鼓励「加油 / 坚持」。</p>
+        <p><b>推荐标语：</b>Play for yourself. / Never dim your light. / Follow your heart. / Be yourself and shine on. / Music knows no gender.</p>
+        <p><b>画面选择：</b>打破被质疑、被偏见的视觉符号——女性在音乐舞台自信绽放（闪耀）。</p>
+      </div>
+      <div class="crit-card">
+        <h3>反应描写：不要空洞的情绪堆砌</h3>
+        <ul style="margin:0;padding-left:18px">
+          <li><b>体态：</b>背挺直、眼睛闪闪发亮（hunched shoulders relaxed, spine straightened）</li>
+          <li><b>内心：</b>决心不让 Deepak 影响自己，要靠能力而非性别赢得机会</li>
+          <li><b>回忆：</b>与 tabla 的相遇之旅——指尖起泡、清晨练习、掌握第一个复杂节拍的喜悦</li>
+        </ul>
+      </div>
+    </div>
+    <div class="crit-grid two" style="margin-top:14px">
+      <div class="crit-card">
+        <h3>范文 · 标语 quote 版</h3>
+        <div class="model-passage">One of them was illustrated with a quote, "Never dim your light." For that moment, Anjali was transported back to her first encounter with the tabla. She remembered how she was mesmerized by the beautiful sounds, created by dancing fingers. She knew that tabla was meant for her.</div>
+      </div>
+      <div class="crit-card">
+        <h3>范文 · 图像版</h3>
+        <div class="model-passage">With a closer look, her eyes were fixed on one particular poster featuring a girl highlighted in the spotlight. Though facing away from the audience, her silhouette still conveyed a strong sense of determination. Instantly, Anjali felt a surge of power rushing through her veins. "What if I were on the stage, playing tabla and immersed in the breathtaking rhythm of every strike?" she found herself wondering irresistibly.</div>
+      </div>
+    </div>
+    <div class="teacher-note-label">【文本框】课堂批注</div>
+    <div class="teacher-note" contenteditable="true" data-key="clinic1" data-placeholder="点击此处输入批注…"></div>
+    <div class="notes">讲评①：标语扣牢「音乐无性别」，反应写具体——体态 / 内心 / 回忆。</div>
+    <button class="comic-peek-btn" data-target="peek1" title="查看分镜漫画">✏️</button>
+    <div class="comic-peek" id="peek1">
+      <img src="images/panel-10.png" alt="Panel 10 · The Poster">
+      <img src="images/panel-11.png" alt="Panel 11 · The Slogan">
+    </div>
+  </section>
+
+  <!-- L5. 讲评② 态度转变认真训练 -->
+  <section class="slide" data-title="讲评② · 态度转变与训练">
+    <p class="page-kicker">Writing Clinic 2</p>
+    <h2 class="h2">讲评② 态度转变 · 认真训练</h2>
+    <div class="crit-grid two" style="margin-top:14px">
+      <div class="crit-card">
+        <h3>过渡总起句（时间流逝）</h3>
+        <p class="scene-desc">In the days that followed / In the following days / With each passing day / As time slipped away / As time ticked away unnoticed / Day in, day out / As days merged into weeks</p>
+        <h3 style="margin-top:12px">训练动作表达</h3>
+        <p class="scene-desc">throw herself heart and soul into practice / immerse herself completely in the practice / bury herself in endless practice / pour all her passion into tireless practice / redouble her efforts into endless practice / go all out for the recital</p>
+      </div>
+      <div class="crit-card">
+        <h3>关键提醒：除了坚持，还要「无视偏见」</h3>
+        <p>对他人质疑置之不理、不分心——这是本段区别于泛泛而谈的关键：</p>
+        <p class="scene-desc">… deaf to all outside noise. / ignoring all the prejudice and bias. / all the noise faded into the background. / completely absorbed in her own musical world.</p>
+        <div class="model-passage" style="margin-top:10px">As days slipped away, she buried herself in the realm of rhythm, leaving only sweat (and callouses) to bear witness to her devotion.</div>
+      </div>
+    </div>
+    <div class="teacher-note-label">【文本框】课堂批注</div>
+    <div class="teacher-note" contenteditable="true" data-key="clinic2" data-placeholder="点击此处输入批注…"></div>
+    <div class="notes">讲评②：过渡句 + 训练表达 + 「无视偏见」结合文本。</div>
+    <button class="comic-peek-btn" data-target="peek2" title="查看分镜漫画">✏️</button>
+    <div class="comic-peek one" id="peek2">
+      <img src="images/panel-12.png" alt="Panel 12 · The Montage">
+    </div>
+  </section>
+
+  <!-- L6. 讲评③ 表演成功 -->
+  <section class="slide" data-title="讲评③ · 表演成功">
+    <p class="page-kicker">Writing Clinic 3</p>
+    <h2 class="h2">讲评③ recital 到来 · 表演成功</h2>
+    <div class="crit-grid two" style="margin-top:14px">
+      <div class="crit-card">
+        <h3>转场句（训练 → 演出）</h3>
+        <p class="scene-desc">The day finally came. / Finally came the big day. / Finally came her long-awaited day. / Sweat and calluses bore witness to her dedication. / Before she even realized it, the long-awaited recital arrived, and it was her time to shine.</p>
+      </div>
+      <div class="crit-card">
+        <h3>要点</h3>
+        <ul style="margin:0;padding-left:18px">
+          <li>如果笔墨够，不写观众也可以</li>
+          <li><b>但一定要写表演成功</b></li>
+          <li>可写：登台前的深呼吸 / 指尖流淌的美妙乐音 / 观众惊叹</li>
+        </ul>
+      </div>
+    </div>
+    <div class="model-passage mt-l" style="margin-top:14px">Finally came the big day. Standing on stage, she took a deep breath to get rid of lingering doubts and raised her hands in mid-air. The next second, everyone was captivated by the beautiful sounds flowing from her fingers. On the decisive stage, every single strike of hers blossomed into a breathless, flawless performance, leaving everyone present in awe.</div>
+    <div class="teacher-note-label">【文本框】课堂批注</div>
+    <div class="teacher-note" contenteditable="true" data-key="clinic3" data-placeholder="点击此处输入批注…"></div>
+    <div class="notes">讲评③：转场自然，表演成功必写。</div>
+    <button class="comic-peek-btn" data-target="peek3" title="查看分镜漫画">✏️</button>
+    <div class="comic-peek one" id="peek3">
+      <img src="images/panel-13.png" alt="Panel 13 · The Recital">
+    </div>
+  </section>
+
+  <!-- L7. 讲评④ Deepak道歉与Anjali反应 -->
+  <section class="slide" data-title="讲评④ · 道歉与反应">
+    <p class="page-kicker">Writing Clinic 4</p>
+    <h2 class="h2">讲评④ Deepak 道歉 + Anjali 的反应</h2>
+    <div class="crit-grid two" style="margin-top:14px">
+      <div class="crit-card">
+        <h3>互动设计要点</h3>
+        <ul style="margin:0;padding-left:18px">
+          <li>两人的互动是否需要详细描写？——可详可略，视笔墨而定</li>
+          <li>Anjali 的反应：惊讶或困惑？两人之间的坚冰融化</li>
+          <li>老师挑选她参加音乐会、音乐会表演是否是重点？——不是，重点在和解与成长</li>
+          <li><b>妙招：呼应第一段海报标语</b></li>
+        </ul>
+      </div>
+      <div class="crit-card">
+        <h3>范文</h3>
+        <div class="model-passage">"Very impressive," he remarked awkwardly, admitting "I was just jealous because tabla should be a boy's thing." Anjali shrugged, "You know there is no such thing." … Under the spotlight, the set of tabla gleamed on the stage, mirroring her own radiant performance just minutes earlier. [呼应 poster]</div>
+      </div>
+    </div>
+    <div class="comic-stage mt-l" style="margin-bottom:0">
+      <p class="scene-desc"><b>点睛：</b>Anjali's heart swelled. Looking back at Deepak and the rest of the boys, she read genuine admiration in their silent eyes. Her victory was not merely securing a spot in Mr. Zakir's concert—it was showing them all that <b>music knew no gender, belonging only to those who gave it their sweat and soul</b>.</p>
+    </div>
+    <div class="teacher-note-label">【文本框】课堂批注</div>
+    <div class="teacher-note" contenteditable="true" data-key="clinic4" data-placeholder="点击此处输入批注…"></div>
+    <div class="notes">讲评④：道歉互动可详可略，主旨回扣海报「音乐无性别」。</div>
+    <button class="comic-peek-btn" data-target="peek4" title="查看分镜漫画">✏️</button>
+    <div class="comic-peek one" id="peek4">
+      <img src="images/panel-14.png" alt="Panel 14 · The Apology">
+    </div>
+  </section>
+
+  <!-- L8. 讲评⑤ 主旨升华 -->
+  <section class="slide" data-title="讲评⑤ · 主旨升华">
+    <p class="page-kicker">Writing Clinic 5</p>
+    <h2 class="h2">讲评⑤ 主旨升华</h2>
+    <div class="crit-grid two" style="margin-top:14px">
+      <div class="crit-card">
+        <h3>主旨是什么？</h3>
+        <ul style="margin:0;padding-left:18px">
+          <li>不是弥合两人的关系</li>
+          <li>是<b>相信自己，坚持梦想</b></li>
+          <li>是<b>女孩子可以做成功自己想做的任何事情</b></li>
+          <li>必须<b>回扣第一段的海报</b></li>
+        </ul>
+      </div>
+      <div class="crit-card">
+        <h3>范文（女孩可以做任何事）</h3>
+        <div class="model-passage">Anjali's outstanding performance left no one surprised when they heard Mr. Zakir's pick — Anjali, the girl, the star student — for his next concert. Since then, whenever Mr. Zakir asked questions in class, Anjali was the first to respond confidently. The once self-doubting girl had vanished and was replaced by a brand-new Anjali, who firmly believed that girls could achieve anything they set their minds to.</div>
+      </div>
+    </div>
+    <div class="comic-stage mt-l" style="margin-bottom:0">
+      <p class="scene-desc"><b>范文（相信自己）：</b>Among countless compliments, Anjali heard a little sweet voice, "Bravo, Anjali!" A little girl looked up at her, eyes wide with surprise: "I didn't know girls could play tabla." "Girls can do everything boys do," Anjali beamed, "Never dim your light."</p>
+    </div>
+    <div class="teacher-note-label">【文本框】课堂批注</div>
+    <div class="teacher-note" contenteditable="true" data-key="clinic5" data-placeholder="点击此处输入批注…"></div>
+    <div class="notes">讲评⑤：主旨 = 相信自己 + 女孩能做任何事，回扣海报。</div>
+    <button class="comic-peek-btn" data-target="peek5" title="查看分镜漫画">✏️</button>
+    <div class="comic-peek" id="peek5">
+      <img src="images/panel-11.png" alt="Panel 11 · The Slogan">
+      <img src="images/panel-01.png" alt="Panel 1 · The Taunt">
+    </div>
+  </section>
+
+  <!-- L9. ChatGPT 范文 -->
+  <section class="slide" data-title="ChatGPT 范文">
+    <p class="page-kicker">Model · ChatGPT</p>
+    <h2 class="h2">ChatGPT 完整范文（两段）</h2>
+    <div class="crit-grid two" style="margin-top:14px">
+      <div class="crit-card">
+        <h3>Para.1 · 海报与蜕变</h3>
+        <div class="model-passage">Stepping out of the bathroom, Anjali saw some inspiring posters on the wall. One depicted a young woman holding a tabla with the words, "Rhythm is not gendered — perseverance crafts the artist." The message resonated deeply with her, washing away her doubts and fears. Anjali's spirit rekindled; she straightened her back, her resolve hardening. She decided then and there that her performance at the recital would speak for her dedication and talent. With each beat she practiced, her confidence grew. By the day of the recital, Anjali was more prepared than ever, turning her anxiety into an electrifying performance that captivated everyone in the audience.</div>
+      </div>
+      <div class="crit-card">
+        <h3>Para.2 · 道歉与升华</h3>
+        <div class="model-passage">After the recital, Deepak walked up to Anjali. His expression was one of awe and remorse. "Anjali, I was wrong," he said earnestly. "Your playing was the highlight of the evening. I'm sorry for how I treated you; you truly are a remarkable musician." Anjali nodded, accepting his apology with a gracious smile. "Thank you, Deepak. Let's both keep pushing ourselves and support each other as musicians, regardless of anything else," she responded. This moment was more than a personal victory; it was a testament to her belief that with hard work and belief in oneself, any barrier could be overcome.</div>
+      </div>
+    </div>
+    <div class="notes">ChatGPT 范文：结构完整，两段分别完成 A 线与 B 线。</div>
+  </section>
+
+  <!-- L10. 学生佳作 -->
+  <section class="slide" data-title="学生佳作对比">
+    <p class="page-kicker">Student Work</p>
+    <h2 class="h2">学生佳作 · 对比讲评</h2>
+    <div class="crit-grid three" style="margin-top:14px">
+      <div class="crit-card">
+        <h3>佳作 1</h3>
+        <p class="scene-desc"><b>Para.1：</b>Among them, one dazzling tabla poster stood out with a bold slogan reading "Play for yourself." At these uplifting words, Anjali felt a blazing flame of determination ignited in her chest: She will secure the concert opportunity, not by her gender but by her competence. Ultimately, the decisive recital came. Anjali, who left the taunts and teases aside, braved the stage and played the tabla freely and fluidly. Mr. Zakir announced the winner — Anjali! She made it!</p>
+        <p class="scene-desc"><b>Para.2：</b>After the recital, Deepak walked up to Anjali. Instead of wearing the usual mean expression, he drooped his head in shame, murmuring, "Your performance deserves the honor." Hearing the heartfelt praise, Anjali couldn't help but curve her lips. Heart brimming with a new dose of confidence, Anjali dedicated herself to the demanding practice sessions with Mr. Zakir. She now was fully convinced that music offers equality for all, regardless of gender.</p>
+      </div>
+      <div class="crit-card">
+        <h3>佳作 2</h3>
+        <p class="scene-desc"><b>Para.1：</b>One striking image caught her eye: a young woman, immersed in playing the tabla, beneath the bold slogan "Gender is no barrier, simply go and play!" These powerful words reignited a blazing flame of determination within her. Rather than surrender to doubt, she resolved to redouble her efforts and fight back, proving that her skill, not her gender, should define her success. In the days that followed, Anjali dedicated herself completely, sharpening her craft and inching ever closer to perfection.</p>
+        <p class="scene-desc"><b>Para.2：</b>After the recital, Deepak walked up to Anjali. His sudden presence took Anjali off guard, prompting her to assume a defensive posture. But this time, she saw a change in him. Gone was his usual mean sneer; his head was bowed in shame. "Your performance was truly remarkable—I regret my earlier words," he stammered, visibly embarrassed. As Anjali accepted his apology with a forgiving smile, a warm current surged through her heart. Indeed, she had proven that a girl could excel in anything she set her heart on.</p>
+      </div>
+      <div class="crit-card">
+        <h3>佳作 3</h3>
+        <p class="scene-desc"><b>Para.1：</b>"Music knows no gender." "Savor the charm of music!" She roamed her gaze on them. The energetic words somehow put a bandage on her broken heart, mutely telling her, "you should give it another try." And so she did. Anjali channelled double efforts into practice and her efforts paid off.</p>
+        <p class="scene-desc"><b>点评：</b>标语直接点题「音乐无性别」；「put a bandage on her broken heart」比喻新颖，情感过渡自然。篇幅略短，若补足表演细节与 Deepak 互动更完整。</p>
+      </div>
+    </div>
+    <div class="notes">学生佳作：三篇对比，观察标语扣题、体态与内心描写、主旨回扣的差异。</div>
+  </section>
+
+  <!-- L11. 自查清单 -->
+  <section class="slide" data-title="续写自查清单">
+    <p class="page-kicker">Self-check</p>
+    <h2 class="h2">续写自查清单 <span style="font-size:16px;font-weight:700" id="check-count"></span></h2>
+    <div class="crit-grid two" style="margin-top:14px">
+      <ul class="check-list">
+        <li><label><input type="checkbox"> Para.1 以海报开头，标语扣牢「音乐无性别 / 做自己」而非泛泛鼓励</label></li>
+        <li><label><input type="checkbox"> Anjali 反应写具体：体态 / 内心活动 / 与 tabla 的回忆，至少两类</label></li>
+        <li><label><input type="checkbox"> 训练段有过渡句 + 「无视偏见」的表述</label></li>
+        <li><label><input type="checkbox"> 演出段明确写到表演成功（可写观众反应）</label></li>
+      </ul>
+      <ul class="check-list">
+        <li><label><input type="checkbox"> Deepak 道歉自然（羞愧神态 / 真心话），Anjali 反应不落俗套</label></li>
+        <li><label><input type="checkbox"> 主旨回扣海报：相信自己 / 女孩能做任何事</label></li>
+        <li><label><input type="checkbox"> 情节完整：A1-A3 与 B1-B3 要点全部覆盖</label></li>
+        <li><label><input type="checkbox"> 语言表达：有地道短语，无中式英语</label></li>
+      </ul>
+    </div>
+    <div class="comic-stage mt-l" style="margin-bottom:0">
+      <p class="scene-desc"><b>满分口诀：</b>海报扣题 → 反应具体 → 训练无视偏见 → 表演必成功 → 道歉显真诚 → 主旨回扣海报。</p>
+    </div>
+    <div class="notes">自查清单：讲评后逐项勾选，快速定位失分点。</div>
+  </section>
+
+  <!-- 18. Thanks -->
+  <section class="slide center tc" data-title="结尾">
