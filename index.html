@@ -2178,8 +2178,9 @@ window.addEventListener('load', fitAllSlides);
   /* ===== 智谱 GLM-Image Key 自动保存（由 Marvis 注入） ===== */
   (function(){
     try{
-      if(!localStorage.getItem('comic_img_key')){
-        localStorage.setItem('comic_img_key', '78b05970e2d642ba923e654d762bb684.9m2o0GHkKc1jgaga');
+      var cur = localStorage.getItem('comic_img_key') || '';
+      if(!cur || cur === '78b05970e2d642ba923e654d762bb684.9m2o0GHkKc1jgaga'){
+        localStorage.setItem('comic_img_key', '92b50c41560b4fb7971e0ea3b3890910.5PalDq2IG250xHUy');
       }
     }catch(e){}
   })();
