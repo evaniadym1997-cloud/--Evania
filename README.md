@@ -9,9 +9,9 @@ AIGC:
     ReservedCode2: PLA3luUfa8KzWiGKbpAqBAR+mdMSPeMvy4lJfCJCQP1JWKQ3cm0N8wcMY4gSauAZ/NiM/lImz5ogHWwLEN7PZrdLhG4nJttBf+1TOWCbk5qhfSb6wVZEY0rSxCCmdsctszdrQ6VCwR+oZp/DYjYjvlCKnrq4swiBb0ChA64vkHRyvu6eY7NOWuFzV/c=
 ---
 
-# 讲评网页生成器（通用版 · 分镜漫画 + 讲评）
+# 漫画故事板
 
-基于漫画 + 讲评结构的可交互 HTML 网页生成器。页面内置「＋ 导入」面板：上传或拖入 Word（.docx）/ PDF / TXT，或直接粘贴文本后，复制指令发送给 Marvis，即可自动完成 **文本 → Image Prompt → 逐格渲染漫画图片（迪士尼风格统一）→ 可交互 HTML 分镜漫画 + 读后续写讲评** 的完整流水线。
+基于漫画 + 讲评结构的可交互 HTML 网页生成器。页面内置「＋ 导入」面板：上传或拖入 Word（.docx）/ PDF / TXT / Markdown，或直接粘贴文本后，网页端**自动分析并生成**完整内容 —— 无需再单独发送给 Marvis。
 
 ## 功能特性
 
@@ -20,8 +20,8 @@ AIGC:
 - 四段式思维导图、人物关系图、两栏/三栏并列对比
 - 可打字文本框、涂鸦工具栏（含放大镜）、页码 xx/30
 - info-fold 折叠块，讲评部分以点击动作展开具体内容
-- 「＋ 导入」面板：拖入 / 上传 / 粘贴 → 自动提取文本 → 复制生成指令发送给 Marvis
-- 自动生成链路：文本 → 14 格分镜 Image Prompt → baoyu-image-gen 逐格渲染（Disney 2D 风格统一）→ 组装可交互 HTML（分镜漫画 + 讲评）
+- 「＋ 导入」面板：拖入 / 上传 / 粘贴 → 自动提取文本 → 一键生成漫画故事板
+- 自动生成链路：文本 → 分句/分段 → 14 格分镜 Image Prompt → 逐格渲染漫画图片（Disney 2D 风格统一，可选智谱 GLM-Image API；未配置 Key 时使用 SVG 占位图）→ 组装可交互 HTML（分镜漫画 + 讲评）
 
 ## 使用方式
 
@@ -30,11 +30,8 @@ AIGC:
    - 拖入 `.docx` / `.pdf` / `.txt` / `.md` 文件，或点击选择文件；
    - 或直接在文本框粘贴文章 / 课件原文；
    - 提取出的文本会显示在「提取结果预览」中，可手动编辑补充；
-   - 点击「复制文本 · 发送给 Marvis 自动生成讲评」，将复制的指令粘贴给 Marvis；
-3. Marvis 按指令自动执行：
-   - 将文本拆分为 14 格分镜（Panel 1-14），为每格编写详细 Image Prompt；
-   - 使用 baoyu-image-gen 逐格渲染漫画图片（3:4、2K，全篇 Disney 2D 风格统一，角色/服装/色彩光影一致）；
-   - 组装为可交互 HTML 分镜漫画 + 读后续写讲评（正文不小于 27px，逐框点击展开，支持键盘翻页）。
+   - （可选）在「智谱 GLM-Image Key」填入 API Key，用于渲染真实 Disney 风格分镜图；留空则生成 SVG 占位图；
+   - 点击「自动分析并生成漫画故事板」，网页端直接完成：文本 → 14 格分镜 → Image Prompt → 逐格渲染（串行调用）→ 组装分镜漫画 + 读后续写讲评，并自动跳转到生成结果。
 
 > 说明：`.docx` 与 `.pdf` 解析依赖 CDN 在线加载（mammoth / pdf.js），离线环境请直接粘贴文本。
 

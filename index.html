@@ -2,7 +2,7 @@
 <html lang="zh-CN" data-theme="sunset-warm">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Anjali's Tabla Dream · 漫画故事板</title>
+<title>漫画故事板</title>
 <link rel="stylesheet" href="assets/fonts.css">
 <link rel="stylesheet" href="assets/base.css">
 <link rel="stylesheet" id="theme-link" href="assets/themes/sunset-warm.css">
@@ -946,7 +946,7 @@
     <div>
       <p class="kicker">The End</p>
       <h1 class="h1 anim-rise-in" data-anim="rise-in" style="font-size:52px;line-height:1.15">GENDER IS NO BARRIER —<br><span class="gradient-text">SIMPLY GO AND PLAY!</span></h1>
-      <p class="lede" style="margin:20px auto;max-width:560px">Anjali's Tabla Dream · 14-Panel Disney-Style Storyboard</p>
+      <p class="lede" style="margin:20px auto;max-width:560px">漫画故事板 · 导入文档自动生成分镜漫画 + 讲评</p>
       <p class="dim" style="font-size:13px">按 ← → 翻页 · T 切换主题 · A 切换动效 · F 全屏 · S 演讲者模式 · O 概览</p>
     </div>
     <div class="notes">结尾页：点题标语与操作提示。</div>
@@ -957,7 +957,7 @@
 <button class="import-fab" id="import-fab" title="导入文档，自动生成讲评">＋ 导入</button>
 <div class="import-modal" id="import-modal">
   <div class="import-box">
-    <div class="import-head"><span>导入文档 · 自动生成讲评</span><button class="import-close" id="import-close">✕ 关闭</button></div>
+    <div class="import-head"><span>导入文档 · 自动生成漫画故事板</span><button class="import-close" id="import-close">✕ 关闭</button></div>
     <div class="import-body">
       <div class="import-drop" id="import-drop">
         <div>拖入 Word（.docx）/ PDF / TXT 文件到这里</div>
@@ -969,8 +969,10 @@
       <div class="import-status" id="import-status"></div>
       <div class="import-preview-label">提取结果预览（可编辑）</div>
       <textarea id="import-preview" placeholder="解析出的文本会显示在这里，可手动修改补充"></textarea>
+      <div class="import-preview-label" style="margin-top:12px">图像 API Key（可选）</div>
+      <input type="password" id="import-key" placeholder="智谱 GLM-Image API Key（留空则自动生成占位分镜图，配置后逐格渲染迪士尼风格漫画）" style="width:100%;padding:10px 12px;border:1px solid rgba(0,0,0,.18);border-radius:10px;font-size:14px;box-sizing:border-box;color:var(--text-1,#333);background:var(--surface,#fff);">
       <div class="import-actions">
-        <button class="import-gen" id="import-gen">复制文本 · 发送给 Marvis 自动生成讲评</button>
+        <button class="import-gen" id="import-gen">自动分析并生成漫画故事板</button>
       </div>
     </div>
   </div>
@@ -1705,7 +1707,7 @@ window.addEventListener('load', fitAllSlides);
   });
 })();
 
-// ===== 导入文档：拖入/上传/粘贴 → 提取文本 → 交给 Marvis 生成讲评 =====
+// ===== 导入文档：拖入/上传/粘贴 → 提取文本 → 自动分析并生成漫画故事板 =====
 (function(){
   var fab = document.getElementById('import-fab');
   var modal = document.getElementById('import-modal');
@@ -1786,7 +1788,11 @@ window.addEventListener('load', fitAllSlides);
     setStatus('不支持的文件类型：' + ext + '（支持 .docx / .pdf / .txt / .md）');
   }
 
-  fab.addEventListener('click', function(){ modal.classList.add('open'); });
+  fab.addEventListener('click', function(){
+    modal.classList.add('open');
+    var keyInput = document.getElementById('import-key');
+    if(keyInput && !keyInput.value) keyInput.value = getImgKey();
+  });
   closeBtn.addEventListener('click', function(){ modal.classList.remove('open'); });
   modal.addEventListener('click', function(e){ if(e.target === modal) modal.classList.remove('open'); });
   fileBtn.addEventListener('click', function(){ fileInput.click(); });
@@ -1802,32 +1808,332 @@ window.addEventListener('load', fitAllSlides);
     var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
     if(f) parseFile(f);
   });
+  /* ================= 自动生成引擎：导入 → 分析 → 分镜 → 讲评 ================= */
+  var IMG_API_URL = 'https://open.bigmodel.cn/api/paas/v4/images/generations';
+  var DISNEY_STYLE = 'Disney 2D animation style, soft rounded characters, large expressive eyes, smooth clean line art, painterly backgrounds, warm vibrant color palette, consistent character design (same hairstyle, clothing, skin tone and proportions as the first panel) throughout, no photorealistic, no cel-shading, no 3D render, cinematic composition.';
+  var CN_STOP = ['一个','可以','没有','这个','那个','他们','我们','你们','自己','时候','什么','已经','还是','因为','所以','但是','如果','怎么','知道','看到','觉得','故事','不过','就是','只是','起来','出来','过来','这样','那样','现在','当时','然后','最后','开始','终于','忽然','突然','笑着','说着','看着','想到'];
+
+  function getImgKey(){ try{ return localStorage.getItem('comic_img_key') || ''; }catch(e){ return ''; } }
+  function setImgKey(k){ try{ localStorage.setItem('comic_img_key', k || ''); }catch(e){} }
+  function escHtml(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function truncate(s, n){ s = String(s || ''); return s.length > n ? s.slice(0, n) + '…' : s; }
+
+  function splitSentences(text){
+    var paras = String(text||'').replace(/\r/g,'').split(/\n+/).map(function(s){ return s.trim(); }).filter(Boolean);
+    var out = [];
+    paras.forEach(function(p){
+      var parts = p.split(/([.!?。！？；;]+)/);
+      var cur = '';
+      for(var i=0;i<parts.length;i++){
+        cur += parts[i];
+        if(/([.!?。！？；;]+)$/.test(parts[i]) && cur.trim()){ out.push(cur.trim()); cur=''; }
+      }
+      if(cur.trim()) out.push(cur.trim());
+    });
+    return out;
+  }
+
+  function chunkSentences(sents, n){
+    if(!sents.length) return [];
+    if(sents.length <= n) return sents.map(function(s){ return [s]; });
+    var per = Math.ceil(sents.length / n);
+    var out = [];
+    for(var i=0;i<sents.length && out.length<n;i+=per){ out.push(sents.slice(i, i+per)); }
+    return out;
+  }
+
+  function detectNames(text){
+    var names = {}, out = [];
+    var skip = {'The':1,'A':1,'An':1,'This':1,'That':1,'It':1,'He':1,'She':1,'They':1,'We':1,'I':1,'My':1,'His':1,'Her':1,'But':1,'And':1,'So':1,'When':1,'Then':1,'There':1,'Their':1,'One':1,'Two':1,'In':1,'On':1,'At':1,'For':1,'With':1,'As':1,'If':1,'Not':1,'No':1,'Yes':1,'Or':1,'Its':1,'Our':1,'Your':1,'You':1,'What':1,'Who':1,'Where':1,'Why':1,'How':1,'All':1,'Some':1,'After':1,'Before':1,'Because':1,'Until':1,'While':1,'During':1,'Every':1,'Each':1,'Both':1,'Only':1,'Just':1,'Even':1,'Still':1,'Also':1,'Very':1,'Too':1,'Now':1,'Here':1,'Again':1,'Soon':1,'Today':1,'Suddenly':1,'Finally':1,'Never':1,'Always':1,'Together':1,'Toward':1,'Towards':1,'Inside':1,'Outside':1,'Behind':1,'Above':1,'Below':1,'Down':1,'Up':1,'Out':1,'Off':1,'Back':1,'Away':1,'Over':1,'Under':1,'Around':1,'Between':1,'Through':1,'Across':1,'Along':1,'Against':1,'From':1,'Into':1,'About':1,'Like':1,'Without':1,'Could':1,'Would':1,'Should':1,'Must':1,'May':1,'Might':1,'Can':1,'Will':1,'Shall':1,'Did':1,'Does':1,'Do':1,'Has':1,'Have':1,'Had':1,'Was':1,'Were':1,'Be':1,'Been':1,'Being':1,'Am':1,'Is':1,'Are':1,'Mr':1,'Mrs':1,'Ms':1,'Dr':1,'OK':1,'Okay':1};
+    var re = /\b([A-Z][a-zA-Z]{2,14})(?:['’]s)?\b/g, m;
+    while((m = re.exec(text))){ var w = m[1]; if(!skip[w]) names[w] = (names[w]||0)+1; }
+    Object.keys(names).filter(function(k){ return names[k]>=2; }).sort(function(a,b){ return names[b]-names[a]; }).slice(0,8).forEach(function(k){ out.push({name:k, count:names[k]}); });
+    var cn = {}, cm;
+    var cnRe = /([\u4e00-\u9fa5]{2,4})(?=[\u4e00-\u9fa5]|[\s，。！？；：,.!?;:]|$)/g;
+    while((cm = cnRe.exec(text))){ var w2 = cm[1]; if(CN_STOP.indexOf(w2)<0) cn[w2]=(cn[w2]||0)+1; }
+    Object.keys(cn).filter(function(k){ return cn[k]>=3; }).sort(function(a,b){ return cn[b]-cn[a]; }).slice(0,8).forEach(function(k){ out.push({name:k, count:cn[k]}); });
+    return out;
+  }
+
+  function pickTitle(text, sents){
+    var firstLine = String(text||'').replace(/\r/g,'').split(/\n+/).map(function(s){ return s.trim(); }).filter(Boolean)[0] || '';
+    if(firstLine && firstLine.length <= 40) return firstLine;
+    if(sents.length) return sents[0].slice(0, 32);
+    return '新漫画故事板';
+  }
+
+  function buildPrompt(idx, chunk, title, names){
+    var plot = chunk.join(' ').slice(0, 400);
+    var chars = names.slice(0,3).map(function(c){ return c.name; }).join(', ');
+    var shot = ['Wide cinematic shot','Medium shot','Close-up shot','Over-the-shoulder shot','Establishing shot','Two-shot','Low-angle shot','High-angle shot'][idx % 8];
+    return shot + ' of ' + truncate(plot, 300) + (chars ? ' Characters: ' + chars + '.' : '') + ' ' + DISNEY_STYLE;
+  }
+
+  function placeholderImg(n, title, keyed){
+    var note = keyed ? '正在渲染…' : '未配置图像 Key · 占位图';
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="768" height="1024" viewBox="0 0 768 1024">' +
+      '<defs><linearGradient id="pg'+n+'" x1="0" y1="0" x2="1" y2="1">' +
+      '<stop offset="0" stop-color="#ffd9a0"/><stop offset="0.5" stop-color="#ffb37a"/><stop offset="1" stop-color="#e88a5a"/></linearGradient></defs>' +
+      '<rect width="768" height="1024" fill="url(#pg'+n+')"/>' +
+      '<circle cx="580" cy="160" r="90" fill="rgba(255,255,255,.18)"/>' +
+      '<circle cx="120" cy="860" r="140" fill="rgba(255,255,255,.12)"/>' +
+      '<text x="384" y="430" text-anchor="middle" font-size="120" font-family="Arial, sans-serif" font-weight="bold" fill="rgba(255,255,255,.92)">Panel '+n+'</text>' +
+      '<text x="384" y="516" text-anchor="middle" font-size="40" font-family="Arial, sans-serif" fill="rgba(255,255,255,.88)">'+escHtml(truncate(title, 26))+'</text>' +
+      '<text x="384" y="640" text-anchor="middle" font-size="30" font-family="Arial, sans-serif" fill="rgba(120,60,30,.75)">'+note+'</text>' +
+      '</svg>';
+    return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+  }
+
+  function renderWithGLM(prompt, key){
+    return fetch(IMG_API_URL, {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + key, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'glm-image', prompt: prompt, size: '1024x1024' })
+    }).then(function(res){
+      return res.json().then(function(data){ return { ok: res.ok, data: data }; });
+    }).then(function(r){
+      if(!r.ok) throw new Error((r.data && r.data.error && r.data.error.message) || ('HTTP ' + r.status));
+      var url = r.data && r.data.data && r.data.data[0] && r.data.data[0].url;
+      if(!url) throw new Error('API 未返回图片地址');
+      return fetch(url).then(function(ir){ return ir.blob(); });
+    }).then(function(blob){
+      return new Promise(function(res, rej){
+        var fr = new FileReader();
+        fr.onload = function(){ res(fr.result); };
+        fr.onerror = function(){ rej(new Error('读取图片失败')); };
+        fr.readAsDataURL(blob);
+      });
+    });
+  }
+
+  function renderPanelsSequential(items, key){
+    var chain = Promise.resolve();
+    items.forEach(function(it){
+      chain = chain.then(function(){
+        return renderWithGLM(it.prompt, key).then(function(dataUrl){
+          var img = document.querySelector('[data-panel-img="' + it.idx + '"]');
+          if(img){ img.src = dataUrl; img.classList.add('rendered'); }
+        }).catch(function(e){
+          console.warn('panel ' + it.idx + ' render failed:', e && e.message);
+        });
+      });
+    });
+    return chain;
+  }
+
+  function buildSlides(analysis){
+    var html = '';
+    var t = analysis.title, sents = analysis.sents, names = analysis.names, chunks = analysis.chunks, prompts = analysis.prompts;
+    var nameList = names.map(function(c){ return c.name; }).join(' / ') || '（未检测到明确人名，可在文本预览中标注）';
+    var nameCards = names.slice(0,6).map(function(c){
+      var sample = truncate((sents.join(' ').split(c.name).filter(Boolean)[0] || ''), 70);
+      return '<div style="background:linear-gradient(160deg,color-mix(in srgb,var(--surface) 95%,var(--accent) 5%),var(--surface));border:1px solid color-mix(in srgb,var(--accent) 26%,transparent);border-radius:14px;padding:12px 16px"><b style="color:var(--accent)">' + escHtml(c.name) + '</b><div class="dim" style="font-size:16px;margin-top:4px">出现 ' + c.count + ' 次 · ' + escHtml(sample) + '</div></div>';
+    }).join('');
+
+    html += '<section class="slide center tc" data-title="生成故事板 · 封面">' +
+      '<div style="max-width:920px;margin:0 auto">' +
+      '<p class="kicker">Auto-Generated Storyboard · 自动生成漫画故事板</p>' +
+      '<h1 class="h1 anim-rise-in" data-anim="rise-in" style="font-size:56px;line-height:1.12">' + escHtml(truncate(t, 30)) + '</h1>' +
+      '<p class="lede" style="margin:18px auto 8px;max-width:660px">由导入文档自动分析生成：14 格分镜漫画（Disney 2D 统一风格）+ 读后续写讲评。' + (names.length ? '检测到角色：' + escHtml(nameList) : '') + '</p>' +
+      '<div style="margin-top:28px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">' +
+      '<span class="emotion-tag">🎨 Disney 2D 统一风格</span><span class="emotion-tag">📖 14 Panels</span><span class="emotion-tag">✏️ 续写讲评</span></div>' +
+      '<p class="dim" style="margin-top:34px;font-size:13px">按 ← → 翻页 · 每格点击查看 Image Prompt</p></div>' +
+      '<div class="notes">自动生成封面：标题取自文档。</div></section>';
+
+    html += '<section class="slide" data-title="角色与设定">' +
+      '<p class="page-kicker">Global Style Guide</p>' +
+      '<h2 style="font-size:40px;line-height:1.2;margin:8px 0 14px">角色与风格设定</h2>' +
+      '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:18px">' + nameCards + '</div>' +
+      '<div class="info-fold" style="margin-top:6px"><div class="fold-head" style="cursor:pointer;user-select:none"><span style="font-size:22px;font-weight:800">🎨 风格规范（贯穿全篇）</span><span class="reveal-hint">点击展开</span></div>' +
+      '<div class="fold-body" style="display:none;margin-top:10px"><ul style="list-style:none;padding:0;margin:0;font-size:27px;line-height:1.5">' +
+      '<li>· Disney 2D 动画风格：圆润角色、大眼、干净线条、绘画感背景</li>' +
+      '<li>· 同一角色发型 / 服装 / 肤色 / 比例在每一格保持一致</li>' +
+      '<li>· 禁止赛璐璐、写实、3D 等其他风格</li>' +
+      '<li>· 全篇暖色调、光影一致</li></ul></div></div>' +
+      '<div class="notes">风格规范页：确保 14 格画风统一。</div></section>';
+
+    var panelTitles = ['开端 · 引入','情境 · 铺垫','冲突 · 触发','冲突 · 升级','挣扎 · 内心','对话 · 转折','顿悟 · 火花','决定 · 行动','尝试 · 努力','阻碍 · 考验','坚持 · 不弃','支持 · 助力','高潮 · 绽放','结局 · 回响'];
+    chunks.forEach(function(ch, i){
+      var idx = i + 1;
+      var title = panelTitles[i] || ('分镜 ' + idx);
+      var plot = ch.join(' ').slice(0, 260);
+      var cap = truncate(ch.join(' '), 220);
+      html += '<section class="slide" data-title="Panel ' + idx + '">' +
+        '<div class="comic-meta"><span class="panel-badge"><span class="panel-num">' + idx + '</span><span class="panel-title">' + escHtml(title) + '</span></span>' +
+        '<span class="emotion-tag">Auto Panel ' + idx + '</span></div>' +
+        '<div class="panel-row two">' +
+        '<div class="comic-img"><img data-panel-img="' + idx + '" src="' + placeholderImg(idx, title, false) + '" alt="Panel ' + idx + '" loading="lazy"></div>' +
+        '<div><div class="comic-stage"><p class="scene-desc">' + escHtml(plot) + '</p>' +
+        '<div class="caption"><b>Caption：</b>' + escHtml(cap) + '</div></div></div>' +
+        '<div class="prompt-box"><span class="lbl">Image Prompt</span>' + escHtml(prompts[idx-1]) + '</div>' +
+        '</div><div class="notes">自动分镜 ' + idx + '：' + escHtml(title) + '。</div></section>';
+    });
+
+    var paras = analysis.paras;
+    var summaryCells = chunks.map(function(ch, i){
+      var idx = i + 1;
+      return '<td><span class="cell-hint">Panel ' + idx + '</span><div class="cell-body">' + escHtml(truncate(ch.join(' '), 140)) + '</div></td>';
+    });
+    var rows = [];
+    for(var i=0;i<summaryCells.length;i+=4){ rows.push('<tr>' + summaryCells.slice(i,i+4).join('') + '</tr>'); }
+
+    html += '<section class="slide" data-title="任务总览">' +
+      '<p class="page-kicker">Lesson Overview</p><h2 style="font-size:40px;line-height:1.2;margin:8px 0 14px">任务总览</h2>' +
+      '<div class="crit-grid two" style="margin-bottom:16px">' +
+      '<div class="crit-card" style="padding:14px 18px"><b style="color:var(--accent)">文本统计</b><div style="font-size:27px;line-height:1.5;margin-top:6px">段落 ' + paras.length + ' · 句子 ' + sents.length + ' · 词数约 ' + analysis.wordCount + ' · 检测角色 ' + names.length + '</div></div>' +
+      '<div class="crit-card" style="padding:14px 18px"><b style="color:var(--accent)">情节走向</b><div style="font-size:27px;line-height:1.5;margin-top:6px">' + escHtml(truncate(sents[0] || '', 90)) + '</div></div></div>' +
+      '<div style="font-size:18px;font-weight:800;margin-bottom:8px;color:var(--text-2)">14 格分镜速查（逐格点击展开）</div>' +
+      '<table class="cell-table" style="width:100%">' + rows.join('') + '</table>' +
+      '<div class="teacher-note-label">讲评记录</div><div class="teacher-note" data-placeholder="在此记录课堂讲评要点…" contenteditable="true"></div>' +
+      '<div class="notes">任务总览：统计信息与 14 格速查表。</div></section>';
+
+    var q = Math.max(1, Math.floor(sents.length / 4));
+    var four = [sents.slice(0, q), sents.slice(q, q*2), sents.slice(q*2, q*3), sents.slice(q*3)];
+    var fourTitles = ['开头 · Setup', '发展 · Development', '转折 · Turning Point', '结尾 · Resolution'];
+    var branches = four.map(function(seg, i){
+      return '<div class="branch"><b>' + fourTitles[i] + '：</b>' + escHtml(truncate(seg[0] || '', 80)) + '</div>';
+    }).join('');
+    html += '<section class="slide" data-title="四段式情节导图">' +
+      '<p class="page-kicker">Plot Map</p><h2 style="font-size:40px;line-height:1.2;margin:8px 0 14px">四段式情节导图</h2>' +
+      '<div class="mindmap"><div class="hub">情节<br>结构</div><div class="branches">' + branches + '</div></div>' +
+      '<div class="teacher-note-label">讲评记录</div><div class="teacher-note" data-placeholder="记录四段结构分析…" contenteditable="true"></div>' +
+      '<div class="notes">四段式导图：自动按文本比例切分。</div></section>';
+
+    var relCards = names.slice(0,6).map(function(c){
+      return '<div class="crit-card" style="padding:12px 16px"><b style="color:var(--accent)">' + escHtml(c.name) + '</b><div style="font-size:22px;line-height:1.5;margin-top:4px">出现 ' + c.count + ' 次 · 核心角色</div><div style="font-size:18px;color:var(--text-2)">与故事主线互动，具体关系可在讲评记录补充</div></div>';
+    }).join('') || '<div class="dim" style="font-size:20px">未自动检测到明确人名，可在讲评记录中补充人物关系。</div>';
+    html += '<section class="slide" data-title="人物关系图">' +
+      '<p class="page-kicker">Characters</p><h2 style="font-size:40px;line-height:1.2;margin:8px 0 14px">人物关系图</h2>' +
+      '<div class="crit-grid three">' + relCards + '</div>' +
+      '<div class="teacher-note-label">讲评记录</div><div class="teacher-note" data-placeholder="补充人物关系说明…" contenteditable="true"></div>' +
+      '<div class="notes">人物关系：自动检测高频角色。</div></section>';
+
+    var critChunks = chunkSentences(sents, 5);
+    var critTitles = ['开端讲评','发展讲评①','发展讲评②','转折讲评','结尾讲评'];
+    var boxes = critChunks.map(function(seg, i){
+      var first = truncate(seg[0] || '', 110);
+      var longest = seg.slice().sort(function(a,b){ return b.length - a.length; })[0] || '';
+      return '<div class="box-item"><div class="box-head"><span class="box-arrow">▶</span><span class="box-label">' + critTitles[i] + ' · 点击展开</span><span class="reveal-hint">概括 / 语言点 / 建议</span></div>' +
+        '<div class="box-body" style="display:none;padding:4px 14px 12px">' +
+        '<p style="font-size:27px;line-height:1.5"><b style="color:var(--accent)">内容概括：</b>' + escHtml(first) + '</p>' +
+        '<p style="font-size:27px;line-height:1.5"><b style="color:var(--accent)">语言点：</b>' + escHtml(truncate(longest, 130)) + '</p>' +
+        '<p style="font-size:27px;line-height:1.5"><b style="color:var(--accent)">讲评建议：</b>结合上文检查情节连贯、人称与时态一致；引导学生在续写中保持风格统一、注意细节描写与情感升华。</p>' +
+        '<div class="teacher-note" data-placeholder="逐条记录学生问题与改进…" contenteditable="true"></div></div></div>';
+    }).join('');
+    html += '<section class="slide" data-title="逐段讲评①-③">' +
+      '<p class="page-kicker">Clinic · 1-3</p><h2 style="font-size:40px;line-height:1.2;margin:8px 0 14px">逐段讲评 ①-③</h2>' +
+      '<div class="lesson-reveal">' + boxes.slice(0, 3) + '</div>' +
+      '<div class="notes">逐段讲评 ①-③：点击逐框展开。</div></section>';
+    html += '<section class="slide" data-title="逐段讲评④-⑤">' +
+      '<p class="page-kicker">Clinic · 4-5</p><h2 style="font-size:40px;line-height:1.2;margin:8px 0 14px">逐段讲评 ④-⑤</h2>' +
+      '<div class="lesson-reveal">' + boxes.slice(3) + '</div>' +
+      '<div class="notes">逐段讲评 ④-⑤：点击逐框展开。</div></section>';
+
+    var model = paras.slice().sort(function(a,b){ return b.length - a.length; })[0] || '';
+    html += '<section class="slide" data-title="范文参考">' +
+      '<p class="page-kicker">Model Passage</p><h2 style="font-size:40px;line-height:1.2;margin:8px 0 14px">范文参考</h2>' +
+      '<div class="model-passage" style="font-size:27px;line-height:1.6;padding:16px 20px;border-left:4px solid var(--accent);background:color-mix(in srgb,var(--surface) 88%,var(--accent) 8%);border-radius:12px">' + escHtml(model) + '</div>' +
+      '<div class="teacher-note-label">讲评记录</div><div class="teacher-note" data-placeholder="分析范文亮点…" contenteditable="true"></div>' +
+      '<div class="notes">范文：自动提取文本中最长段。</div></section>';
+
+    var sorted = paras.slice().sort(function(a,b){ return b.length - a.length; });
+    var picks = [sorted[1] || sorted[0], sorted[2] || sorted[0], sorted[3] || sorted[0]];
+    var letters = ['A', 'B', 'C'];
+    var cards = picks.map(function(p, i){
+      return '<div class="crit-card" style="padding:14px 16px"><h3 style="margin:0 0 8px;color:var(--accent)">佳作 ' + letters[i] + '</h3><div style="font-size:22px;line-height:1.55;max-height:340px;overflow:auto">' + escHtml(truncate(p, 300)) + '</div><div class="teacher-note" data-placeholder="点评…" contenteditable="true" style="margin-top:10px;min-height:56px;font-size:22px"></div></div>';
+    }).join('');
+    html += '<section class="slide" data-title="学生佳作对比">' +
+      '<p class="page-kicker">Student Works</p><h2 style="font-size:40px;line-height:1.2;margin:8px 0 14px">学生佳作对比</h2>' +
+      '<div class="crit-grid three">' + cards + '</div>' +
+      '<div class="notes">学生佳作：自动抽取三个片段对比。</div></section>';
+
+    var checks = ['故事结构完整：开头 / 发展 / 转折 / 结尾齐全', '情节与原文衔接自然，无断裂', '人称与全文一致', '时态使用正确且统一', '包含动作 / 神态 / 心理描写', '语言表达有亮点（句式多样、用词生动）', '字数符合要求', '书写 / 排版整洁'];
+    var lis = checks.map(function(c){ return '<li><label><input type="checkbox"> <span>' + escHtml(c) + '</span></label></li>'; }).join('');
+    html += '<section class="slide" data-title="自查清单">' +
+      '<p class="page-kicker">Self Check</p><h2 style="font-size:40px;line-height:1.2;margin:8px 0 14px">自查清单</h2>' +
+      '<ul class="check-list">' + lis + '</ul>' +
+      '<div class="teacher-note-label">讲评记录</div><div class="teacher-note" data-placeholder="记录整体评价…" contenteditable="true"></div>' +
+      '<div class="notes">自查清单：可勾选。</div></section>';
+
+    return html;
+  }
+
+  function bindDynamicInteractions(root){
+    root.querySelectorAll('.lesson-reveal > .reveal-head').forEach(function(h){
+      if(h.dataset.bound) return; h.dataset.bound = '1';
+      h.addEventListener('click', function(){ h.parentElement.classList.toggle('open'); });
+    });
+    root.querySelectorAll('.box-head').forEach(function(h){
+      if(h.dataset.bound) return; h.dataset.bound = '1';
+      h.addEventListener('click', function(){
+        var box = h.closest('.box-item, .box-wrap');
+        if(box) box.classList.toggle('box-open');
+        var body = box && box.querySelector(':scope > .box-body');
+        if(body) body.style.display = box.classList.contains('box-open') ? '' : 'none';
+      });
+    });
+    root.querySelectorAll('.cell-table td').forEach(function(td){
+      if(td.dataset.bound) return; td.dataset.bound = '1';
+      td.addEventListener('click', function(){ td.classList.toggle('open'); });
+    });
+    root.querySelectorAll('.info-fold .fold-head').forEach(function(head){
+      if(head.dataset.bound) return; head.dataset.bound = '1';
+      head.addEventListener('click', function(){
+        var fold = head.closest('.info-fold');
+        var open = fold.classList.toggle('open');
+        var body = fold.querySelector(':scope > .fold-body');
+        if(body) body.style.display = open ? '' : 'none';
+      });
+    });
+    if(window.fitText) root.querySelectorAll('section.slide').forEach(function(s){ try{ window.fitText(s); }catch(e){} });
+  }
+
+  function generateStoryboard(text, key){
+    var sents = splitSentences(text);
+    if(!sents.length) throw new Error('未能从文本中提取到有效内容');
+    var paras = String(text).replace(/\r/g,'').split(/\n+/).map(function(s){ return s.trim(); }).filter(Boolean);
+    var names = detectNames(text);
+    var title = pickTitle(text, sents);
+    var chunks = chunkSentences(sents, 14);
+    while(chunks.length < 14){ chunks.push([sents[sents.length-1]]); }
+    var prompts = chunks.map(function(ch, i){ return buildPrompt(i, ch, title, names); });
+    var wordCount = (text.match(/[A-Za-z]+/g) || []).length + (text.match(/[\u4e00-\u9fa5]/g) || []).length;
+    var analysis = { title: title, sents: sents, paras: paras, names: names, chunks: chunks, prompts: prompts, wordCount: wordCount };
+
+    var deck = document.querySelector('.deck');
+    var beforeCount = deck.querySelectorAll('section.slide').length;
+    var html = buildSlides(analysis);
+    deck.insertAdjacentHTML('beforeend', html);
+    bindDynamicInteractions(deck);
+
+    if(key){
+      setStatus('已生成内容，正在逐格渲染漫画图片（共 14 格，串行执行）…');
+      renderPanelsSequential(chunks.map(function(ch, i){ return { idx: i+1, prompt: prompts[i] }; }), key)
+        .then(function(){ setStatus('全部漫画图片渲染完成'); })
+        .catch(function(e){ setStatus('部分图片渲染失败：' + (e && e.message || e) + '（可稍后重试或检查 Key）'); });
+    } else {
+      setStatus('生成完成：已生成占位分镜图；填写图像 API Key 可自动渲染迪士尼风格漫画');
+    }
+    return { startIdx: beforeCount, count: 24 };
+  }
+
   genBtn.addEventListener('click', function(){
     var text = (preview.value || paste.value || '').trim();
     if(!text){ setStatus('请先导入文件或粘贴文本'); return; }
-    var msg = '请根据以下文本，自动生成一份完整的可交互 HTML 分镜漫画 + 读后续写讲评页面：\n' +
-      '1. 将文本故事拆分为 14 格分镜（Panel 1-14），为每格编写详细的 Image Prompt；\n' +
-      '2. 全部分镜图片风格必须严格统一为迪士尼 2D 动画风格：同一角色发型/服装/肤色/比例保持一致，色彩光影一致，禁止出现赛璐璐、写实、3D 等其他风格（可参照第 1 格的角色设定贯穿全篇）；\n' +
-      '3. 使用 baoyu-image-gen 按每格 Image Prompt 逐格渲染成漫画图片（建议 3:4、2K）；\n' +
-      '4. 将图片与讲评组装为可交互浏览的 HTML：分镜漫画页 + 读后续写讲评（任务总览表格、四段式情节导图、人物关系图、逐段讲评①-⑤、范文、学生佳作对比、自查清单等结构），正文不小于 27px，每个框点击后再展开内容，支持键盘翻页与页码。\n\n' +
-      '文本内容：\n\n' + text;
-    function done(){
-      setStatus('已复制到剪贴板，请直接粘贴发送给 Marvis，将自动生成完整分镜漫画 + 讲评页面');
-    }
-    if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(msg).then(done, function(){ fallbackCopy(msg); done(); });
-    } else { fallbackCopy(msg); done(); }
+    var key = document.getElementById('import-key').value.trim();
+    setImgKey(key);
+    setStatus('正在自动分析文本并生成漫画故事板…');
+    setTimeout(function(){
+      try {
+        var res = generateStoryboard(text, key);
+        modal.classList.remove('open');
+        if(window.__deckRefresh) window.__deckRefresh(res.startIdx);
+        setStatus('生成完成：新增 ' + res.count + ' 页');
+      } catch(e){
+        setStatus('生成失败：' + (e && e.message || e));
+      }
+    }, 60);
   });
-  function fallbackCopy(text){
-    var ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.select();
-    try { document.execCommand('copy'); } catch(e){}
-    document.body.removeChild(ta);
-  }
 })();
 </script>
 <script src="assets/runtime.js"></script>

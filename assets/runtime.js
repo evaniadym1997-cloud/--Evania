@@ -40,7 +40,7 @@
   ready(function () {
     const deck = document.querySelector('.deck');
     if (!deck) return;
-    const slides = Array.from(deck.querySelectorAll('.slide'));
+    let slides = Array.from(deck.querySelectorAll('.slide'));
     if (!slides.length) return;
 
     const previewOnlyIdx = getPreviewIdx();
@@ -106,7 +106,7 @@
     }
 
     let idx = 0;
-    const total = slides.length;
+    let total = slides.length;
 
     /* ===== BroadcastChannel for presenter sync ===== */
     const CHANNEL_NAME = 'html-ppt-presenter-' + location.pathname;
@@ -960,5 +960,12 @@
     window.addEventListener('hashchange', fromHash);
     fromHash();
     go(idx);
+
+    /* ===== dynamic deck refresh (append slides at runtime) ===== */
+    window.__deckRefresh = function(goTo){
+      slides = Array.from(deck.querySelectorAll('.slide'));
+      total = slides.length;
+      go(goTo == null ? total - 1 : Math.max(0, Math.min(total-1, goTo)));
+    };
   });
 })();
