@@ -1805,9 +1805,14 @@ window.addEventListener('load', fitAllSlides);
   genBtn.addEventListener('click', function(){
     var text = (preview.value || paste.value || '').trim();
     if(!text){ setStatus('请先导入文件或粘贴文本'); return; }
-    var msg = '请根据以下文本，参照通用讲评模板（任务总览表格、四段式情节导图、人物关系图、逐段讲评①②③④⑤、范文、学生佳作对比、自查清单等结构，正文不小于27px，每框点击展开）自动生成一份新的讲评页面：\n\n' + text;
+    var msg = '请根据以下文本，自动生成一份完整的可交互 HTML 分镜漫画 + 读后续写讲评页面：\n' +
+      '1. 将文本故事拆分为 14 格分镜（Panel 1-14），为每格编写详细的 Image Prompt；\n' +
+      '2. 全部分镜图片风格必须严格统一为迪士尼 2D 动画风格：同一角色发型/服装/肤色/比例保持一致，色彩光影一致，禁止出现赛璐璐、写实、3D 等其他风格（可参照第 1 格的角色设定贯穿全篇）；\n' +
+      '3. 使用 baoyu-image-gen 按每格 Image Prompt 逐格渲染成漫画图片（建议 3:4、2K）；\n' +
+      '4. 将图片与讲评组装为可交互浏览的 HTML：分镜漫画页 + 读后续写讲评（任务总览表格、四段式情节导图、人物关系图、逐段讲评①-⑤、范文、学生佳作对比、自查清单等结构），正文不小于 27px，每个框点击后再展开内容，支持键盘翻页与页码。\n\n' +
+      '文本内容：\n\n' + text;
     function done(){
-      setStatus('已复制到剪贴板，请直接粘贴发送给 Marvis，将自动生成新讲评页面');
+      setStatus('已复制到剪贴板，请直接粘贴发送给 Marvis，将自动生成完整分镜漫画 + 讲评页面');
     }
     if(navigator.clipboard && navigator.clipboard.writeText){
       navigator.clipboard.writeText(msg).then(done, function(){ fallbackCopy(msg); done(); });
