@@ -1823,7 +1823,8 @@ window.addEventListener('load', fitAllSlides);
       .replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1')
       .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
       .replace(/`([^`]+)`/g, '$1')
-      .replace(/^#{1,6}\s+/gm, '');
+      .replace(/^#{1,6}\s+/gm, '')
+      .replace(/^para\.?\s*\d+\s*[:：.]\s*/gim, '');
   }
   function splitSentences(text){
     var paras = cleanMarkdown(text).replace(/\r/g,'').split(/\n+/).map(function(s){ return s.trim(); }).filter(Boolean);
@@ -1916,13 +1917,20 @@ window.addEventListener('load', fitAllSlides);
       if(!r.ok) throw new Error((r.data && r.data.error && r.data.error.message) || ('HTTP ' + r.status));
       var url = r.data && r.data.data && r.data.data[0] && r.data.data[0].url;
       if(!url) throw new Error('API 未返回图片地址');
-      return fetch(url).then(function(ir){ return ir.blob(); });
-    }).then(function(blob){
-      return new Promise(function(res, rej){
-        var fr = new FileReader();
-        fr.onload = function(){ res(fr.result); };
-        fr.onerror = function(){ rej(new Error('读取图片失败')); };
-        fr.readAsDataURL(blob);
+      return fetch(url).then(function(ir){ return ir.blob(); }).then(function(blob){
+        return new Promise(function(res, rej){
+          var fr = new FileReader();
+          fr.onload = function(){ res({ dataUrl: fr.result }); };
+          fr.onerror = function(){ rej(new Error('读取图片失败')); };
+          fr.readAsDataURL(blob);
+        });
+      }).catch(function(e){
+        // 智谱图片 CDN 无 CORS 头时 fetch 会被浏览器拦截，降级为直接使用原始 URL（img 标签不受 CORS 限制）
+        if(e && e.name === 'TypeError' || e && /failed to fetch|networkerror|load failed/i.test(String(e && e.message || e))){
+          console.warn('图片 CDN fetch 被拦截，降级直连 URL');
+          return { directUrl: url };
+        }
+        throw e;
       });
     });
   }
@@ -1936,16 +1944,20 @@ window.addEventListener('load', fitAllSlides);
   }
   function renderPanelsSequential(items, key){
     var chain = Promise.resolve();
+    var okCount = 0, failCount = 0, failMsg = '';
     items.forEach(function(it){
       chain = chain.then(function(){
-        return renderWithGLM(it.prompt, key).then(function(dataUrl){
+        return renderWithGLM(it.prompt, key).then(function(res){
+          okCount++;
           var img = document.querySelector('[data-panel-img="' + it.idx + '"]');
-          if(img){ img.src = dataUrl; img.classList.add('rendered'); }
+          if(img){ img.src = (res && res.directUrl) || (res && res.dataUrl) || ''; img.classList.add('rendered'); }
         }).catch(function(e){
+          failCount++;
+          var msg = friendlyImgErr((e && e.message) || '渲染失败');
+          if(!failMsg) failMsg = msg;
           console.warn('panel ' + it.idx + ' render failed:', e && e.message);
           var img = document.querySelector('[data-panel-img="' + it.idx + '"]');
           if(img){
-            var msg = friendlyImgErr((e && e.message) || '渲染失败');
             var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="768" height="1024" viewBox="0 0 768 1024"><rect width="768" height="1024" fill="#f4e2d8"/><text x="384" y="460" text-anchor="middle" font-size="44" font-family="Arial, sans-serif" font-weight="bold" fill="#a05a3a">渲染失败</text><text x="384" y="540" text-anchor="middle" font-size="28" font-family="Arial, sans-serif" fill="#a05a3a">' + escHtml(msg) + '</text></svg>';
             img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
             img.title = msg;
@@ -1953,11 +1965,79 @@ window.addEventListener('load', fitAllSlides);
         });
       });
     });
-    return chain;
+    return chain.then(function(){ return { ok: okCount, failed: failCount, total: items.length, failMsg: failMsg }; });
+  }
+
+  /* ===== 历史文本目录（每次生成自动收录） ===== */
+  var HIST_KEY = 'comic_history_v1';
+  function loadHistory(){
+    try{ var arr = JSON.parse(localStorage.getItem(HIST_KEY) || '[]'); return Array.isArray(arr) ? arr : []; }catch(e){ return []; }
+  }
+  function saveHistory(entry){
+    var arr = loadHistory();
+    var idx = -1;
+    for(var i=0;i<arr.length;i++){ if(arr[i].id === entry.id){ idx = i; break; } }
+    if(idx >= 0){ arr[idx] = entry; } else { arr.unshift(entry); }
+    if(arr.length > 50){ arr = arr.slice(0, 50); }
+    try{ localStorage.setItem(HIST_KEY, JSON.stringify(arr)); }catch(e){}
+    return arr;
+  }
+  function fmtTime(ts){
+    var d = new Date(ts);
+    function p(n){ return (n < 10 ? '0' : '') + n; }
+    return (d.getMonth()+1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+  }
+  function historyListHtml(){
+    var arr = loadHistory();
+    if(!arr.length){ return '<div class="dim" style="font-size:20px;padding:28px 0">暂无历史记录。导入文本并生成后，会自动收录到本目录。</div>'; }
+    return arr.slice(0, 20).map(function(en){
+      var prev = String(en.text || '').replace(/^para\.?\s*\d+\s*[:：.]\s*/gim, '').replace(/\s+/g, ' ').slice(0, 96);
+      return '<div class="hist-item" data-hist-id="' + escHtml(en.id) + '" style="cursor:pointer;background:color-mix(in srgb,var(--surface) 96%,var(--accent) 4%);border:1px solid color-mix(in srgb,var(--accent) 24%,transparent);border-radius:14px;padding:12px 18px;text-align:left;display:flex;gap:14px;align-items:baseline;transition:transform .15s, border-color .15s" onmouseover="this.style.borderColor=\'color-mix(in srgb,var(--accent) 55%,transparent)\';this.style.transform=\'translateX(4px)\'" onmouseout="this.style.borderColor=\'color-mix(in srgb,var(--accent) 24%,transparent)\';this.style.transform=\'none\'">' +
+        '<span style="flex:none;font-size:16px;color:var(--text-2);min-width:96px">' + escHtml(fmtTime(en.ts)) + '</span>' +
+        '<b style="flex:none;min-width:150px;max-width:240px;color:var(--accent);font-size:20px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + escHtml(truncate(en.title, 20)) + '</b>' +
+        '<span style="flex:1;font-size:17px;color:var(--text-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + escHtml(prev) + '</span>' +
+        '<span style="flex:none;font-size:14px;color:var(--text-3)">点击跳转 →</span></div>';
+    }).join('');
+  }
+  function jumpToHistory(id){
+    var arr = loadHistory();
+    var en = null;
+    for(var i=0;i<arr.length;i++){ if(arr[i].id === id){ en = arr[i]; break; } }
+    if(!en){ setStatus('未找到该历史记录'); return; }
+    var deck = document.querySelector('.deck');
+    var total = deck.querySelectorAll('section.slide').length;
+    if(en.startIdx != null && en.startIdx < total){
+      if(window.__deckRefresh) window.__deckRefresh(en.startIdx + 1);
+      setStatus('已跳转：' + en.title);
+      return;
+    }
+    setStatus('正在重新生成历史内容：' + en.title + ' …');
+    var key = document.getElementById('import-key').value.trim() || getImgKey();
+    if(key){ setImgKey(key); }
+    setTimeout(function(){
+      try{
+        var res = generateStoryboard(en.text, key, { skipSave: true });
+        en.startIdx = res.startIdx; en.ts = Date.now();
+        saveHistory(en);
+        if(window.__deckRefresh) window.__deckRefresh(en.startIdx + 1);
+        setStatus('已重新生成并跳转：' + en.title);
+      }catch(e){ setStatus('重新生成失败：' + (e && e.message || e)); }
+    }, 60);
   }
 
   function buildSlides(analysis){
     var html = '';
+    var histHtml = historyListHtml();
+    var histCount = loadHistory().length;
+    html += '<section class="slide center tc" data-title="历史目录">' +
+      '<div style="max-width:980px;margin:0 auto;width:100%">' +
+      '<p class="kicker">Library · 历史文本目录</p>' +
+      '<h2 style="font-size:44px;line-height:1.2;margin:8px 0 10px">历史文本目录</h2>' +
+      '<p class="lede" style="margin:0 auto 20px;max-width:640px">每次导入生成的内容都会自动收录于此，共 ' + histCount + ' 条，点击即可跳转到对应故事板。</p>' +
+      '<div class="hist-list" style="display:flex;flex-direction:column;gap:10px;max-height:52vh;overflow:auto;padding:2px">' + histHtml + '</div>' +
+      '</div>' +
+      '<div class="notes">历史目录：收录每次输入的新文本，便于查找跳转。</div></section>';
+
     var t = analysis.title, sents = analysis.sents, names = analysis.names, chunks = analysis.chunks, prompts = analysis.prompts;
     var nameList = names.map(function(c){ return c.name; }).join(' / ') || '（未检测到明确人名，可在文本预览中标注）';
     var nameCards = names.slice(0,6).map(function(c){
@@ -1997,7 +2077,7 @@ window.addEventListener('load', fitAllSlides);
         '<div class="comic-meta"><span class="panel-badge"><span class="panel-num">' + idx + '</span><span class="panel-title">' + escHtml(title) + '</span></span>' +
         '<span class="emotion-tag">Auto Panel ' + idx + '</span></div>' +
         '<div class="panel-row two">' +
-        '<div class="comic-img"><img data-panel-img="' + idx + '" src="' + placeholderImg(idx, title, false) + '" alt="Panel ' + idx + '" loading="lazy"></div>' +
+        '<div class="comic-img"><img data-panel-img="' + idx + '" src="' + placeholderImg(idx, title, analysis.hasKey) + '" alt="Panel ' + idx + '" loading="lazy"></div>' +
         '<div><div class="comic-stage"><p class="scene-desc">' + escHtml(plot) + '</p>' +
         '<div class="caption"><b>Caption：</b>' + escHtml(cap) + '</div></div></div>' +
         '<div class="prompt-box"><span class="lbl">Image Prompt</span>' + escHtml(prompts[idx-1]) + '</div>' +
@@ -2055,14 +2135,14 @@ window.addEventListener('load', fitAllSlides);
         '<p style="font-size:27px;line-height:1.5"><b style="color:var(--accent)">语言点：</b>' + escHtml(truncate(longest, 130)) + '</p>' +
         '<p style="font-size:27px;line-height:1.5"><b style="color:var(--accent)">讲评建议：</b>结合上文检查情节连贯、人称与时态一致；引导学生在续写中保持风格统一、注意细节描写与情感升华。</p>' +
         '<div class="teacher-note" data-placeholder="逐条记录学生问题与改进…" contenteditable="true"></div></div></div>';
-    }).join('');
+    });
     html += '<section class="slide" data-title="逐段讲评①-③">' +
       '<p class="page-kicker">Clinic · 1-3</p><h2 style="font-size:40px;line-height:1.2;margin:8px 0 14px">逐段讲评 ①-③</h2>' +
-      '<div class="lesson-reveal">' + boxes.slice(0, 3) + '</div>' +
+      '<div class="lesson-reveal">' + boxes.slice(0, 3).join('') + '</div>' +
       '<div class="notes">逐段讲评 ①-③：点击逐框展开。</div></section>';
     html += '<section class="slide" data-title="逐段讲评④-⑤">' +
       '<p class="page-kicker">Clinic · 4-5</p><h2 style="font-size:40px;line-height:1.2;margin:8px 0 14px">逐段讲评 ④-⑤</h2>' +
-      '<div class="lesson-reveal">' + boxes.slice(3) + '</div>' +
+      '<div class="lesson-reveal">' + boxes.slice(3).join('') + '</div>' +
       '<div class="notes">逐段讲评 ④-⑤：点击逐框展开。</div></section>';
 
     var model = paras.slice().sort(function(a,b){ return b.length - a.length; })[0] || '';
@@ -2121,10 +2201,15 @@ window.addEventListener('load', fitAllSlides);
         if(body) body.style.display = open ? '' : 'none';
       });
     });
+    root.querySelectorAll('.hist-item').forEach(function(item){
+      if(item.dataset.bound) return; item.dataset.bound = '1';
+      item.addEventListener('click', function(){ jumpToHistory(item.dataset.histId); });
+    });
     if(window.fitText) root.querySelectorAll('section.slide').forEach(function(s){ try{ window.fitText(s); }catch(e){} });
   }
 
-  function generateStoryboard(text, key){
+  function generateStoryboard(text, key, opts){
+    opts = opts || {};
     var sents = splitSentences(text);
     if(!sents.length) throw new Error('未能从文本中提取到有效内容');
     var paras = String(text).replace(/\r/g,'').split(/\n+/).map(function(s){ return s.trim(); }).filter(Boolean);
@@ -2138,6 +2223,9 @@ window.addEventListener('load', fitAllSlides);
 
     var deck = document.querySelector('.deck');
     var beforeCount = deck.querySelectorAll('section.slide').length;
+    if(!opts.skipSave){
+      saveHistory({ id: 'h' + Date.now() + Math.random().toString(36).slice(2, 6), title: title, text: text, ts: Date.now(), startIdx: beforeCount });
+    }
     var html = buildSlides(analysis);
     deck.insertAdjacentHTML('beforeend', html);
     bindDynamicInteractions(deck);
@@ -2145,7 +2233,11 @@ window.addEventListener('load', fitAllSlides);
     if(key){
       setStatus('已生成内容，正在逐格渲染漫画图片（共 14 格，串行执行）…');
       renderPanelsSequential(chunks.map(function(ch, i){ return { idx: i+1, prompt: prompts[i] }; }), key)
-        .then(function(){ setStatus('全部漫画图片渲染完成'); })
+        .then(function(stat){
+          if(stat.failed === 0){ setStatus('全部漫画图片渲染完成（' + stat.ok + '/' + stat.total + ' 格）'); }
+          else if(stat.ok === 0){ setStatus('漫画图片渲染失败：' + (stat.failMsg || '未知错误') + '（可稍后重试或检查 Key）'); }
+          else { setStatus(stat.ok + '/' + stat.total + ' 格渲染完成，' + stat.failed + ' 格失败：' + (stat.failMsg || '')); }
+        })
         .catch(function(e){ setStatus('部分图片渲染失败：' + (e && e.message || e) + '（可稍后重试或检查 Key）'); });
     } else {
       setStatus('生成完成：已生成占位分镜图；填写图像 API Key 可自动渲染迪士尼风格漫画');
