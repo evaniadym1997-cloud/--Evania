@@ -2,7 +2,7 @@
 <html lang="zh-CN" data-theme="sunset-warm">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>漫画故事板</title>
+<title>续写漫画讲评板 · Callie 与干草棚里的小猫（草棚救猫）</title>
 <link rel="stylesheet" href="assets/fonts.css">
 <link rel="stylesheet" href="assets/base.css">
 <link rel="stylesheet" id="theme-link" href="assets/themes/sunset-warm.css">
@@ -204,833 +204,579 @@
   .magnifier .mag-view.dragging { cursor:grabbing; }
   .magnifier .mag-pos { position:absolute; top:0; left:0; transform-origin:0 0; }
   .magnifier .mag-pos, .magnifier .mag-pos * { pointer-events:none; }
+  /* ===== Callie hayloft storyboard additions ===== */
+  .story-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:14px; margin-top:18px; }
+  .story-grid.four { grid-template-columns:repeat(4,1fr); gap:20px; }
+  .story-card { background:linear-gradient(160deg, color-mix(in srgb, var(--surface) 94%, var(--accent) 6%), var(--surface)); border:1px solid color-mix(in srgb, var(--accent) 26%, transparent); border-radius:18px; padding:10px 10px 12px; box-shadow:0 8px 22px color-mix(in srgb, var(--accent) 12%, transparent); }
+  .story-card .p-img { position:relative; border-radius:12px; overflow:hidden; background:#fff; margin-bottom:9px; aspect-ratio:16/10; }
+  .story-card img { width:100%; height:100%; object-fit:cover; display:block; }
+  .story-card .p-tag { position:absolute; top:8px; left:8px; background:color-mix(in srgb, var(--accent) 92%, #000 8%); color:#fff; font-size:13px; font-weight:900; padding:3px 10px; border-radius:999px; letter-spacing:.5px; box-shadow:0 2px 8px rgba(0,0,0,.25); }
+  .story-card .p-label { font-size:16px; font-weight:800; line-height:1.3; color:var(--text-1); text-align:center; letter-spacing:.02em; }
+  .story-card .p-note { font-size:14px; line-height:1.4; color:var(--text-2); text-align:center; margin-top:4px; opacity:.9; }
+  .qcard { background:color-mix(in srgb, var(--surface) 90%, var(--accent) 10%); border:1px dashed color-mix(in srgb, var(--accent) 45%, transparent); border-radius:14px; padding:10px 16px; margin-bottom:10px; }
+  .qcard b { color:var(--accent); }
+  .hub-pair { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:14px; align-items:stretch; }
+  .hub-pair .mindmap { margin-top:0; height:100%; }
+  .pill-row { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:26px; }
+  .pill-row .emotion-tag { font-size:15px; padding:7px 18px; }
+  .guide-strip { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-top:22px; }
+  .guide-cell { background:color-mix(in srgb, var(--surface) 92%, var(--accent) 8%); border:1px solid color-mix(in srgb, var(--accent) 26%, transparent); border-radius:16px; padding:14px 10px; text-align:center; }
+  .guide-cell b { display:block; font-size:18px; color:var(--accent); margin-bottom:6px; }
+  .guide-cell span { font-size:15px; line-height:1.45; color:var(--text-1); }
+  .panel-flow { display:flex; flex-wrap:wrap; gap:8px 10px; justify-content:center; margin-top:14px; }
+  .panel-chip { font-size:15px; font-weight:700; padding:6px 14px; border-radius:999px; background:color-mix(in srgb, var(--accent) 14%, var(--surface)); border:1px solid color-mix(in srgb, var(--accent) 36%, transparent); color:var(--text-1); }
+  .mini-flow { display:flex; flex-direction:column; gap:8px; margin-top:12px; }
+  .mini-flow .flow-line { font-size:27px; line-height:1.55; }
+
+  /* ===== 首页封面：主题短句 + 疑问句 ===== */
+  .cover-hook { text-align:center; }
+  .cover-hook .cover-line { margin:0; font-size:30px; font-weight:900; line-height:1.5; color:var(--text-1); letter-spacing:.01em; }
+  .cover-hook .cover-q { margin:10px 0 0; font-family:Georgia,'Times New Roman',serif; font-style:italic; font-size:21px; font-weight:700; color:var(--accent); letter-spacing:.05em; }
+
+  /* ===== 导览页：五步学习路径（独立 slide） ===== */
+  .guide-page { display:grid; grid-template-columns:repeat(5,1fr); gap:16px; margin-top:22px; }
+  .guide-page .guide-cell { position:relative; padding:22px 12px 30px; border:1.5px solid color-mix(in srgb, var(--accent) 34%, transparent); border-radius:18px; background:linear-gradient(165deg, color-mix(in srgb, var(--surface) 88%, var(--accent) 12%), var(--surface)); box-shadow:0 10px 26px color-mix(in srgb, var(--accent) 14%, transparent); cursor:pointer; transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease; user-select:none; }
+  .guide-page .guide-cell:hover { transform:translateY(-4px); box-shadow:0 16px 34px color-mix(in srgb, var(--accent) 24%, transparent); border-color:var(--accent); }
+  .guide-page .guide-cell b { font-size:21px; margin-bottom:8px; }
+  .guide-page .guide-cell span { font-size:15.5px; }
+  .guide-page .guide-cell .jump-hint { display:block; margin-top:10px; font-size:13px; font-weight:700; color:var(--accent); letter-spacing:.06em; opacity:.8; }
+
+  /* ===== 通用「点击展开 / 收回」折叠（点击呈现） ===== */
+  .tap-fold .tf-head { cursor:pointer; display:flex; align-items:center; gap:10px; flex-wrap:wrap; user-select:none; padding:2px 0; border-radius:10px; }
+  .tap-fold .tf-head:hover .tf-label { color:var(--accent); }
+  .tap-fold .tf-ico { display:inline-flex; align-items:center; justify-content:center; flex:0 0 auto; width:30px; height:30px; border-radius:50%; background:color-mix(in srgb, var(--accent) 16%, var(--surface)); border:1px solid color-mix(in srgb, var(--accent) 42%, transparent); color:var(--accent); transition:transform .25s ease, background .2s ease, color .2s ease; }
+  .tap-fold .tf-ico::before { content:'+'; font-size:17px; font-weight:900; line-height:1; }
+  .tap-fold.open > .tf-head .tf-ico { background:color-mix(in srgb, var(--accent) 92%, #000 8%); color:#fff; transform:rotate(180deg); }
+  .tap-fold.open > .tf-head .tf-ico::before { content:'−'; }
+  .tap-fold .tf-label { transition:color .2s; }
+  .tap-fold .tf-hint { font-size:15px; font-weight:600; color:var(--text-2); opacity:.7; }
+  .tap-fold .tf-body { display:none; }
+  .tap-fold.open > .tf-body { display:block; animation:revealFade .32s ease; }
+
+  /* 故事山 / 人物关系图：branch 点击展开 */
+  .mindmap .branch.tap-fold { padding:6px 14px 6px; }
+  .mindmap .branch.tap-fold .tf-head { padding:4px 0; }
+  .mindmap .branch .tf-label { color:var(--text-1); font-weight:700; }
+
+  /* 学生佳作卡：标题行可见，正文点击展开 */
+  .crit-card.tap-fold { padding-top:14px; }
+  .crit-card.tap-fold > .tf-head { margin:0 0 6px; }
+  .crit-card.tap-fold h3 { margin:0; font-size:27px; font-weight:800; }
+  .crit-card.tap-fold .tf-body p { margin:6px 0; }
+
+  /* 讲评① 示范链折叠 */
+  .mini-flow.tap-fold .tf-head.flow-line { cursor:pointer; margin:0; }
+  .mini-flow.tap-fold .tf-body { padding-top:2px; }
+
+  /* ===== 分镜图点击放大 ===== */
+  .img-zoom { position:fixed; inset:0; z-index:10050; display:flex; align-items:center; justify-content:center; background:rgba(8,8,12,.88); cursor:zoom-out; animation:zoomFade .22s ease; }
+  .img-zoom img { max-width:min(90vmin,1400px); max-height:90vmin; width:auto; height:auto; object-fit:contain; border-radius:10px; box-shadow:0 18px 60px rgba(0,0,0,.6); }
+  .img-zoom .zoom-close { position:fixed; right:26px; top:22px; z-index:10051; width:44px; height:44px; border-radius:50%; border:none; background:rgba(255,255,255,.16); color:#fff; font-size:22px; font-weight:900; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .2s; }
+  .img-zoom .zoom-close:hover { background:rgba(255,255,255,.32); }
+  .img-zoom .zoom-hint { position:fixed; left:50%; bottom:26px; transform:translateX(-50%); margin:0; color:rgba(255,255,255,.75); font-size:16px; font-weight:600; letter-spacing:.04em; text-align:center; }
+  .img-zoom[hidden] { display:none; }
+  @keyframes zoomFade { from { opacity:0; } to { opacity:1; } }
 </style>
 </head>
 <body data-themes="sunset-warm,soft-pastel,aurora,editorial-serif,minimal-white,rainbow-gradient" data-theme-base="assets/themes/">
 <div class="deck">
+<section class="slide center tc" data-title="封面">
+  <div style="max-width:1000px;margin:0 auto">
+    <p class="kicker" style="font-size:16px">读后续写 · 分镜漫画 + 逐板块讲评</p>
+    <h1 class="h1 anim-rise-in" data-anim="rise-in" style="font-size:56px;line-height:1.16">续写漫画讲评板 · <span class="gradient-text">Callie 与干草棚里的小猫</span></h1>
+    <p class="kicker" style="font-size:15px;letter-spacing:.3em">草棚救猫 · 聆听与坚持</p>
+    <div class="cover-hook">
+      <p class="cover-line">原来坚持相信一个声音，<span class="gradient-text">真的救下了一条小生命。</span></p>
+      <p class="cover-q">Who has got better ears?</p>
+    </div>
+    <div class="pill-row">
+      <span class="emotion-tag">🌾 Hayloft · 干草棚</span>
+      <span class="emotion-tag">🐱 谷仓小猫</span>
+      <span class="emotion-tag">🔦 深夜手电</span>
+      <span class="emotion-tag">💛 聆听与坚持</span>
+    </div>
+    <p class="dim" style="margin-top:14px;font-size:15px">五步学习路径 → 下一页</p>
+    <p class="dim" style="margin-top:22px;font-size:14px">按 ← → 翻页 · 点击标题/框/表格格子逐层展开 · T 切主题 · F 全屏 · 涂鸦右下角</p>
+  </div>
+  <div class="notes">封面：标题 + 主题短句。五步板块导航已移至下一页独立导览（本板导览 · 五步学习路径）。</div>
+</section>
 
-  <!-- 1. Cover -->
-  <section class="slide center tc" data-title="封面">
-    <div style="max-width:900px;margin:0 auto">
-      <p class="kicker">A Disney-Style Storyboard Comic · 14 Panels</p>
-      <h1 class="h1 anim-rise-in" data-anim="rise-in" style="font-size:64px;line-height:1.12">Anjali's <span class="gradient-text">Tabla</span> Dream</h1>
-      <p class="lede" style="margin:18px auto 8px;max-width:640px">一个 12 岁印度女孩 Anjali 在塔布拉鼓课堂上的成长故事 —— 从被嘲笑、自我怀疑，到被一句"性别不是障碍"点燃，最终在舞台上证明自己。</p>
-      <div style="margin-top:28px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-        <span class="emotion-tag">🎨 Modern Disney 2D</span>
-        <span class="emotion-tag">🥁 Music Classroom</span>
-        <span class="emotion-tag">💛 Courage &amp; Growth</span>
-      </div>
-      <p class="dim" style="margin-top:34px;font-size:13px">按 ← → 翻页 · T 切主题 · F 全屏 · O 概览</p>
+<section class="slide" data-title="本板导览 · 五步学习路径">
+  <p class="page-kicker">Board Guide · 本板导览</p>
+  <h2 class="h2">五步学习路径 · 本板导览</h2>
+  <div class="guide-page">
+    <div class="guide-cell" data-jump="分镜漫画 · 15格速查"><b>① 分镜漫画</b><span>15 格速查 + 逐格展示<br>分镜点击可放大查看</span><em class="jump-hint">进入板块 →</em></div>
+    <div class="guide-cell" data-jump="续写任务总览"><b>② 任务总览</b><span>两段开头句 + 问题链<br>续写任务要求速览</span><em class="jump-hint">进入板块 →</em></div>
+    <div class="guide-cell" data-jump="原文情节梳理"><b>③ 原文梳理</b><span>故事山 · 冲突 · 伏笔<br>点节点逐个看情节</span><em class="jump-hint">进入板块 →</em></div>
+    <div class="guide-cell" data-jump="讲评导览"><b>④ 写作讲评</b><span>句式 / 词汇 / 范文<br>示范句点击展开</span><em class="jump-hint">进入板块 →</em></div>
+    <div class="guide-cell" data-jump="讲评⑨ · 升华角度"><b>⑤ 升华自查</b><span>语料 · 角度 · 清单<br>对照清单自查提升</span><em class="jump-hint">进入板块 →</em></div>
+  </div>
+  <p class="dim" style="margin-top:20px;font-size:14px">点击卡片跳转到对应板块 · 也可以按 ← → 顺序浏览</p>
+  <div class="notes">导览：五步学习路径独立成页，五张卡片可点击跳转对应板块（分镜漫画 / 任务总览 / 原文梳理 / 讲评导览 / 讲评⑨升华角度）。</div>
+</section>
+<section class="slide" data-title="分镜漫画 · 15格速查">
+<p class="page-kicker">Storyboard Overview</p>
+<h2 class="h2">分镜漫画 · 15 格速查</h2>
+<div class="story-grid"><div class="story-card"><div class="p-img"><img src="images/panel-01.png" alt="Panel 1 A HARD DAY'S WORK" loading="lazy"><span class="p-tag">PANEL 1</span></div><div class="p-label">A HARD DAY'S WORK</div><div class="p-note">白天帮 Briggs 搬运干草捆，汗水直流</div></div><div class="story-card"><div class="p-img"><img src="images/panel-02.png" alt="Panel 2 A STRANGE SOUND" loading="lazy"><span class="p-tag">PANEL 2</span></div><div class="p-label">A STRANGE SOUND</div><div class="p-note">喂马时，阁楼传来一声 faint meow</div></div><div class="story-card"><div class="p-img"><img src="images/panel-03.png" alt="Panel 3 LISTENING IN THE HAYLOFT" loading="lazy"><span class="p-tag">PANEL 3</span></div><div class="p-label">LISTENING IN THE HAYLOFT</div><div class="p-note">爬上阁楼，贴近草捆侧耳细听</div></div><div class="story-card"><div class="p-img"><img src="images/panel-04.png" alt="Panel 4 “IT'S JUST A BIRD”" loading="lazy"><span class="p-tag">PANEL 4</span></div><div class="p-label">“IT'S JUST A BIRD”</div><div class="p-note">Briggs 断言「只是树上的鸟」</div></div><div class="story-card"><div class="p-img"><img src="images/panel-05.png" alt="Panel 5 SHE HEARS IT AGAIN" loading="lazy"><span class="p-tag">PANEL 5</span></div><div class="p-label">SHE HEARS IT AGAIN</div><div class="p-note">晚饭后再听——小猫的叫声还在</div></div><div class="story-card"><div class="p-img"><img src="images/panel-06.png" alt="Panel 6 ASKING DAD ONE MORE TIME" loading="lazy"><span class="p-tag">PANEL 6</span></div><div class="p-label">ASKING DAD ONE MORE TIME</div><div class="p-note">睡前请 Dad 再听一次，依然无果</div></div><div class="story-card"><div class="p-img"><img src="images/panel-07.png" alt="Panel 7 THE SCREECH OWL" loading="lazy"><span class="p-tag">PANEL 7</span></div><div class="p-label">THE SCREECH OWL</div><div class="p-note">Dad 说：不过是只 screech owl</div></div><div class="story-card"><div class="p-img"><img src="images/panel-08.png" alt="Panel 8 SHE CANNOT SLEEP" loading="lazy"><span class="p-tag">PANEL 8</span></div><div class="p-label">SHE CANNOT SLEEP</div><div class="p-note">夜里惊醒：万一真有猫被困呢？</div></div><div class="story-card"><div class="p-img"><img src="images/panel-09.png" alt="Panel 9 INTO THE DARK BARN" loading="lazy"><span class="p-tag">PANEL 9</span></div><div class="p-label">INTO THE DARK BARN</div><div class="p-note">拿起手电筒，独自走进黑暗谷仓</div></div><div class="story-card"><div class="p-img"><img src="images/panel-10.png" alt="Panel 10 TWO LITTLE EYES" loading="lazy"><span class="p-tag">PANEL 10</span></div><div class="p-label">TWO LITTLE EYES</div><div class="p-note">黑暗深处，两只小眼睛亮了起来</div></div><div class="story-card"><div class="p-img"><img src="images/panel-11.png" alt="Panel 11 CALLIE PUSHES THROUGH" loading="lazy"><span class="p-tag">PANEL 11</span></div><div class="p-label">CALLIE PUSHES THROUGH</div><div class="p-note">她一块块拨开草捆，向前推进</div></div><div class="story-card"><div class="p-img"><img src="images/panel-12.png" alt="Panel 12 SHE FREES THE KITTEN" loading="lazy"><span class="p-tag">PANEL 12</span></div><div class="p-label">SHE FREES THE KITTEN</div><div class="p-note">搬开草捆，救出发抖的小猫</div></div><div class="story-card"><div class="p-img"><img src="images/panel-13.png" alt="Panel 13 THE KITTEN IS FREE" loading="lazy"><span class="p-tag">PANEL 13</span></div><div class="p-label">THE KITTEN IS FREE</div><div class="p-note">小猫终于自由，钻进她的怀里</div></div><div class="story-card"><div class="p-img"><img src="images/panel-14.png" alt="Panel 14 “YOU REALLY DID HEAR A KITTEN”" loading="lazy"><span class="p-tag">PANEL 14</span></div><div class="p-label">“YOU REALLY DID HEAR A KITTEN”</div><div class="p-note">家人惊讶：你真的听见小猫了</div></div><div class="story-card"><div class="p-img"><img src="images/panel-15.png" alt="Panel 15 A LITTLE HOME FOR THE KITTEN" loading="lazy"><span class="p-tag">PANEL 15</span></div><div class="p-label">A LITTLE HOME FOR THE KITTEN</div><div class="p-note">用木箱为小猫搭一个温暖的家</div></div></div>
+<div class="notes">分镜漫画总览：15 格按剧情顺序速查；逐格大图见随后两页。</div>
+</section>
+<section class="slide" data-title="分镜漫画 · PANEL 1-8">
+<p class="page-kicker">Storyboard 1-8 · 白天到深夜</p>
+<h2 class="h2">分镜漫画 · PANEL 1 – 8</h2>
+<div class="story-grid four"><div class="story-card"><div class="p-img"><img src="images/panel-01.png" alt="Panel 1 A HARD DAY'S WORK" loading="lazy"><span class="p-tag">PANEL 1</span></div><div class="p-label">A HARD DAY'S WORK</div><div class="p-note">白天帮 Briggs 搬运干草捆，汗水直流</div></div><div class="story-card"><div class="p-img"><img src="images/panel-02.png" alt="Panel 2 A STRANGE SOUND" loading="lazy"><span class="p-tag">PANEL 2</span></div><div class="p-label">A STRANGE SOUND</div><div class="p-note">喂马时，阁楼传来一声 faint meow</div></div><div class="story-card"><div class="p-img"><img src="images/panel-03.png" alt="Panel 3 LISTENING IN THE HAYLOFT" loading="lazy"><span class="p-tag">PANEL 3</span></div><div class="p-label">LISTENING IN THE HAYLOFT</div><div class="p-note">爬上阁楼，贴近草捆侧耳细听</div></div><div class="story-card"><div class="p-img"><img src="images/panel-04.png" alt="Panel 4 “IT'S JUST A BIRD”" loading="lazy"><span class="p-tag">PANEL 4</span></div><div class="p-label">“IT'S JUST A BIRD”</div><div class="p-note">Briggs 断言「只是树上的鸟」</div></div><div class="story-card"><div class="p-img"><img src="images/panel-05.png" alt="Panel 5 SHE HEARS IT AGAIN" loading="lazy"><span class="p-tag">PANEL 5</span></div><div class="p-label">SHE HEARS IT AGAIN</div><div class="p-note">晚饭后再听——小猫的叫声还在</div></div><div class="story-card"><div class="p-img"><img src="images/panel-06.png" alt="Panel 6 ASKING DAD ONE MORE TIME" loading="lazy"><span class="p-tag">PANEL 6</span></div><div class="p-label">ASKING DAD ONE MORE TIME</div><div class="p-note">睡前请 Dad 再听一次，依然无果</div></div><div class="story-card"><div class="p-img"><img src="images/panel-07.png" alt="Panel 7 THE SCREECH OWL" loading="lazy"><span class="p-tag">PANEL 7</span></div><div class="p-label">THE SCREECH OWL</div><div class="p-note">Dad 说：不过是只 screech owl</div></div><div class="story-card"><div class="p-img"><img src="images/panel-08.png" alt="Panel 8 SHE CANNOT SLEEP" loading="lazy"><span class="p-tag">PANEL 8</span></div><div class="p-label">SHE CANNOT SLEEP</div><div class="p-note">夜里惊醒：万一真有猫被困呢？</div></div></div>
+<div class="notes">分镜漫画逐格展示（images/panel-01–08.png），图下为格标题与剧情提示。</div>
+</section>
+<section class="slide" data-title="分镜漫画 · PANEL 9-15">
+<p class="page-kicker">Storyboard 9-15 · 夜探谷仓到安家</p>
+<h2 class="h2">分镜漫画 · PANEL 9 – 15</h2>
+<div class="story-grid four"><div class="story-card"><div class="p-img"><img src="images/panel-09.png" alt="Panel 9 INTO THE DARK BARN" loading="lazy"><span class="p-tag">PANEL 9</span></div><div class="p-label">INTO THE DARK BARN</div><div class="p-note">拿起手电筒，独自走进黑暗谷仓</div></div><div class="story-card"><div class="p-img"><img src="images/panel-10.png" alt="Panel 10 TWO LITTLE EYES" loading="lazy"><span class="p-tag">PANEL 10</span></div><div class="p-label">TWO LITTLE EYES</div><div class="p-note">黑暗深处，两只小眼睛亮了起来</div></div><div class="story-card"><div class="p-img"><img src="images/panel-11.png" alt="Panel 11 CALLIE PUSHES THROUGH" loading="lazy"><span class="p-tag">PANEL 11</span></div><div class="p-label">CALLIE PUSHES THROUGH</div><div class="p-note">她一块块拨开草捆，向前推进</div></div><div class="story-card"><div class="p-img"><img src="images/panel-12.png" alt="Panel 12 SHE FREES THE KITTEN" loading="lazy"><span class="p-tag">PANEL 12</span></div><div class="p-label">SHE FREES THE KITTEN</div><div class="p-note">搬开草捆，救出发抖的小猫</div></div><div class="story-card"><div class="p-img"><img src="images/panel-13.png" alt="Panel 13 THE KITTEN IS FREE" loading="lazy"><span class="p-tag">PANEL 13</span></div><div class="p-label">THE KITTEN IS FREE</div><div class="p-note">小猫终于自由，钻进她的怀里</div></div><div class="story-card"><div class="p-img"><img src="images/panel-14.png" alt="Panel 14 “YOU REALLY DID HEAR A KITTEN”" loading="lazy"><span class="p-tag">PANEL 14</span></div><div class="p-label">“YOU REALLY DID HEAR A KITTEN”</div><div class="p-note">家人惊讶：你真的听见小猫了</div></div><div class="story-card"><div class="p-img"><img src="images/panel-15.png" alt="Panel 15 A LITTLE HOME FOR THE KITTEN" loading="lazy"><span class="p-tag">PANEL 15</span></div><div class="p-label">A LITTLE HOME FOR THE KITTEN</div><div class="p-note">用木箱为小猫搭一个温暖的家</div></div></div>
+<div class="notes">分镜漫画逐格展示（images/panel-09–15.png），图下为格标题与剧情提示。</div>
+</section>
+<section class="slide" data-title="讲评导览">
+  <p class="page-kicker">How to Use This Board</p>
+  <h2 class="h2">讲评导览 · 点击进入各板块</h2>
+  <div class="crit-grid two" style="margin-top:16px">
+    <div class="crit-card">
+      <h3>📖 先讲故事</h3>
+      <p><b>分镜漫画</b>（前 4 页）：15 格速查 → PANEL 1-8 → PANEL 9-15，先让情节与画面留在脑中。</p>
+      <p><b>任务总览</b>：Para.1 / Para.2 段首句与问题链——续写要往哪里走。</p>
+      <p><b>原文梳理</b>：故事山（问题 ^ 冲突解决型）+ 冲突解决 + 伏笔回应。</p>
     </div>
-    <div class="notes">开场页：介绍漫画标题、风格与主题。</div>
-  </section>
-
-  <!-- 2. Collection Gallery -->
-  <section class="slide" data-title="收藏馆 Collection">
-    <style>
-      /* ===== 收藏馆 Collection 画廊样式（仅作用于 .collection-* 类，不影响既有 slide） ===== */
-      .collection-outer { max-width:1180px; margin:0 auto; padding:6vh 24px 4vh; text-align:center; }
-      .collection-outer .page-kicker { font-size:19px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent,#c96); font-weight:800; margin:0 0 10px; }
-      .collection-outer h2.collection-h2 { font-size:44px; line-height:1.15; margin:0 0 12px; }
-      .collection-sub { font-size:27px; line-height:1.5; color:var(--text-2,#666); margin:0 auto 30px; max-width:820px; }
-      .collection-grid { display:flex; flex-wrap:wrap; gap:28px; justify-content:center; align-items:stretch; }
-      .collection-card { display:flex; flex-direction:column; gap:14px; flex:0 1 520px; min-width:0; max-width:560px; padding:18px; border-radius:20px; background:var(--surface,#fff); border:1px solid color-mix(in srgb, var(--accent,#c96) 34%, transparent); box-shadow:0 10px 26px rgba(0,0,0,.08); text-align:left; text-decoration:none; color:inherit; transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease; }
-      .collection-card:hover { transform:translateY(-4px); box-shadow:0 16px 34px rgba(0,0,0,.13); border-color:var(--accent,#c96); }
-      .collection-card .cc-cover { display:block; border-radius:14px; overflow:hidden; background:#f3efe8; border:1px solid rgba(0,0,0,.08); }
-      .collection-card .cc-cover img { display:block; width:100%; max-height:300px; object-fit:contain; }
-      .collection-card .cc-info { display:flex; flex-direction:column; gap:10px; }
-      .collection-card .cc-title { font-size:31px; font-weight:800; line-height:1.25; color:var(--text-1,#222); }
-      .collection-card .cc-meta { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
-      .collection-card .cc-date { font-size:27px; font-weight:700; line-height:1.3; color:var(--accent,#c96); }
-      .collection-card .cc-count { font-size:15px; font-weight:800; line-height:1; padding:6px 10px; border-radius:999px; background:color-mix(in srgb, var(--accent,#c96) 16%, var(--surface,#fff)); color:var(--text-2,#666); letter-spacing:.03em; }
-      .collection-card .cc-intro { font-size:27px; font-weight:600; line-height:1.45; color:var(--text-2,#555); margin:0; }
-      .collection-hint { font-size:15px; line-height:1.6; color:var(--text-2,#888); margin-top:26px; opacity:.85; }
-    </style>
-    <div class="collection-outer">
-      <p class="page-kicker">Collection Hub</p>
-      <h2 class="h2 collection-h2">收藏馆 <span class="dim" style="font-size:30px">Collection</span></h2>
-      <p class="collection-sub">这里集中管理所有已收集的续写漫画版本 —— 点击卡片即可打开对应作品。</p>
-      <div class="collection-grid" id="collection-grid"></div>
-      <p class="collection-hint">提示：← → 翻页继续浏览本站漫画 · 点卡片进入收藏版本后，浏览器返回键可回到本页</p>
+    <div class="crit-card">
+      <h3>✍️ 再讲写法</h3>
+      <p><b>句式拆解</b>（讲评②~④）：段一找猫、段二抱猫安顿的好句逐条点开。</p>
+      <p><b>词汇内容协同</b>（讲评⑤）：汗水 / 声音 / 颜色 / 语言，让内容带着词汇走。</p>
+      <p><b>优秀改写 + 范文 + 佳作</b>（讲评⑥ / 学生佳作 / ChatGPT 范文）：先模仿再超越。</p>
     </div>
-    <div class="notes">收藏馆：所有已收集续写漫画版本的总览入口。</div>
-    <script>
-      /* ============================================================
-         收藏馆注册表（Collection Registry）—— 未来新增收藏版本只改这里
-         ------------------------------------------------------------
-         【以后新增收藏版本的登记方法】
-         1. 在下方 window.COLLECTION_REGISTRY 数组中追加一个对象：
-            {
-              id:    'comic-xxx',                                    // 唯一英文 id（勿与现有条目重复）
-              title: '漫画标题 · Subtitle',                          // 收藏卡片主标题
-              date:  'YYYY-MM-DD',                                   // 生成 / 收集日期
-              intro: '一句话简介（可不带标点）',
-              cover: 'collections/comic-xxx/images/panel-01.png',    // 封面图，相对本 index.html 的路径
-              href:  'collections/comic-xxx/index.html'              // 目标版本首页，相对本 index.html 的路径
-            },
-         2. 把该版本的整套文件放入 collections/comic-xxx/ 目录，
-            确保 cover 与 href 指向的文件真实存在。
-         无需修改下方渲染函数或其它任何代码，收藏馆会自动为该版本生成卡片。
-         （若整套文件部署到 GitHub Pages，相对路径无需改动即可跨设备打开）
-         ============================================================ */
-      window.COLLECTION_REGISTRY = [
-        {
-          id: 'hayloft-comic',
-          title: '草棚救猫 · Callie and the Kitten in the Hayloft',
-          date: '2026-09-03',
-          intro: '谷仓救猫续写 · 15格分镜漫画 + 22页写作讲评',
-          cover: 'collections/hayloft-comic/images/panel-01.png',
-          href:  'collections/hayloft-comic/index.html'
-        }
-      ];
-      /* 渲染收藏馆卡片：仅读取上方注册表变量，不依赖 fetch / localStorage */
-      (function(){
-        var grid = document.getElementById('collection-grid');
-        if(!grid || !window.COLLECTION_REGISTRY) return;
-        var html = '';
-        window.COLLECTION_REGISTRY.forEach(function(item, i){
-          html += '<a class="collection-card" href="' + item.href + '" title="打开：' + item.title + '">'
-               +   '<span class="cc-cover"><img src="' + item.cover + '" alt="' + item.title + '" loading="lazy"></span>'
-               +   '<span class="cc-info">'
-               +     '<span class="cc-title">' + item.title + '</span>'
-               +     '<span class="cc-meta"><span class="cc-date">' + item.date + '</span><span class="cc-count">版本 #' + (i + 1) + '</span></span>'
-               +     '<span class="cc-intro">' + item.intro + '</span>'
-               +   '</span>'
-               + '</a>';
-        });
-        grid.innerHTML = html;
-      })();
-    </script>
-  </section>
-
-  <!-- 3. Characters & Setting -->
-  <section class="slide" data-title="角色与设定">
-    <p class="page-kicker">Global Style Guide</p>
-    <h2 class="h2">角色与设定 <span class="dim" style="font-size:15px">（全程统一）</span></h2>
-
-    <div class="grid g3 mt-l anim-stagger-list" data-anim-target>
-      <div class="char-card">
-        <h4><span class="char-swatch" style="background:#d9a441"></span>Anjali</h4>
-        <p class="dim" style="font-size:13.5px;line-height:1.65">12 岁印度女孩 · 深棕色大眼睛长睫毛 · 两条粗辫子系红丝带 · 芥末黄 salwar kameez 配金色刺绣</p>
-      </div>
-      <div class="char-card">
-        <h4><span class="char-swatch" style="background:#3e8e5a"></span>Deepak</h4>
-        <p class="dim" style="font-size:13.5px;line-height:1.65">12 岁印度男孩 · 大而深的眼睛 · 凌乱黑色短发 · 锐利眉毛 · 绿色 kurta 卷起袖子</p>
-      </div>
-      <div class="char-card">
-        <h4><span class="char-swatch" style="background:#b3452f"></span>Mr. Zakir</h4>
-        <p class="dim" style="font-size:13.5px;line-height:1.65">50 多岁印度男士 · 慈祥闪亮的眼睛 · 修剪整齐的灰胡子 · 白色 kurta 披红色披肩</p>
-      </div>
-    </div>
-
-    <div class="info-fold-list">
-      <div class="info-fold">
-        <button class="fold-head" type="button" aria-expanded="false">
-          <span class="fold-arrow">▶</span><b>场景设定</b>
-        </button>
-        <div class="fold-body"><p>温馨的印度音乐教室 —— 陶土色暖墙、木地板、编织地毯、塔布拉鼓、彩色海报，阳光透过拱形窗洒入。</p></div>
-      </div>
-      <div class="info-fold">
-        <button class="fold-head" type="button" aria-expanded="false">
-          <span class="fold-arrow">▶</span><b>对话泡泡规范</b>
-        </button>
-        <div class="fold-body"><p>对白＝白色椭圆 speech bubble（黑色手写体英文）；内心独白＝云朵形 thought bubble（浅蓝底色）；拟声词＝彩色艺术字 SFX。</p></div>
-      </div>
-      <div class="info-fold">
-        <button class="fold-head" type="button" aria-expanded="false">
-          <span class="fold-arrow">▶</span><b>Art Direction</b>
-        </button>
-        <div class="fold-body"><p>Modern Disney 2D animation（Moana / Coco / Raya 美学）—— 圆润角色、大而灵动的眼睛带高光、干净线条、暖体积光、浓郁和谐配色、电影感构图。</p></div>
-      </div>
-    </div>
-    <div class="notes">本页展示三主角与全局风格指南，后续所有分镜均沿用此设定。</div>
-  </section>
-
-  <!-- 4. Panel 1 -->
-  <section class="slide" data-title="Panel 1 · The Taunt">
-    <div class="comic-meta">
-      <span class="panel-badge"><span class="panel-num">1</span><span class="panel-title">The Taunt · 挑衅</span></span>
-      <span class="emotion-tag">Smugness / mockery</span>
-    </div>
-    <div class="panel-row two">
-      <div class="comic-img"><img src="images/panel-01.png" alt="Panel 1" loading="lazy"></div>
-      <div>
-        <div class="comic-stage">
-          <p class="scene-desc">教室全景镜头。学生们盘腿坐在编织地毯上，面前是各自的塔布拉鼓。Deepak 得意地坏笑着俯身靠近 Anjali，一手朝她比划。其他学生好奇地看过来，拱形窗外阳光温暖。</p>
-          <div class="bubble-wrap">
-            <div class="bubble speech"><small>Speech · Deepak</small>"I'll bet Anjali knows. Right, Anjali? Why don't you show us since you're the star student?"</div>
-          </div>
-          <div class="caption"><b>Caption：</b>Deepak's voice cut through the classroom like a sharp blade.</div>
-        </div>
-      </div>
-      <div class="prompt-box">
-        <span class="lbl">Image Prompt</span>Wide cinematic shot of a cozy Indian music classroom with terracotta walls, wooden floors, woven rugs, and warm sunlight streaming through arched windows. In Disney 2D animation style with soft rounded characters, large expressive eyes, smooth clean line art, and painterly backgrounds. A 12-year-old Indian boy with short messy black hair and sharp eyebrows in a green kurta leans toward a 12-year-old Indian girl with two thick dark braids tied with red ribbons in a mustard-yellow salwar kameez, sneering smugly and gesturing at her. Other students sit cross-legged with tabla drums, glancing over. A white oval speech bubble above the boy's head contains English text: "I'll bet Anjali knows. Right, Anjali? Why don't you show us since you're the star student?" Warm golden volumetric lighting, vibrant harmonious color palette, cinematic composition.
-      </div>
-    </div>
-    <div class="notes">分镜 1：Deepak 当众挑衅，让 Anjali "表演"给大家看。</div>
-  </section>
-
-  <!-- 5. Panel 2 -->
-  <section class="slide" data-title="Panel 2 · Confusion">
-    <div class="comic-meta">
-      <span class="panel-badge"><span class="panel-num">2</span><span class="panel-title">Confusion · 困惑</span></span>
-      <span class="emotion-tag">Bewilderment</span>
-    </div>
-    <div class="panel-row two">
-      <div class="comic-img"><img src="images/panel-02.png" alt="Panel 2" loading="lazy"></div>
-      <div>
-        <div class="comic-stage">
-          <p class="scene-desc">Anjali 中近景。她的大眼睛满是困惑，眉毛上扬，嘴微张，双手悬在鼓面上。轻柔的思绪气泡在她头顶飘浮，背景暖色光斑虚化。</p>
-          <div class="bubble-wrap">
-            <div class="bubble thought"><small>Thought · Anjali</small>"I wasn't trying to show off... I was just playing, like everyone else. Why is he being so mean?"</div>
-          </div>
-          <div class="caption"><b>Caption：</b>Anjali's heart sank. She had done nothing wrong.</div>
-        </div>
-      </div>
-      <div class="prompt-box">
-        <span class="lbl">Image Prompt</span>Medium close-up of a 12-year-old Indian girl with two thick dark braids tied with red ribbons in a mustard-yellow salwar kameez, in Disney 2D animation style with large expressive glossy eyes, soft rounded face, smooth clean line art, and painterly backgrounds. She sits cross-legged with a tabla drum, her large brown eyes wide with confusion, eyebrows raised, mouth slightly open, hands hovering over the drum surface. A cloud-shaped thought bubble in light blue above her head contains English text: "I wasn't trying to show off... I was just playing, like everyone else. Why is he being so mean?" Warm classroom background softly blurred with golden bokeh. Warm volumetric lighting, emotional expression.
-      </div>
-    </div>
-    <div class="notes">分镜 2：Anjali 内心困惑——她明明只是像大家一样在演奏。</div>
-  </section>
-
-  <!-- 6. Panel 3 -->
-  <section class="slide" data-title="Panel 3 · The Groan">
-    <div class="comic-meta">
-      <span class="panel-badge"><span class="panel-num">3</span><span class="panel-title">The Groan · 嘘声</span></span>
-      <span class="emotion-tag">Embarrassment</span>
-    </div>
-    <div class="panel-row two">
-      <div class="comic-img"><img src="images/panel-03.png" alt="Panel 3" loading="lazy"></div>
-      <div>
-        <div class="comic-stage">
-          <p class="scene-desc">Anjali 的手指慌乱地在鼓面上划过——手边带着运动线。前景中一名同学捂住耳朵、满脸烦躁地叹气。Anjali 僵住，双手停在半空，眼睛瞪大。</p>
-          <div class="sfx">TUK — TUK — CLACK...</div>
-          <div class="bubble-wrap">
-            <div class="bubble speech"><small>Speech · Classmate</small>"Ugh!"</div>
-          </div>
-          <div class="caption"><b>Caption：</b>The wrong note hung in the air. Anjali stopped playing at once.</div>
-        </div>
-      </div>
-      <div class="prompt-box">
-        <span class="lbl">Image Prompt</span>A 12-year-old Indian girl with two thick dark braids in a mustard-yellow salwar kameez freezes with her hands hovering over a tabla drum, large eyes wide with shock, in Disney 2D animation style with soft rounded characters, large expressive eyes, smooth clean line art, painterly backgrounds. Motion lines around her hands show she was just playing. In the blurred foreground, another young Indian student covers one ear and groans with an annoyed expression. A small white speech bubble near the foreground student contains English text: "Ugh!" Colorful stylized SFX art text floats near the tabla: "TUK — TUK — CLACK..." Warm classroom lighting, dynamic composition.
-      </div>
-    </div>
-    <div class="notes">分镜 3：错音响起，同学叹气，Anjali 当场停下。</div>
-  </section>
-
-  <!-- 7. Panel 4 -->
-  <section class="slide" data-title="Panel 4 · Sheepish">
-    <div class="comic-meta">
-      <span class="panel-badge"><span class="panel-num">4</span><span class="panel-title">Sheepish · 窘迫</span></span>
-      <span class="emotion-tag">Shame / self-doubt</span>
-    </div>
-    <div class="panel-row two">
-      <div class="comic-img"><img src="images/panel-04.png" alt="Panel 4" loading="lazy"></div>
-      <div>
-        <div class="comic-stage">
-          <p class="scene-desc">Anjali 低头看着鼓，脸颊泛红，一只手不好意思地摸着后颈，露出尴尬的微笑。Zakir 老师站在旁边，眉头微皱，正要开口——又停住，手捋着胡子。</p>
-          <div class="bubble-wrap">
-            <div class="bubble speech"><small>Speech · Anjali (quiet)</small>"I guess I don't know it that well after all..."</div>
-          </div>
-          <div class="caption"><b>Caption：</b>Her stomach was doing flip-flops. That wasn't true — not even a little.</div>
-        </div>
-      </div>
-      <div class="prompt-box">
-        <span class="lbl">Image Prompt</span>A 12-year-old Indian girl with two thick dark braids tied with red ribbons in a mustard-yellow salwar kameez looks down at her tabla drum, cheeks flushed pink, one hand rubbing the back of her neck sheepishly with a small awkward smile, in Disney 2D animation style with large expressive eyes, soft rounded face, smooth clean line art, painterly backgrounds. Beside her, a 50-year-old Indian man with a neatly trimmed grey beard and kind twinkling eyes in a white kurta with a red shawl stands with narrowed eyes, mouth slightly open as if hesitating to speak, one hand stroking his beard. A small white speech bubble near the girl contains quiet English text: "I guess I don't know it that well after all..." Warm classroom setting, gentle emotional body language.
-      </div>
-    </div>
-    <div class="notes">分镜 4：Anjali 自我怀疑——"我大概没那么会吧……"但旁白揭示这不是真的。</div>
-  </section>
-
-  <!-- 8. Panel 5 -->
-  <section class="slide" data-title="Panel 5 · The Announcement">
-    <div class="comic-meta">
-      <span class="panel-badge"><span class="panel-num">5</span><span class="panel-title">The Announcement · 公告</span></span>
-      <span class="emotion-tag">Hope / excitement</span>
-    </div>
-    <div class="panel-row two">
-      <div class="comic-img"><img src="images/panel-05.png" alt="Panel 5" loading="lazy"></div>
-      <div>
-        <div class="comic-stage">
-          <p class="scene-desc">Zakir 老师站在全班面前，一只手富有表现力地举起，眼里闪着光，带着温暖的笑容。学生们抬头专注地看着他。他举起的手边飘着小小魔法星光。前景中的 Anjali 眼中燃起希望。</p>
-          <div class="bubble-wrap">
-            <div class="bubble speech"><small>Speech · Mr. Zakir</small>"The recital is next week, everyone. Keep practicing. I will be announcing who will get to perform onstage with me at my next concert!"</div>
-          </div>
-          <div class="caption"><b>Caption：</b>Anjali's eyes lit up. She had dreamed of a moment like that.</div>
-        </div>
-      </div>
-      <div class="prompt-box">
-        <span class="lbl">Image Prompt</span>A 50-year-old Indian man with a neatly trimmed grey beard and kind twinkling eyes in a white kurta with a red shawl stands at the front of a cozy Indian music classroom, one hand raised expressively, eyes bright with excitement and a warm smile, in Disney 2D animation style with soft rounded characters, large expressive eyes, smooth clean line art, painterly backgrounds. Young Indian students sit cross-legged with tabla drums, looking up at him attentively with wide eyes. A 12-year-old girl with two braids in a mustard-yellow salwar kameez in the foreground has eyes lit up with hope. Small magical sparkles float near the man's raised hand. A large white speech bubble above him contains English text: "The recital is next week, everyone. Keep practicing. I will be announcing who will get to perform onstage with me at my next concert!" Colorful wall posters, warm golden sunlight, inspiring cinematic lighting.
-      </div>
-    </div>
-    <div class="notes">分镜 5：老师宣布下周汇演，将挑选一位学生同台演出——Anjali 燃起梦想。</div>
-  </section>
-
-  <!-- 9. Panel 6 -->
-  <section class="slide" data-title="Panel 6 · Ignored">
-    <div class="comic-meta">
-      <span class="panel-badge"><span class="panel-num">6</span><span class="panel-title">Ignored · 被无视</span></span>
-      <span class="emotion-tag">Rejection</span>
-    </div>
-    <div class="panel-row two">
-      <div class="comic-img"><img src="images/panel-06.png" alt="Panel 6" loading="lazy"></div>
-      <div>
-        <div class="comic-stage">
-          <p class="scene-desc">教室渐渐空了，学生们在背景里收拾东西。Anjali 追着 Deepak，伸出手想叫他。Deepak 故意别过头，眉头紧锁、肩膀绷紧，头也不回地走开。长长的影子铺在地板上。</p>
-          <div class="bubble-wrap">
-            <div class="bubble speech"><small>Speech · Anjali (trailing off)</small>"Deepak, can we—"</div>
-          </div>
-          <div class="caption"><b>Caption：</b>He wouldn't even look at her.</div>
-        </div>
-      </div>
-      <div class="prompt-box">
-        <span class="lbl">Image Prompt</span>A music classroom with students packing up and leaving in the background, long warm shadows stretching across the wooden floor, in Disney 2D animation style with soft rounded characters, large expressive eyes, smooth clean line art, painterly backgrounds. A 12-year-old Indian girl with two thick dark braids in a mustard-yellow salwar kameez hurries after a 12-year-old Indian boy with short messy black hair in a green kurta, reaching out one hand toward him, mouth open calling. The boy deliberately turns his head away with furrowed eyebrows and tense shoulders, walking off without looking back. A small white speech bubble near the girl contains English text: "Deepak, can we—" Warm fading afternoon light, body language showing rejection, emotional composition.
-      </div>
-    </div>
-    <div class="notes">分镜 6：Anjali 想和 Deepak 说话，却被他刻意无视。</div>
-  </section>
-
-  <!-- 10. Panel 7 -->
-  <section class="slide" data-title="Panel 7 · Overheard">
-    <div class="comic-meta">
-      <span class="panel-badge"><span class="panel-num">7</span><span class="panel-title">Overheard · 无意听到</span></span>
-      <span class="emotion-tag">Hurt / anger</span>
-    </div>
-    <div class="panel-row two">
-      <div class="comic-img"><img src="images/panel-07.png" alt="Panel 7" loading="lazy"></div>
-      <div>
-        <div class="comic-stage">
-          <p class="scene-desc">次日明亮的学校走廊。Anjali 半藏在打开的更衣柜门后，眼睛睁大、泛着受伤与愤怒的光，一只手按在胸口。背景里 Deepak 凑近扎高马尾、穿蓝裙的 Mary，捂着嘴低声说着刻薄的话。</p>
-          <div class="bubble-wrap">
-            <div class="bubble speech"><small>Whisper · Deepak</small>"People are only interested because she's the only girl in tabla class and they want her to feel special. She's not that good—"</div>
-          </div>
-          <div class="caption"><b>Caption：</b>The words struck Anjali like a physical blow.</div>
-        </div>
-      </div>
-      <div class="prompt-box">
-        <span class="lbl">Image Prompt</span>A bright school hallway with blue lockers and fluorescent lighting, in Disney 2D animation style with soft rounded characters, large expressive eyes, smooth clean line art, painterly backgrounds. A 12-year-old Indian girl with two thick dark braids in a mustard-yellow salwar kameez stands half-hidden behind an open locker door, large eyes wide and glistening with hurt and anger, one hand pressed to her chest. In the background, a 12-year-old Indian boy with short messy black hair in a green kurta leans close to a girl with a high ponytail in a blue dress, whispering behind his cupped hand with a mean expression. A small white speech bubble near the boy contains English text: "People are only interested because she's the only girl in tabla class and they want her to feel special. She's not that good—" Dramatic emotional tension, contrast between hidden girl and whispering boy.
-      </div>
-    </div>
-    <div class="notes">分镜 7：Anjali 无意间听到 Deepak 贬低她——"大家只是因为她特别才关注她"。</div>
-  </section>
-
-  <!-- 11. Panel 8 -->
-  <section class="slide" data-title="Panel 8 · The Bathroom">
-    <div class="comic-meta">
-      <span class="panel-badge"><span class="panel-num">8</span><span class="panel-title">The Bathroom · 洗手间</span></span>
-      <span class="emotion-tag">Rage / frustration</span>
-    </div>
-    <div class="panel-row two">
-      <div class="comic-img"><img src="images/panel-08.png" alt="Panel 8" loading="lazy"></div>
-      <div>
-        <div class="comic-stage">
-          <p class="scene-desc">Anjali 独自站在学校洗手间，靠在洗手台边，双拳紧握，脸因愤怒涨红，紧闭双眼深呼吸。镜中映出她愤怒颤抖的脸。冷色日光灯与她温暖色调的身影形成对比。</p>
-          <div class="bubble-wrap">
-            <div class="bubble thought"><small>Thought · Anjali</small>"It's not my fault that people make a big deal about a girl playing tabla. I make mistakes too, but I work really hard. Maybe he should too."</div>
-          </div>
-          <div class="caption"><b>Caption：</b>Her heart was pounding. She couldn't relax.</div>
-        </div>
-      </div>
-      <div class="prompt-box">
-        <span class="lbl">Image Prompt</span>A 12-year-old Indian girl with two thick dark braids in a mustard-yellow salwar kameez stands alone in a school bathroom, leaning against a white sink, fists clenched at her sides, face flushed with rage, large eyes squeezed shut taking deep breaths, in Disney 2D animation style with soft rounded face, large expressive eyes, smooth clean line art, painterly backgrounds. The bathroom mirror reflects her angry, trembling face. Tiled walls, harsh cool fluorescent lighting contrasting with her warm-toned figure. A cloud-shaped light blue thought bubble above her head contains English text: "It's not my fault that people make a big deal about a girl playing tabla. I make mistakes too, but I work really hard. Maybe he should too." Intense emotional close-up, dramatic shadows.
-      </div>
-    </div>
-    <div class="notes">分镜 8：Anjali 独自消化愤怒——"我也犯错，但我很努力，也许他该努力一点"。</div>
-  </section>
-
-  <!-- 12. Panel 9 -->
-  <section class="slide" data-title="Panel 9 · The Breaking Point">
-    <div class="comic-meta">
-      <span class="panel-badge"><span class="panel-num">9</span><span class="panel-title">The Breaking Point · 爆发</span></span>
-      <span class="emotion-tag">Despair</span>
-    </div>
-    <div class="panel-row two">
-      <div class="comic-img"><img src="images/panel-09.png" alt="Panel 9" loading="lazy"></div>
-      <div>
-        <div class="comic-stage">
-          <p class="scene-desc">Anjali 对着洗手间镜中的自己大喊，泪水顺着泛红的脸颊流下，嘴大张着发出挫败的哭喊，双手死死抓住洗手台边缘。镜中映出微微裂开、扭曲的倒影（隐喻）。黑暗压抑的色调，头顶一束刺眼的光。</p>
-          <div class="bubble-wrap">
-            <div class="bubble jagged"><small>Shout · Anjali</small>"I don't want to see a tabla or hear a tabla or play a tabla EVER AGAIN!!"</div>
-          </div>
-          <div class="caption"><b>Caption：</b>It was one of her darkest days ever.</div>
-        </div>
-      </div>
-      <div class="prompt-box">
-        <span class="lbl">Image Prompt</span>A 12-year-old Indian girl with two thick dark braids in a mustard-yellow salwar kameez shouts at her own reflection in a bathroom mirror, tears streaming down her flushed cheeks, mouth wide open in a cry of frustration, hands gripping the sink edge tightly, in Disney 2D animation style with large expressive tearful eyes, soft rounded face, smooth clean line art, painterly backgrounds. The mirror shows a slightly cracked, distorted reflection. Tiled bathroom walls, dark moody tones with a single harsh overhead light casting dramatic shadows. A jagged-edged white speech bubble near her mouth contains bold English text: "I don't want to see a tabla or hear a tabla or play a tabla EVER AGAIN!!" Raw emotional intensity, dark cinematic mood.
-      </div>
-    </div>
-    <div class="notes">分镜 9：情绪最低谷——Anjali 哭着大喊"再也不碰塔布拉鼓"。</div>
-  </section>
-
-  <!-- 13. Panel 10 -->
-  <section class="slide" data-title="Panel 10 · The Poster">
-    <div class="comic-meta">
-      <span class="panel-badge"><span class="panel-num">10</span><span class="panel-title">The Poster · 海报</span></span>
-      <span class="emotion-tag">Wonder / turning point</span>
-    </div>
-    <div class="panel-row two">
-      <div class="comic-img"><img src="images/panel-10.png" alt="Panel 10" loading="lazy"></div>
-      <div>
-        <div class="comic-stage">
-          <p class="scene-desc">Anjali（洗过脸后）走进温暖明亮的家中走廊，脚步一顿，大眼睛带着安静的惊奇向上望去，脸颊上还挂着一滴泪。墙上，一幅充满活力的海报泛着温暖金光——画着一位自信的年轻女性在打塔布拉鼓。柔和的光线从海报散发，照亮 Anjali 的脸。</p>
-          <div class="caption"><b>Caption：</b>Stepping out, something caught her eye — a poster that seemed to glow.</div>
-        </div>
-      </div>
-      <div class="prompt-box">
-        <span class="lbl">Image Prompt</span>A 12-year-old Indian girl with two thick dark braids in a mustard-yellow salwar kameez steps into a warmly lit home hallway and stops mid-step, her large brown eyes drawn upward with quiet wonder, a single tear still on her cheek, in Disney 2D animation style with large expressive eyes, soft rounded face, smooth clean line art, painterly backgrounds. On the wall, a vibrant colorful poster glows with warm golden light, depicting a confident young Indian woman playing tabla drums. Soft golden rays emanate from the poster, illuminating the girl's face with a hopeful glow. Cozy home hallway interior. Contrast between the girl's tired tearful face and the warm glowing poster. Hopeful warm cinematic lighting, emotional turning point composition.
-      </div>
-    </div>
-    <div class="notes">分镜 10：转折点——走廊里一幅闪闪发光的海报吸引了 Anjali。</div>
-  </section>
-
-  <!-- 14. Panel 11 -->
-  <section class="slide" data-title="Panel 11 · The Slogan">
-    <div class="comic-meta">
-      <span class="panel-badge"><span class="panel-num">11</span><span class="panel-title">The Slogan · 标语</span></span>
-      <span class="emotion-tag">Inspiration</span>
-    </div>
-    <div class="panel-row two">
-      <div class="comic-img"><img src="images/panel-11.png" alt="Panel 11" loading="lazy"></div>
-      <div>
-        <div class="comic-stage">
-          <p class="scene-desc">励志海报特写。一位自信的年轻印度女性长发飘逸，闭眼沉浸地打着塔布拉鼓，带着宁静的微笑。海报顶部以粗体印着标语，四周点缀小音符与暖橙色火焰图案，金色装饰边框。</p>
-          <div class="sfx" style="font-size:30px">GENDER IS NO BARRIER — SIMPLY GO AND PLAY!</div>
-          <div class="caption"><b>Caption：</b>Those powerful words reignited a blazing flame within her.</div>
-        </div>
-      </div>
-      <div class="prompt-box">
-        <span class="lbl">Image Prompt</span>Close-up of a vibrant inspirational poster on a warm wall, with a decorative golden border, in Disney 2D animation style with painterly textures and warm colors. The poster features a confident young Indian woman with flowing dark hair, eyes closed in bliss, a serene smile, playing tabla drums with both hands. Bold uppercase English text across the top of the poster reads: "GENDER IS NO BARRIER — SIMPLY GO AND PLAY!" in strong decorative lettering. Small decorative musical notes and warm orange-red flame motifs surround the woman's image. Warm fiery color palette, glowing light around the poster edges, hopeful and empowering mood.
-      </div>
-    </div>
-    <div class="notes">分镜 11：海报标语"性别不是障碍——去演奏吧！"重燃她心中的火焰。</div>
-  </section>
-
-  <!-- 15. Panel 12 -->
-  <section class="slide" data-title="Panel 12 · The Montage">
-    <div class="comic-meta">
-      <span class="panel-badge"><span class="panel-num">12</span><span class="panel-title">The Montage · 蒙太奇</span></span>
-      <span class="emotion-tag">Determination / growth</span>
-    </div>
-    <div class="panel-row two">
-      <div class="comic-img"><img src="images/panel-12.png" alt="Panel 12" loading="lazy"></div>
-      <div>
-        <div class="comic-stage">
-          <p class="scene-desc">三格分屏蒙太奇，以细金线分隔：(a) 深夜台灯下 Anjali 专注练鼓，乐谱摊开，头发微乱；(b) 手指在鼓面飞速移动的特写，运动模糊，音符发光；(c) 她擦去额头的汗，露出坚定自信的笑容，被清晨暖光逆光勾勒。角落的小日历一页页翻过。</p>
-          <div class="caption"><b>Caption：</b>Day after day, Anjali dedicated herself completely — honing her craft, inching ever closer to perfection.</div>
-        </div>
-      </div>
-      <div class="prompt-box">
-        <span class="lbl">Image Prompt</span>A three-scene split-panel montage separated by thin golden decorative lines, in Disney 2D animation style with soft rounded characters, large expressive eyes, smooth clean line art, painterly backgrounds, warm golden lighting throughout. Panel (a): A 12-year-old Indian girl with two thick dark braids in a mustard-yellow salwar kameez practices tabla late at night by a warm desk lamp, sheets of music spread out, hair slightly messy, focused determined expression. Panel (b): Extreme close-up of her fingers moving rapidly across a tabla drum surface, motion blur, glowing golden musical notes floating upward. Panel (c): The girl wipes sweat from her brow with a determined confident smile, backlit by warm morning light through a window. A small calendar icon in the corner shows pages flipping. Warm cohesive color palette, showing dedication and growth, cinematic montage composition.
-      </div>
-    </div>
-    <div class="notes">分镜 12：日复一日的刻苦练习，Anjali 不断精进。</div>
-  </section>
-
-  <!-- 16. Panel 13 -->
-  <section class="slide" data-title="Panel 13 · The Recital">
-    <div class="comic-meta">
-      <span class="panel-badge"><span class="panel-num">13</span><span class="panel-title">The Recital · 汇演</span></span>
-      <span class="emotion-tag">Triumph / passion</span>
-    </div>
-    <div class="panel-row two">
-      <div class="comic-img"><img src="images/panel-13.png" alt="Panel 13" loading="lazy"></div>
-      <div>
-        <div class="comic-stage">
-          <p class="scene-desc">汇演舞台中央，Anjali 坐在聚光灯下，以惊人的技艺与热情演奏塔布拉鼓，闭着双眼，带着宁静灿烂的笑容。金色光芒洒满舞台，发光音符从鼓面升起。暗处的观众席上 Zakir 老师骄傲地点头，其他学生惊叹地看着。Deepak 目瞪口呆，嘴微微张开。</p>
-          <div class="sfx">TIN — TIN — TA — TIN...</div>
-          <div class="caption"><b>Caption：</b>With exceptional skill and creative interpretation, Anjali easily outperformed the others.</div>
-        </div>
-      </div>
-      <div class="prompt-box">
-        <span class="lbl">Image Prompt</span>A 12-year-old Indian girl with two thick dark braids tied with red ribbons in a mustard-yellow salwar kameez sits center stage under a brilliant warm spotlight, playing tabla drums with breathtaking skill and passion, eyes closed, a serene radiant smile, in Disney 2D animation style with large expressive eyes, soft rounded face, smooth clean line art, painterly backgrounds. Golden light bathes the stage, small glowing musical notes rise from her drums. Flowing colorful SFX art text floats near the drums: "TIN — TIN — TA — TIN..." In the darkened audience, a 50-year-old Indian man with a grey beard in a white kurta nods approvingly with a proud smile, and other young students watch with awe and wide eyes. A 12-year-old boy in a green kurta in the audience looks stunned, mouth slightly open. Concert stage with rich curtains, dramatic spotlight lighting, triumphant cinematic mood.
-      </div>
-    </div>
-    <div class="notes">分镜 13：高光时刻——Anjali 以出色表现技惊四座。</div>
-  </section>
-
-  <!-- 17. Panel 14 -->
-  <section class="slide" data-title="Panel 14 · The Apology">
-    <div class="comic-meta">
-      <span class="panel-badge"><span class="panel-num">14</span><span class="panel-title">The Apology · 道歉</span></span>
-      <span class="emotion-tag">Forgiveness / reconciliation</span>
-    </div>
-    <div class="panel-row two">
-      <div class="comic-img"><img src="images/panel-14.png" alt="Panel 14" loading="lazy"></div>
-      <div>
-        <div class="comic-stage">
-          <p class="scene-desc">演出后台温暖的走廊，背景堆着塔布拉鼓箱。Deepak 走向 Anjali，羞愧地低着头，一贯的坏笑完全消失，一手局促地摸着后颈，脸颊因尴尬泛红。Anjali 站得笔直，起初双臂交叉，但神情柔和成宽容的微笑，一只手向他伸出。温暖的金光在他们之间流动。</p>
-          <div class="bubble-wrap">
-            <div class="bubble wobbly"><small>Deepak · stammering</small>"Your performance was truly remarkable... I regret my earlier words."</div>
-          </div>
-          <div class="caption"><b>Caption：</b>As Anjali accepted his apology with a forgiving smile, a warm current surged through her heart. She had proven that a girl could excel in anything she set her heart on.</div>
-        </div>
-      </div>
-      <div class="prompt-box">
-        <span class="lbl">Image Prompt</span>Classic Disney 2D animation style, exactly like a traditional Disney feature film still: soft rounded character shapes, smooth thick clean contour lines, painterly backgrounds, warm skin tones with soft gradient shading, large glossy expressive eyes, gentle volumetric golden lighting, vibrant harmonious color palette. A warmly lit backstage hallway after a concert, with tabla cases and instrument bags stacked in the background. Two 12-year-old Indian children of exactly the same age and nearly identical height stand facing each other at eye level, same stature, both standing on the same floor line. The boy Deepak: short messy black hair, sharp eyebrows, wearing the same green kurta over white pants as in the earlier classroom scene. The girl Anjali: two thick dark braids tied with red ribbons, wearing the same mustard-yellow salwar kameez with matching dupatta as in the earlier classroom scene. The boy is the one speaking: his mouth slightly open mid-apology, head bowed in shame, usual sneer completely gone, one hand rubbing the back of his neck awkwardly, cheeks flushed. A small wobbly white speech bubble with its tail pointing directly to the boy's mouth contains English text: "Your performance was truly remarkable... I regret my earlier words." The girl listens silently, lips closed in a gentle forgiving smile, arms unfolding, one hand reaching out toward him. Emotional reconciliation, hopeful cinematic lighting, soft painterly shadows.
-      </div>
-    </div>
-    <div class="notes">分镜 14：Deepak 真诚道歉，Anjali 微笑原谅——她证明了女孩也能在自己热爱的领域发光。</div>
-  </section>
-
-  <!-- 18. Quick Reference -->
-  <section class="slide" data-title="14-Panel 速查表">
-    <p class="page-kicker">Quick Reference</p>
-    <h2 class="h2">14 格分镜速查表</h2>
-    <table class="tiny-table mt-l">
-      <thead><tr><th>#</th><th>Panel</th><th>Dialogue Bubble</th><th>Key Emotion</th></tr></thead>
+  </div>
+  <div class="comic-stage" style="margin-top:16px;margin-bottom:0">
+    <p class="scene-desc"><b>一句话主线：</b>本文<b>以声音为主线推进</b>——从 faint meow 起，经鸟鸣与 screech owl 的干扰，到深夜的寂静，再到小猫的 meow、purr，最后以家人「better ears」的承认收束。讲评时反复回到这条声音链。</p>
+  </div>
+  <div class="notes">导览页：说明读板顺序（故事 → 任务 → 原文 → 写法 → 升华），并提示全文以声音为主线。</div>
+</section>
+<section class="slide" data-title="续写任务总览">
+  <p class="page-kicker">Task Overview · 以声音为主线</p>
+  <h2 class="h2">续写任务总览 · 开头句 + 问题链</h2>
+  <div class="hub-pair">
+    <table class="tiny-table cell-table">
+      <thead><tr><th colspan="2">Para.1 · Once in the barn, she shined the flashlight's beam toward the ladder.</th></tr></thead>
       <tbody>
-        <tr><td>1</td><td>The Taunt</td><td>Deepak speech bubble</td><td>Smugness / mockery</td></tr>
-        <tr><td>2</td><td>Confusion</td><td>Anjali thought bubble</td><td>Bewilderment</td></tr>
-        <tr><td>3</td><td>The Groan</td><td>Classmate "Ugh!" + SFX</td><td>Embarrassment</td></tr>
-        <tr><td>4</td><td>Sheepish</td><td>Anjali quiet speech</td><td>Shame / self-doubt</td></tr>
-        <tr><td>5</td><td>The Announcement</td><td>Mr. Zakir speech</td><td>Hope / excitement</td></tr>
-        <tr><td>6</td><td>Ignored</td><td>Anjali trailing off</td><td>Rejection</td></tr>
-        <tr><td>7</td><td>Overheard</td><td>Deepak whisper bubble</td><td>Hurt / anger</td></tr>
-        <tr><td>8</td><td>The Bathroom</td><td>Anjali thought bubble</td><td>Rage / frustration</td></tr>
-        <tr><td>9</td><td>Breaking Point</td><td>Anjali jagged shout bubble</td><td>Despair</td></tr>
-        <tr><td>10</td><td>The Poster</td><td>(no dialogue)</td><td>Wonder / turning point</td></tr>
-        <tr><td>11</td><td>The Slogan</td><td>Poster text</td><td>Inspiration</td></tr>
-        <tr><td>12</td><td>The Montage</td><td>(no dialogue)</td><td>Determination / growth</td></tr>
-        <tr><td>13</td><td>The Recital</td><td>SFX only</td><td>Triumph / passion</td></tr>
-        <tr><td>14</td><td>The Apology</td><td>Deepak wobbly bubble</td><td>Forgiveness / reconciliation</td></tr>
+        <tr><td style="width:34%"><b>夜晚的谷仓</b></td><td><div class="cell-body">夜深人静，谷仓是什么样？光束、干草堆、阴影、寂静或声响——环境描写交代氛围。</div><span class="cell-hint">点击展开</span></td></tr>
+        <tr><td><b>Callie 怎么做</b></td><td><div class="cell-body">攀梯、搜寻、搬开草捆的动作链 + 紧张又坚定的心理（动作描写带出情绪）。</div><span class="cell-hint">点击展开</span></td></tr>
+        <tr><td><b>如何找到小猫</b></td><td><div class="cell-body">听见 faint trembling meow → 拨开草捆 → 发现 tiny striped ball of fur；小猫长什么样、状态如何。</div><span class="cell-hint">点击展开</span></td></tr>
       </tbody>
     </table>
-    <div class="comic-stage mt-l" style="margin-bottom:0">
-      <p class="scene-desc"><b>故事弧线：</b>挑衅 → 困惑 → 嘘声 → 自我怀疑 → 希望 → 被无视 → 受伤 → 愤怒 → 绝望 → 转折（海报）→ 激励 → 苦练 → 凯旋 → 和解。这是一个关于勇气与成长的完整旅程。</p>
-    </div>
-    <div class="notes">速查表：14 格分镜的一句话索引。</div>
-  </section>
-
-  <!-- ===================== 续写讲评板块 ===================== -->
-
-  <!-- L1. 讲评导览 -->
-  <section class="slide center tc" data-title="续写讲评 · 导览">
-    <div>
-      <p class="kicker">Continuation Writing · Review</p>
-      <h1 class="h1 anim-rise-in" data-anim="rise-in" style="font-size:46px;line-height:1.18">续写讲评<br><span class="gradient-text">女孩坚持演奏印度鼓</span></h1>
-      <p class="lede" style="margin:18px auto;max-width:640px">从「故事理解」到「分段写作」再到「范文对比」——本讲评页整合 26 页课件核心，共 11 个讲评环节，配合上方漫画分镜辅助理解情节。</p>
-      <div class="crit-grid three" style="margin-top:26px;text-align:left">
-        <div class="crit-card"><b>① 任务与情节</b><br>续写任务总览 · 原文四段式梳理</div>
-        <div class="crit-card"><b>② 分段写作讲评</b><br>海报 → 训练 → 表演 → 道歉 → 主旨</div>
-        <div class="crit-card"><b>③ 范文与自查</b><br>ChatGPT 范文 · 学生佳作 · 自查清单</div>
-      </div>
-    </div>
-    <div class="notes">讲评导览：本次续写讲评的三个环节。</div>
-  </section>
-
-  <!-- L2. 续写任务总览 -->
-  <section class="slide" data-title="续写任务总览">
-    <p class="page-kicker">Task Overview</p>
-    <h2 class="h2">续写任务总览</h2>
-    <div class="crit-grid two" style="margin-top:14px">
-      <div class="crit-card">
-        <h3>两个段落开头句</h3>
-        <p class="scene-desc"><b>Para.1：</b>Stepping out of the bathroom, Anjali saw some inspiring posters on the wall.</p>
-        <p class="scene-desc"><b>Para.2：</b>After the recital, Deepak walked up to Anjali.</p>
-      </div>
-      <div class="crit-card">
-        <h3>写作提示</h3>
-        <ul style="margin:0;padding-left:18px">
-          <li>第一段或第二段结尾可写「得知入选 concert」，也可不写</li>
-          <li>Mr. Zakir 可以出现，也可以不出现</li>
-        </ul>
-      </div>
-    </div>
-    <table class="tiny-table cell-table mt-l">
-      <thead><tr><th>情节要点</th><th>A 线（Para.1）</th><th>B 线（Para.2）</th></tr></thead>
+    <table class="tiny-table cell-table">
+      <thead><tr><th colspan="2">Para.2 · Finally, Callie picked up the scared kitten from the corner of the hayloft.</th></tr></thead>
       <tbody>
-        <tr>
-          <td>A1 / B1</td>
-          <td><div class="cell-body">[inspiring posters] 的内容 + Anjali 看到后的反应</div><span class="cell-hint">点击展开</span></td>
-          <td><div class="cell-body">[Deepak] 道歉，表达钦佩</div><span class="cell-hint">点击展开</span></td>
-        </tr>
-        <tr>
-          <td>A2 / B2</td>
-          <td><div class="cell-body">[Anjali] 态度转变，认真训练</div><span class="cell-hint">点击展开</span></td>
-          <td><div class="cell-body">[Anjali] 的反应</div><span class="cell-hint">点击展开</span></td>
-        </tr>
-        <tr>
-          <td>A3 / B3</td>
-          <td><div class="cell-body">[recital] 到来，她表演非常成功（获得机会）</div><span class="cell-hint">点击展开</span></td>
-          <td><div class="cell-body">[主旨升华] 相信自己，坚持梦想 / 女孩子可以做成功自己想做的任何事情</div><span class="cell-hint">点击展开</span></td>
-        </tr>
+        <tr><td style="width:34%"><b>Callie 如何安抚</b></td><td><div class="cell-body">抱入怀中、贴胸、轻声安抚、顺毛；小猫由抖到放松的动作与反应。</div><span class="cell-hint">点击展开</span></td></tr>
+        <tr><td><b>小猫对 Callie</b></td><td><div class="cell-body">snuggle、蹭脸、purr、缓慢眨眼——建立信任的小细节。</div><span class="cell-hint">点击展开</span></td></tr>
+        <tr><td><b>人猫的关系</b></td><td><div class="cell-body">带回家、给家人看、为小猫安家；家人的态度转变（道歉 / 骄傲 / 温情）。</div><span class="cell-hint">点击展开</span></td></tr>
+        <tr><td><b>谁有更好的耳朵</b></td><td><div class="cell-body">呼应 Briggs 的玩笑「better ears」——主旨落脚：聆听与坚持，固执的新名字叫 perseverance。</div><span class="cell-hint">点击展开</span></td></tr>
       </tbody>
     </table>
-    <div class="notes">任务总览：两段开头句 + A/B 双线情节要点。</div>
-  </section>
+  </div>
+  <div class="notes">任务总览：两段开头句各配问题链（Para1 三问、Para2 四问），每格点击展开；全文以声音为主线推进。</div>
+</section>
 
-  <!-- L3. 原文情节梳理 -->
-  <section class="slide" data-title="原文情节梳理">
-    <p class="page-kicker">Plot Map</p>
-    <h2 class="h2">原文情节梳理 · 四段式导图</h2>
-    <div class="mindmap" style="margin-top:16px">
-      <div class="hub">原文情节<br>四段式</div>
-      <div class="branches">
-        <div class="branch"><b>① 矛盾起因</b> — Deepak 当众挑衅：「tabla is a boy's thing」，Anjali 困惑不解</div>
-        <div class="branch"><b>② 妥协退缩</b> — 听到嘘声后自我怀疑：「I guess I don't know it that well after all」</div>
-        <div class="branch"><b>③ 冲突激化</b> — 想找 Deepak 说清楚却被无视；偷听到恶语中伤，Anjali 怒不可遏</div>
-        <div class="branch"><b>④ 情绪崩溃</b> — 躲进洗手间无法冷静：「If I play in this concert, no one will talk to me again」</div>
+<section class="slide" data-title="原文情节梳理">
+  <p class="page-kicker">Plot Map · 问题^冲突解决型</p>
+  <h2 class="h2">原文情节梳理 · 故事山</h2>
+  <div class="mindmap" style="margin-top:16px">
+    <div class="hub">故事山<br>Story<br>Mountain</div>
+    <div class="branches">
+      <div class="branch tap-fold">
+        <div class="tf-head" role="button" tabindex="0" aria-expanded="false"><span class="tf-ico" aria-hidden="true"></span><b class="tf-label">Exposition 起点</b><span class="tf-hint">点击展开 / 收回</span></div>
+        <div class="tf-body"><span class="tf-text">农场 / 干草棚 / 输送机；Callie 帮 Briggs 搬草捆；喂马时阁楼传来 faint meow —— 触发事件</span></div>
+      </div>
+      <div class="branch tap-fold">
+        <div class="tf-head" role="button" tabindex="0" aria-expanded="false"><span class="tf-ico" aria-hidden="true"></span><b class="tf-label">Rising Action 上升</b><span class="tf-hint">点击展开 / 收回</span></div>
+        <div class="tf-body"><span class="tf-text">Briggs：树上鸟；Dad：screech owl；晚饭后她又听见；半夜醒来拿手电筒潜入谷仓 —— 悬念层层加码</span></div>
+      </div>
+      <div class="branch tap-fold">
+        <div class="tf-head" role="button" tabindex="0" aria-expanded="false"><span class="tf-ico" aria-hidden="true"></span><b class="tf-label">Climax 高潮</b><span class="tf-hint">点击展开 / 收回</span></div>
+        <div class="tf-body"><span class="tf-text">Callie 独自进入黑暗谷仓，亲手验证真相（明线：棚里有没有猫？× 暗线：她的坚持 vs 家人的理性否定）</span></div>
+      </div>
+      <div class="branch tap-fold">
+        <div class="tf-head" role="button" tabindex="0" aria-expanded="false"><span class="tf-ico" aria-hidden="true"></span><b class="tf-label">Falling Action 回落</b><span class="tf-hint">点击展开 / 收回</span></div>
+        <div class="tf-body"><span class="tf-text">真相揭晓：真有猫，成功救出</span></div>
+      </div>
+      <div class="branch tap-fold">
+        <div class="tf-head" role="button" tabindex="0" aria-expanded="false"><span class="tf-ico" aria-hidden="true"></span><b class="tf-label">Resolution 收束</b><span class="tf-hint">点击展开 / 收回</span></div>
+        <div class="tf-body"><span class="tf-text">小猫得救；家人承认 Callie 的直觉；道歉 / 收养 —— 情感归宿，回应前文冲突</span></div>
       </div>
     </div>
-    <div class="comic-stage mt-l" style="margin-bottom:0">
-      <p class="scene-desc"><b>关键伏笔：</b>鼓乐不分性别，只关乎努力与汗水（<span class="en">Anjali knew there was no such thing</span>）——续写海报标语与主旨必须回扣这一点。</p>
-    </div>
-    <div class="notes">情节梳理：四段式导图帮助定位续写的情感转折点。</div>
-  </section>
+  </div>
+  <div class="mini-flow" style="margin-top:14px">
+    <div class="flow-line">🔊 声音链：<b>faint meow</b>（白天）→ 鸟鸣 / <b>screech owl</b>（被否定）→ 深夜寂静中的 <b>meow</b>（自我验证）</div>
+  </div>
+  <div class="notes">原文情节：故事山五段式 + 声音链线索，明确续写的情感转折位置（高潮后自证）。</div>
+</section>
 
-  <!-- L3.5 人物关系图 -->
-  <section class="slide" data-title="人物关系图">
-    <p class="page-kicker">Character Map</p>
-    <h2 class="h2">人物关系图</h2>
-    <div class="mindmap" style="margin-top:16px">
-      <div class="hub" style="width:172px">Anjali<br><span style="display:inline-block;font-weight:600;font-size:15px;opacity:.9">主角 · 塔布拉鼓手</span></div>
-      <div class="branches">
-        <div class="branch"><b>Deepak（男同学）</b><br>当众挑衅 → 嫉妒 → 赛后道歉、由衷钦佩；与 Anjali 的冲突推动全文</div>
-        <div class="branch"><b>Mr. Zakir（音乐老师）</b><br>赏识 Anjali 天赋；主持 recital、宣布入选；见证她的成长与和解</div>
-      </div>
+<section class="slide" data-title="原文情节梳理 · 冲突与回应">
+  <p class="page-kicker">Conflict · Echoes · 原文伏笔</p>
+  <h2 class="h2">冲突解决 + 伏笔与回应</h2>
+  <table class="tiny-table cell-table mt-l">
+    <thead><tr><th style="width:50%">冲突 Conflict</th><th>解决 Solution</th></tr></thead>
+    <tbody>
+      <tr><td><div class="cell-body"><b>冲突 1：</b>Callie 听到阁楼猫叫，怀疑有小猫被困 —— 但 Dad 与 Briggs 认为她听错了。</div><span class="cell-hint">点击展开</span></td><td><div class="cell-body"><b>解决 1：</b>她没有被说服，继续求证：晚饭后再听、睡前请 Dad 再查一次。</div><span class="cell-hint">点击展开</span></td></tr>
+      <tr><td><div class="cell-body"><b>冲突 2：</b>Dad 检查无果，认定只是 screech owl，「stop worrying」——双重否定压顶。</div><span class="cell-hint">点击展开</span></td><td><div class="cell-body"><b>解决 2：</b>Callie 半夜醒来，仍想着 kittens 被困的可能，拿起手电筒独自夜探谷仓。</div><span class="cell-hint">点击展开</span></td></tr>
+    </tbody>
+  </table>
+  <div class="crit-grid two" style="margin-top:16px">
+    <div class="crit-card">
+      <h3>🔍 读线索：原文明写</h3>
+      <p><span class="en">faint meow from the hayloft</span> → Callie「pressing an ear to the bales」听到第二次；「woke in the night thinking about what she'd heard」——三个递进证据，读者早已确信，只有大人在否定。</p>
     </div>
-    <div class="comic-stage mt-l" style="margin-bottom:0">
-      <p class="scene-desc"><b>关系说明：</b>Anjali 是核心人物。与 <b>Deepak</b> 的关系从「被质疑 → 和解互敬」，与 <b>Mr. Zakir</b> 是「师生 · 伯乐」关系。续写中两人的互动与老师的安排都是情节关键，海报标语与道歉场景需与人物动机一致。</p>
+    <div class="crit-card">
+      <h3>🪞 找回声：续写回扣</h3>
+      <p>高分续写会<b>回扣原文细节</b>：a distinct but faint meow（呼应 faint meow）；Briggs 道歉 big-headed（呼应玩笑自负）；tiny striped ball of fur（新视觉线索）；a kitten poked her face out … eyes wide with terror（呼应前文「behind the bales」）。</p>
     </div>
-    <div class="notes">人物关系图：理清角色动机，续写时不跑偏人设。</div>
-  </section>
+  </div>
+  <div class="teacher-note-label">【文本框】课堂批注</div>
+  <div class="teacher-note" contenteditable="true" data-key="conflict" data-placeholder="点击此处输入批注…"></div>
+  <div class="notes">冲突解决 + 伏笔回应：两对冲突两两点击展开；原文线索与续写呼应点对照讲解。</div>
+</section>
 
-  <!-- L4. 讲评① 海报内容与反应 -->
-  <section class="slide" data-title="讲评① · 海报与反应">
-    <p class="page-kicker">Writing Clinic 1</p>
-    <h2 class="h2">讲评① 海报内容 + Anjali 的反应</h2>
-    <div class="crit-grid two" style="margin-top:14px">
-      <div class="crit-card">
-        <h3>海报标语：必须扣牢文章</h3>
-        <p>反思：Anjali 情绪低落的真正原因是<b>因性别被质疑、被偏见而自我怀疑</b>，而不是对自己没有信心。因此标语不能泛泛鼓励「加油 / 坚持」。</p>
-        <p><b>推荐标语：</b>Play for yourself. / Never dim your light. / Follow your heart. / Be yourself and shine on. / Music knows no gender.</p>
-        <p><b>画面选择：</b>打破被质疑、被偏见的视觉符号——女性在音乐舞台自信绽放（闪耀）。</p>
+<section class="slide" data-title="人物关系图 · 草棚与小猫">
+  <p class="page-kicker">Character Map · 人物与环境</p>
+  <h2 class="h2">人物关系图 · 谁是「主角」？</h2>
+  <div class="mindmap" style="margin-top:16px">
+    <div class="hub" style="width:168px">Callie<br><span style="display:inline-block;font-weight:600;font-size:15px;opacity:.9">主角 · 坚持倾听的小女孩</span></div>
+    <div class="branches">
+      <div class="branch tap-fold">
+        <div class="tf-head" role="button" tabindex="0" aria-expanded="false"><span class="tf-ico" aria-hidden="true"></span><b class="tf-label">Briggs（哥哥）</b><span class="tf-hint">点击展开 / 收回</span></div>
+        <div class="tf-body"><span class="tf-text">玩笑「I guess we've just got better ears than you」→ 续写中由调侃转为 genuine wonder / 自责道歉</span></div>
       </div>
-      <div class="crit-card">
-        <h3>反应描写：不要空洞的情绪堆砌</h3>
-        <ul style="margin:0;padding-left:18px">
-          <li><b>体态：</b>背挺直、眼睛闪闪发亮（hunched shoulders relaxed, spine straightened）</li>
-          <li><b>内心：</b>决心不让 Deepak 影响自己，要靠能力而非性别赢得机会</li>
-          <li><b>回忆：</b>与 tabla 的相遇之旅——指尖起泡、清晨练习、掌握第一个复杂节拍的喜悦</li>
-        </ul>
+      <div class="branch tap-fold">
+        <div class="tf-head" role="button" tabindex="0" aria-expanded="false"><span class="tf-ico" aria-hidden="true"></span><b class="tf-label">Dad（爸爸）</b><span class="tf-hint">点击展开 / 收回</span></div>
+        <div class="tf-body"><span class="tf-text">理性派：「It's coming from outside / just a screech owl」→ 续写中愧疚抚摸小猫、承认「You were right」</span></div>
       </div>
-    </div>
-    <div class="crit-grid two" style="margin-top:14px">
-      <div class="crit-card">
-        <h3>范文 · 标语 quote 版</h3>
-        <div class="model-passage">One of them was illustrated with a quote, "Never dim your light." For that moment, Anjali was transported back to her first encounter with the tabla. She remembered how she was mesmerized by the beautiful sounds, created by dancing fingers. She knew that tabla was meant for her.</div>
+      <div class="branch tap-fold">
+        <div class="tf-head" role="button" tabindex="0" aria-expanded="false"><span class="tf-ico" aria-hidden="true"></span><b class="tf-label">小猫（非人类角色）</b><span class="tf-hint">点击展开 / 收回</span></div>
+        <div class="tf-body"><span class="tf-text">被困草捆后；害怕却信任；以 meow / purr / 蹭脸回应 Callie —— 推动全文的行动与情感</span></div>
       </div>
-      <div class="crit-card">
-        <h3>范文 · 图像版</h3>
-        <div class="model-passage">With a closer look, her eyes were fixed on one particular poster featuring a girl highlighted in the spotlight. Though facing away from the audience, her silhouette still conveyed a strong sense of determination. Instantly, Anjali felt a surge of power rushing through her veins. "What if I were on the stage, playing tabla and immersed in the breathtaking rhythm of every strike?" she found herself wondering irresistibly.</div>
+      <div class="branch tap-fold">
+        <div class="tf-head" role="button" tabindex="0" aria-expanded="false"><span class="tf-ico" aria-hidden="true"></span><b class="tf-label">谷仓 / 干草棚（环境角色）</b><span class="tf-hint">点击展开 / 收回</span></div>
+        <div class="tf-body"><span class="tf-text">既是舞台也是「沉默的共谋」：白天输送机喧闹、夜晚把叫声吞掉的安静；草捆既是爸爸堆的「墙」，也是困住小猫的「牢笼」</span></div>
       </div>
     </div>
-    <div class="teacher-note-label">【文本框】课堂批注</div>
-    <div class="teacher-note" contenteditable="true" data-key="clinic1" data-placeholder="点击此处输入批注…"></div>
-    <div class="notes">讲评①：标语扣牢「音乐无性别」，反应写具体——体态 / 内心 / 回忆。</div>
-    <button class="comic-peek-btn" data-target="peek1" title="查看分镜漫画">✏️</button>
-    <div class="comic-peek" id="peek1">
-      <img src="images/panel-10.png" alt="Panel 10 · The Poster">
-      <img src="images/panel-11.png" alt="Panel 11 · The Slogan">
+  </div>
+  <div class="comic-stage mt-l" style="margin-bottom:0">
+    <p class="scene-desc"><b>关系说明：</b>Callie 是唯一「认真听」的人。大人不坏，只是用经验过滤掉了微弱的声音；小猫不会说话，却用一声声 meow 召唤她。续写的关键不是让大人认错，而是写 <b>Callie 如何带着坚持去完成这场自证</b>——动作、声音、时间、地点四要素都为她服务。</p>
+  </div>
+  <div class="notes">人物关系图：Callie 为核心；小猫与家人形成「相信 vs 怀疑」两组力；谷仓是环境角色。</div>
+</section>
+<section class="slide" data-title="讲评① · 声音主线拆解">
+  <p class="page-kicker">Writing Clinic ① · Sound Line</p>
+  <h2 class="h2">讲评① · 以声音为主线拆解两段</h2>
+  <p class="dim" style="margin-bottom:6px">提示：写作提示「人物刻画 · 主 Callie」= 动作链 / 声音 / 地点 / 时间。两段都可以靠<b>声音线索</b>推进。</p>
+  <div class="crit-grid two">
+    <div class="crit-card">
+      <h3>🔦 Para.1 声音推进（进入谷仓 → 找到猫）</h3>
+      <p>① 环境音：木梯 creak、脚下 hay 的沙沙、自己的呼吸（制造紧张）；② 目标音：微弱而清晰的 <span class="en">faint trembling meow</span> —— 在绝对安静里才显得「confirming the kitten was indeed there」；③ 触发动作：循声拨开 bales。</p>
     </div>
-  </section>
+    <div class="crit-card">
+      <h3>🫳 Para.2 声音收束（抱起猫 → 情感落地）</h3>
+      <p>① 小猫的恐惧：scared meow / trembling → ② Callie 的安抚声：whisper 低语（「Don't be afraid, little one. I'll take you home.」）→ ③ 信任音：purr、蹭脸的 silent affection → ④ 家人的承认：「You did get better ears than us!」声音从无助到温暖，完成闭环。</p>
+    </div>
+  </div>
+  <div class="mini-flow tap-fold" style="margin-top:14px">
+    <div class="flow-line tf-head" role="button" tabindex="0" aria-expanded="false"><span class="tf-ico" aria-hidden="true"></span><b class="tf-label">示范链 · 三句句式示范</b><span class="tf-hint">点击展开示范句 / 收回</span></div>
+    <div class="tf-body"><div class="flow-line">💡 示范链：<span class="en">…a faint yet discernible meow pierced through, echoing in the barn.</span> → <span class="en">As if catching a glimmer of hope from the light, the kitten started meowing once more.</span> → <span class="en">It purred contentedly … its low rumbling sound filling the room like a tiny engine.</span></div></div>
+  </div>
+  <div class="teacher-note-label">【文本框】课堂批注</div>
+  <div class="teacher-note" contenteditable="true" data-key="soundline" data-placeholder="点击此处输入批注…"></div>
+  <div class="notes">讲评①：用问题链 + 声音主线示范两条写作路线；点击各框展开示范句。</div>
+</section>
 
-  <!-- L5. 讲评② 态度转变认真训练 -->
-  <section class="slide" data-title="讲评② · 态度转变与训练">
-    <p class="page-kicker">Writing Clinic 2</p>
-    <h2 class="h2">讲评② 态度转变 · 认真训练</h2>
-    <div class="crit-grid two" style="margin-top:14px">
-      <div class="crit-card">
-        <h3>过渡总起句（时间流逝）</h3>
-        <p class="scene-desc">In the days that followed / In the following days / With each passing day / As time slipped away / As time ticked away unnoticed / Day in, day out / As days merged into weeks</p>
-        <h3 style="margin-top:12px">训练动作表达</h3>
-        <p class="scene-desc">throw herself heart and soul into practice / immerse herself completely in the practice / bury herself in endless practice / pour all her passion into tireless practice / redouble her efforts into endless practice / go all out for the recital</p>
-      </div>
-      <div class="crit-card">
-        <h3>关键提醒：除了坚持，还要「无视偏见」</h3>
-        <p>对他人质疑置之不理、不分心——这是本段区别于泛泛而谈的关键：</p>
-        <p class="scene-desc">… deaf to all outside noise. / ignoring all the prejudice and bias. / all the noise faded into the background. / completely absorbed in her own musical world.</p>
-        <div class="model-passage" style="margin-top:10px">As days slipped away, she buried herself in the realm of rhythm, leaving only sweat (and callouses) to bear witness to her devotion.</div>
-      </div>
+<section class="slide" data-title="讲评② · 句式拆解 段一上">
+  <p class="page-kicker">Writing Clinic ② · Sentence Clinic · Para.1 (1-4)</p>
+  <h2 class="h2">讲评② · 句式拆解：段一 · 找猫过程（上）</h2>
+  <div class="crit-grid two">
+    <div class="crit-card">
+      <h3>① 环境 · 介词短语</h3>
+      <p>谷仓静得出奇，除了自己的呼吸声。<br><span class="en">The barn was eerily silent except for the soft sound of her own breathing.</span></p>
     </div>
-    <div class="teacher-note-label">【文本框】课堂批注</div>
-    <div class="teacher-note" contenteditable="true" data-key="clinic2" data-placeholder="点击此处输入批注…"></div>
-    <div class="notes">讲评②：过渡句 + 训练表达 + 「无视偏见」结合文本。</div>
-    <button class="comic-peek-btn" data-target="peek2" title="查看分镜漫画">✏️</button>
-    <div class="comic-peek one" id="peek2">
-      <img src="images/panel-12.png" alt="Panel 12 · The Montage">
+    <div class="crit-card">
+      <h3>② 心理 · 无灵主语句</h3>
+      <p>想到被困的小猫，决心涌上心头。<br><span class="en">The thought of the possibly trapped kitty infused her heart with resolution.</span></p>
     </div>
-  </section>
+    <div class="crit-card">
+      <h3>③ 动作+心理 · 二连动二连副 + 独立主格</h3>
+      <p>鼓起勇气，缓慢谨慎地爬上摇晃的梯子。<br><span class="en">She mustered up all her courage and climbed the shaky ladder slowly and cautiously, her heart pounding wildly in her chest.</span></p>
+    </div>
+    <div class="crit-card">
+      <h3>④ 到达 · 时间状语从句 + 无灵主语句</h3>
+      <p>到达干草棚时，耳边传来微弱但清晰无助的喵叫。<br><span class="en">As she reached the hayloft, a distinct but faint, helpless meow came into her ears.</span></p>
+    </div>
+  </div>
+  <div class="teacher-note-label">【文本框】课堂批注</div>
+  <div class="teacher-note" contenteditable="true" data-key="clinic2" data-placeholder="点击此处输入批注…"></div>
+  <div class="notes">讲评②：段一前四句——环境、心理、动作链、到达；每种技法点开逐句对照。</div>
+</section>
 
-  <!-- L6. 讲评③ 表演成功 -->
-  <section class="slide" data-title="讲评③ · 表演成功">
-    <p class="page-kicker">Writing Clinic 3</p>
-    <h2 class="h2">讲评③ recital 到来 · 表演成功</h2>
-    <div class="crit-grid two" style="margin-top:14px">
-      <div class="crit-card">
-        <h3>转场句（训练 → 演出）</h3>
-        <p class="scene-desc">The day finally came. / Finally came the big day. / Finally came her long-awaited day. / Sweat and calluses bore witness to her dedication. / Before she even realized it, the long-awaited recital arrived, and it was her time to shine.</p>
-      </div>
-      <div class="crit-card">
-        <h3>要点</h3>
-        <ul style="margin:0;padding-left:18px">
-          <li>如果笔墨够，不写观众也可以</li>
-          <li><b>但一定要写表演成功</b></li>
-          <li>可写：登台前的深呼吸 / 指尖流淌的美妙乐音 / 观众惊叹</li>
-        </ul>
-      </div>
+<section class="slide" data-title="讲评③ · 句式拆解 段一下">
+  <p class="page-kicker">Writing Clinic ③ · Sentence Clinic · Para.1 (5-7)</p>
+  <h2 class="h2">讲评③ · 句式拆解：段一 · 找猫过程（下）</h2>
+  <div class="crit-grid two">
+    <div class="crit-card">
+      <h3>⑤ 搬草捆 · 独立主格</h3>
+      <p>用尽全力小心翼翼移开草捆，双手因兴奋与期待颤抖。<br><span class="en">She carefully pushed away stacks of the hay bales with all her might, her hands trembling with excitement mingled with anticipation.</span></p>
     </div>
-    <div class="model-passage mt-l" style="margin-top:14px">Finally came the big day. Standing on stage, she took a deep breath to get rid of lingering doubts and raised her hands in mid-air. The next second, everyone was captivated by the beautiful sounds flowing from her fingers. On the decisive stage, every single strike of hers blossomed into a breathless, flawless performance, leaving everyone present in awe.</div>
-    <div class="teacher-note-label">【文本框】课堂批注</div>
-    <div class="teacher-note" contenteditable="true" data-key="clinic3" data-placeholder="点击此处输入批注…"></div>
-    <div class="notes">讲评③：转场自然，表演成功必写。</div>
-    <button class="comic-peek-btn" data-target="peek3" title="查看分镜漫画">✏️</button>
-    <div class="comic-peek one" id="peek3">
-      <img src="images/panel-13.png" alt="Panel 13 · The Recital">
+    <div class="crit-card">
+      <h3>⑥ 发现 · 非谓语作宾补</h3>
+      <p>最终发现草捆后一个微小的条纹毛球。<br><span class="en">Finally, she spotted a tiny striped ball of fur stuck behind one of the bales.</span></p>
     </div>
-  </section>
+    <div class="crit-card" style="grid-column:1/-1">
+      <h3>⑦ 初见 · 对白 + 独立主格 + 无灵主语句</h3>
+      <p>「原来你在这儿！」她轻声道。小猫探出头，满眼惊恐，Callie 的心融化了。<br><span class="en">"There you are!" she whispered softly. A kitten poked her face out of the hay bales, eyes wide with terror. Callie's heart melted.</span></p>
+    </div>
+  </div>
+  <div class="teacher-note-label">【文本框】课堂批注</div>
+  <div class="teacher-note" contenteditable="true" data-key="clinic3" data-placeholder="点击此处输入批注…"></div>
+  <div class="notes">讲评③：段一后三句——搬草捆到初见小猫；独立主格与无灵主语密集出现。</div>
+</section>
 
-  <!-- L7. 讲评④ Deepak道歉与Anjali反应 -->
-  <section class="slide" data-title="讲评④ · 道歉与反应">
-    <p class="page-kicker">Writing Clinic 4</p>
-    <h2 class="h2">讲评④ Deepak 道歉 + Anjali 的反应</h2>
-    <div class="crit-grid two" style="margin-top:14px">
-      <div class="crit-card">
-        <h3>互动设计要点</h3>
-        <ul style="margin:0;padding-left:18px">
-          <li>两人的互动是否需要详细描写？——可详可略，视笔墨而定</li>
-          <li>Anjali 的反应：惊讶或困惑？两人之间的坚冰融化</li>
-          <li>老师挑选她参加音乐会、音乐会表演是否是重点？——不是，重点在和解与成长</li>
-          <li><b>妙招：呼应第一段海报标语</b></li>
-        </ul>
-      </div>
-      <div class="crit-card">
-        <h3>范文</h3>
-        <div class="model-passage">"Very impressive," he remarked awkwardly, admitting "I was just jealous because tabla should be a boy's thing." Anjali shrugged, "You know there is no such thing." … Under the spotlight, the set of tabla gleamed on the stage, mirroring her own radiant performance just minutes earlier. [呼应 poster]</div>
-      </div>
+<section class="slide" data-title="讲评④ · 句式拆解 段二">
+  <p class="page-kicker">Writing Clinic ④ · Sentence Clinic · Para.2</p>
+  <h2 class="h2">讲评④ · 句式拆解：段二 · 抱猫与安顿</h2>
+  <div class="crit-grid two">
+    <div class="crit-card">
+      <h3>① 抱猫 · 独立主格</h3>
+      <p>轻轻抱在怀里，小猫浑身颤抖。<br><span class="en">She cradled it gently in her arms, the little kitten shivering all over.</span></p>
     </div>
-    <div class="comic-stage mt-l" style="margin-bottom:0">
-      <p class="scene-desc"><b>点睛：</b>Anjali's heart swelled. Looking back at Deepak and the rest of the boys, she read genuine admiration in their silent eyes. Her victory was not merely securing a spot in Mr. Zakir's concert—it was showing them all that <b>music knew no gender, belonging only to those who gave it their sweat and soul</b>.</p>
+    <div class="crit-card">
+      <h3>② 信任 · 非谓语伴随 + 拟人</h3>
+      <p>小猫蜷在暖怀里亲昵蹭脸，仿佛表达完全信任。<br><span class="en">The kitten snuggled in her warm arms, affectionately rubbing against Callie's face as if showing her absolute trust.</span></p>
     </div>
-    <div class="teacher-note-label">【文本框】课堂批注</div>
-    <div class="teacher-note" contenteditable="true" data-key="clinic4" data-placeholder="点击此处输入批注…"></div>
-    <div class="notes">讲评④：道歉互动可详可略，主旨回扣海报「音乐无性别」。</div>
-    <button class="comic-peek-btn" data-target="peek4" title="查看分镜漫画">✏️</button>
-    <div class="comic-peek one" id="peek4">
-      <img src="images/panel-14.png" alt="Panel 14 · The Apology">
+    <div class="crit-card">
+      <h3>③ 回房 · 独立主格（环境配合动作）</h3>
+      <p>Callie 跑回房子，手电筒在黑暗中照出一条温暖的路。<br><span class="en">Callie dashed back to the house, her flashlight casting a warm glow on their path in darkness.</span></p>
     </div>
-  </section>
+    <div class="crit-card">
+      <h3>④ 安家 · 倒装句 + 非谓语表目的</h3>
+      <p>一进房间就做了小盒子，为小猫造舒适小窝。<br><span class="en">No sooner had she entered her room than she fashioned a small box into a cozy haven for it.</span></p>
+    </div>
+  </div>
+  <div class="teacher-note-label">【文本框】课堂批注</div>
+  <div class="teacher-note" contenteditable="true" data-key="clinic4" data-placeholder="点击此处输入批注…"></div>
+  <div class="notes">讲评④：段二四句——抱猫 → 信任 → 回房 → 安家；独立主格贯穿、结尾倒装收束。</div>
+</section>
 
-  <!-- L8. 讲评⑤ 主旨升华 -->
-  <section class="slide" data-title="讲评⑤ · 主旨升华">
-    <p class="page-kicker">Writing Clinic 5</p>
-    <h2 class="h2">讲评⑤ 主旨升华</h2>
-    <div class="crit-grid two" style="margin-top:14px">
-      <div class="crit-card">
-        <h3>主旨是什么？</h3>
-        <ul style="margin:0;padding-left:18px">
-          <li>不是弥合两人的关系</li>
-          <li>是<b>相信自己，坚持梦想</b></li>
-          <li>是<b>女孩子可以做成功自己想做的任何事情</b></li>
-          <li>必须<b>回扣第一段的海报</b></li>
-        </ul>
-      </div>
-      <div class="crit-card">
-        <h3>范文（女孩可以做任何事）</h3>
-        <div class="model-passage">Anjali's outstanding performance left no one surprised when they heard Mr. Zakir's pick — Anjali, the girl, the star student — for his next concert. Since then, whenever Mr. Zakir asked questions in class, Anjali was the first to respond confidently. The once self-doubting girl had vanished and was replaced by a brand-new Anjali, who firmly believed that girls could achieve anything they set their minds to.</div>
-      </div>
+<section class="slide" data-title="讲评⑤ · 词汇内容协同">
+  <p class="page-kicker">Writing Clinic ⑤ · Lexis & Content</p>
+  <h2 class="h2">讲评⑤ · 词汇和内容协同（不等于照搬全抄）</h2>
+  <div class="crit-grid two">
+    <div class="crit-card">
+      <h3>💦 汗水：写紧张与谨慎</h3>
+      <p>汗珠从额头滴落，Callie 把手缓缓伸进草堆……<br><span class="en">Beads of sweat dripped from her face as Callie cautiously extended her left hand into the stack of bales. In an instant, her fingers encountered a soft, fluffy creature…</span></p>
     </div>
-    <div class="comic-stage mt-l" style="margin-bottom:0">
-      <p class="scene-desc"><b>范文（相信自己）：</b>Among countless compliments, Anjali heard a little sweet voice, "Bravo, Anjali!" A little girl looked up at her, eyes wide with surprise: "I didn't know girls could play tabla." "Girls can do everything boys do," Anjali beamed, "Never dim your light."</p>
+    <div class="crit-card">
+      <h3>🔉 声音：写氛围与希望</h3>
+      <p>深夜里安静由可怕寂静统治，偶尔一声 haunting hoot；阁楼却传来一声微弱可辨的 meow。<br><span class="en">The deep night was utterly ruled by a dreadful silence, punctuated only by the occasional, haunting hoot of an owl.</span></p>
     </div>
-    <div class="teacher-note-label">【文本框】课堂批注</div>
-    <div class="teacher-note" contenteditable="true" data-key="clinic5" data-placeholder="点击此处输入批注…"></div>
-    <div class="notes">讲评⑤：主旨 = 相信自己 + 女孩能做任何事，回扣海报。</div>
-    <button class="comic-peek-btn" data-target="peek5" title="查看分镜漫画">✏️</button>
-    <div class="comic-peek" id="peek5">
-      <img src="images/panel-11.png" alt="Panel 11 · The Slogan">
-      <img src="images/panel-01.png" alt="Panel 1 · The Taunt">
+    <div class="crit-card">
+      <h3>🎨 颜色：写细节与真相</h3>
+      <p>金色毛发在摇曳光线中闪光——难怪白天看不见：毛色与干草浑然一体。<br><span class="en">…nestled behind the bales lay a cat, whose fur gleamed with a golden radiance, illuminated by the flickering light.</span></p>
     </div>
-  </section>
+    <div class="crit-card">
+      <h3>🗣️ 语言：让家人「长耳朵」</h3>
+      <p>「我上上下下找遍谷仓，根本没有猫！」Dad 耸耸肩；Callie 猛地抬头眨眼——<br><span class="en">Callie jerked her head up and winked. "I guess I've just got better ears than you guys."</span></p>
+    </div>
+  </div>
+  <div class="teacher-note-label">【文本框】课堂批注</div>
+  <div class="teacher-note" contenteditable="true" data-key="clinic5" data-placeholder="点击此处输入批注…"></div>
+  <div class="notes">讲评⑤：汗水 / 声音 / 颜色 / 语言四类描写各配一句可迁移素材，强调词汇与内容协同。</div>
+</section>
 
-  <!-- L9. ChatGPT 范文 -->
-  <section class="slide" data-title="ChatGPT 范文">
-    <p class="page-kicker">Model · ChatGPT</p>
-    <h2 class="h2">ChatGPT 完整范文（两段）</h2>
-    <div class="crit-grid two" style="margin-top:14px">
-      <div class="crit-card">
-        <h3>Para.1 · 海报与蜕变</h3>
-        <div class="model-passage">Stepping out of the bathroom, Anjali saw some inspiring posters on the wall. One depicted a young woman holding a tabla with the words, "Rhythm is not gendered — perseverance crafts the artist." The message resonated deeply with her, washing away her doubts and fears. Anjali's spirit rekindled; she straightened her back, her resolve hardening. She decided then and there that her performance at the recital would speak for her dedication and talent. With each beat she practiced, her confidence grew. By the day of the recital, Anjali was more prepared than ever, turning her anxiety into an electrifying performance that captivated everyone in the audience.</div>
-      </div>
-      <div class="crit-card">
-        <h3>Para.2 · 道歉与升华</h3>
-        <div class="model-passage">After the recital, Deepak walked up to Anjali. His expression was one of awe and remorse. "Anjali, I was wrong," he said earnestly. "Your playing was the highlight of the evening. I'm sorry for how I treated you; you truly are a remarkable musician." Anjali nodded, accepting his apology with a gracious smile. "Thank you, Deepak. Let's both keep pushing ourselves and support each other as musicians, regardless of anything else," she responded. This moment was more than a personal victory; it was a testament to her belief that with hard work and belief in oneself, any barrier could be overcome.</div>
+<section class="slide" data-title="讲评⑥ · 优秀改写示范">
+  <p class="page-kicker">Writing Clinic ⑥ · Model Rewrites</p>
+  <h2 class="h2">讲评⑥ · 优秀改写示范（两段重点）</h2>
+  <div class="crit-grid two">
+    <div class="crit-card">
+      <h3>🎵 两种声音 · 恐惧→希望</h3>
+      <p>旧木料每一声吱呀都如雷震，但几乎听不见的哀怨猫叫成了她的指南针。<br><span class="en">Every creak of the old timbers under her weight struck her as a thunderclap in the dead of night, yet the barely audible, plaintive mewing acted as her compass.</span></p>
+    </div>
+    <div class="crit-card">
+      <h3>👂 听觉衔接 · 引出猫声</h3>
+      <p>爬梯时心跳夹杂恐惧与兴奋；她侧耳不放过最微弱的声音——突然，草堆后传来一声轻弱无力的 meow。<br><span class="en">Suddenly, a soft, feeble meow came from behind the hay, confirming that the kitten was indeed there.</span></p>
+    </div>
+    <div class="crit-card">
+      <h3>👀 视线衔接 · 引出猫眼</h3>
+      <p>光束像希望的灯塔切开黑暗；找了几分钟没有生命迹象，正垂头要放弃时——远处角落，两只发光的眼睛正盯着她！<br><span class="en">In the far corner, two glowing beauty eyes stared back at her!</span></p>
+    </div>
+    <div class="crit-card">
+      <h3>🙌 救猫动作 · 轻而准</h3>
+      <p>她贴平身体把手臂伸进草捆缝隙拉到极限；毫不犹豫地踮脚循声搬开草捆，一只瘦弱的小猫蜷在角落绝望地叫。<br><span class="en">There it was — a skinny kitten curled up in the corner, meowing desperately.</span></p>
+    </div>
+  </div>
+  <div class="teacher-note-label">【文本框】课堂批注</div>
+  <div class="teacher-note" contenteditable="true" data-key="clinic6" data-placeholder="点击此处输入批注…"></div>
+  <div class="notes">讲评⑥：金炫宇式「声音心理空间」改写 + 听觉/视线衔接技法 + 救猫动作示范。</div>
+</section>
+<section class="slide" data-title="学生佳作对比">
+  <p class="page-kicker">Student Masterpieces · 高二（1）班</p>
+  <h2 class="h2">学生佳作对比 · 三种「相信自己」的写法</h2>
+  <div class="crit-grid three">
+    <div class="crit-card tap-fold" data-boxed="1">
+      <h3 class="tf-head" role="button" tabindex="0" aria-expanded="false"><span class="tf-ico" aria-hidden="true"></span>胡博然 · 心跳与指节<span class="tf-hint">点击展开英文修改版 + 讲评 / 收回</span></h3>
+      <div class="tf-body">
+        <p class="crit-sub" style="margin-top:2px"><b>① 语病修改版 · 英文全文</b><span class="tf-note" style="color:var(--text-2);opacity:.65;font-size:15px">（依据手写稿识别整理，修正拼写与句式）</span></p>
+        <div class="model-passage en"><b>Para.1</b> Once in the barn, she shined the flashlight's beam toward the ladder. With her heart pounding against her ribs like a trapped doe, Callie gripped the wooden rungs and climbed, each step creaking in the suffocating silence. Reaching the hayloft, she swept the beam across the high-rising bales, then dropped to her knees and pressed her ear against the prickly hay, holding her breath until she could hold it no longer. Then it came — a faint, trembling "MEOW", so fragile that it seemed to dissolve into the dust-filled, hay-scented air. She was right! The kitten was truly trapped in the bales. Gathering every ounce of her courage, she began to tug, her small fingers digging into the dry stalks, her knuckles whitening as she grabbed the hemp rope tightly. One by one, the bales were pried apart amid her frantic work.<br><b>Para.2</b> Finally, Callie picked up the scared kitten from the corner of the hayloft. Cradling the weak creature against her chest, she felt its tiny body vibrating with rapid purrs. A wave of triumph and tenderness washed over her exhausted frame. Just then, heavy footsteps thumped up the ladder and Briggs' sleepy face emerged at the gate. "You were right, Cal," he whispered, his teasing tone replaced by genuine wonder. He reached out to stroke the kitten's head, his lips curling into a brilliant smile. As the first rays of dawn crept through the barn's wooden slats, painting golden stripes over their faces, Callie smiled — not because she had been proved right, but because her single, persistent belief in a sound had led her to this tender life, now safe and sound in her arms.</div>
+        <p class="crit-sub"><b>② 教师评价</b></p>
+        <p><b>亮点</b>：动词链密而"有手感"——pounded、creaking、digging、whitening、pried apart 让读者能看见她用力；"like a trapped doe" 把紧张感物化成具体画面；结尾 "safe and sound" 双关 sound（声音 / 安然），主题回扣漂亮。</p>
+        <p><b>主要修改点</b>：① 无谓语碎片句并入 with 复合结构（Heart pounding…→With her heart pounding…）；② 倒装误用 "Then come it!"→"Then it came!"；③ 非谓语一致 knuckles whitened→whitening；④ "The bales pried apart on her frantic work"→"were pried apart amid her frantic work"，动作链更完整；⑤ persistence 拼写。短句冲击力是他的武器，保留节奏，但每句都要有完整主谓。</p>
       </div>
     </div>
-    <div class="notes">ChatGPT 范文：结构完整，两段分别完成 A 线与 B 线。</div>
-  </section>
+    <div class="crit-card tap-fold" data-boxed="1">
+      <h3 class="tf-head" role="button" tabindex="0" aria-expanded="false"><span class="tf-ico" aria-hidden="true"></span>朱璐琪 · 光束与倒装金句<span class="tf-hint">点击展开英文修改版 + 讲评 / 收回</span></h3>
+      <div class="tf-body">
+        <p class="crit-sub" style="margin-top:2px"><b>① 语病修改版 · 英文全文</b><span class="tf-note" style="color:var(--text-2);opacity:.65;font-size:15px">（依据手写稿识别整理，修正拼写与句式）</span></p>
+        <div class="model-passage en"><b>Para.1</b> Once in the barn, she shined the flashlight's beam toward the ladder. A chilly night breeze slipped through the cracks of the aged wooden barn, stirring the hay piled high against the walls and filling the air with the dry, earthy aroma of stored hay. Gripping the ladder rail firmly, Callie climbed rung by rung with extreme caution. In the profound stillness of midnight, her pounding heartbeat echoed distinctly in her ears. The wavering beam glided over stacks of hay bales, casting irregular dark shadows across the floor. Once she had steadied herself on the loft, she caught a faint, trembling mewl drifting from the far corner. Holding her breath, Callie crept forward and shifted the light slowly. Then a tiny creature came into sight, huddling up behind a bulky pile of hay.<br><b>Para.2</b> Finally, Callie picked up the scared kitten from the corner of the hayloft. The poor stray shook violently, its thin fur dampened and chilled by the night air. She tucked the fragile little creature inside her warm coat and whispered softly to calm its panic. Back at the house, her father roused easily at her quiet call. Even Briggs, stirred awake by their murmurs, felt remorse for having brushed off the faint meow as a bird's chirp earlier. He rushed to fetch a bowl of milk at once. Together, the whole family lined a wooden crate with cloth scraps, ready to build a nest for the kitten beside the fireplace. Seldom do faint cries, ignored by worldly experience, get noticed; yet a tender heart that dares to listen can always carve out a shelter for lives.</div>
+        <p class="crit-sub"><b>② 教师评价</b></p>
+        <p><b>亮点</b>：环境铺陈有镜头纵深——夜风→草香→静夜心跳→光束与暗影→远处微弱的 mewl，视听一层层推进；结尾倒装句是全篇记忆点，把"被世俗经验忽略的微弱呼喊"与"敢于聆听的温柔之心"对照，主题一锤定音；父亲→Briggs→热牛奶→全家做窝，回应链条完整。</p>
+        <p><b>主要修改点</b>：① 原稿 "the aged wooden barn, piled above walls" 修饰悬垂、结构破碎，并入定语结构（stirring the hay piled high against the walls）；② 倒装金句原为 "Seldom do faint cries ignored…get noticed"，过去分词悬空，规范为插入语 ", ignored by worldly experience,"；③ having brushed off 用完成式表"先前"；④ 涂改未定稿处（Slowed by its helplessness…）整合收束，避免悬垂分词；⑤ Once she steadied…→Once she had steadied…，时态先后更清楚。</p>
+      </div>
+    </div>
+    <div class="crit-card tap-fold" data-boxed="1">
+      <h3 class="tf-head" role="button" tabindex="0" aria-expanded="false"><span class="tf-ico" aria-hidden="true"></span>王贝儿 · 轻声安抚与木箱之家<span class="tf-hint">点击展开英文修改版 + 讲评 / 收回</span></h3>
+      <div class="tf-body">
+        <p class="crit-sub" style="margin-top:2px"><b>① 语病修改版 · 英文全文</b><span class="tf-note" style="color:var(--text-2);opacity:.65;font-size:15px">（依据手写稿识别整理，修正拼写与句式）</span></p>
+        <div class="model-passage en"><b>Para.1</b> Once in the barn, she shined the flashlight's beam toward the ladder. With her heart pounding wildly against her chest, she stepped onto the wooden ladder and climbed upward cautiously. When Callie reached the hayloft, she knelt down, held her breath and strained her ears, only to be overwhelmed by suffocating silence. The cool autumn wind blew through, and her anxiety grew. She gently tapped the thick hay bales and whispered softly, "Are you stuck in there, kitty?" The moment she pressed her ear against the stack of hay, a faint, trembling "meow" drifted out. Without thinking twice, she struggled to shift the heavy hay bales one by one. The tiny meows grew clearer as she cleared a narrow gap between the bales. Through the beam of the flashlight, she caught a flash of fluffy fur hidden deep in the dark corner.<br><b>Para.2</b> Finally, Callie picked up the scared kitten from the corner of the hayloft. The poor tiny cat trembled all over, its thin body curled into a ball, eyes wide with terror. Callie held it tightly against her chest, hurried back to the house and woke her father and Briggs. Dad's face filled with guilt as he stroked the kitten's head, apologizing for having dismissed Callie's worry carelessly. Briggs, too, looked ashamed and fetched a bowl of warm milk right away. As the kitten sipped the milk hungrily, its trembling faded little by little, and so did Callie's worry. Watching the kitten fall asleep safely, she felt immense satisfaction well up inside her. She was glad she had trusted her own ears and followed her heart. A realization hit her: persistence mattered far more than others' careless guesses.</div>
+        <p class="crit-sub"><b>② 教师评价</b></p>
+        <p><b>亮点</b>：三篇里语法错误最少、可读性最高，基本功扎实；"Are you stuck in there, kitty?" 是全文最动人的一笔——先问再听，温柔而尊重小生命；木箱之家、热牛奶、父亲愧疚的画面有生活温度；结尾点题自然不喊口号。</p>
+        <p><b>主要修改点</b>：① 时态 wake→woke（并列过去式）；② "its trembling faded…; So was Callie's worry" 标点与倒装片段不成立→"and so did Callie's worry"；③ 结尾 "…followed her heart that realization hit her" 句界破碎，拆为两句并整合顿悟（A realization hit her: persistence mattered…）；④ 属格 other's→others'；⑤ having dismissed 用完成式表"先前草率"。整体只需轻改，说明语感已相当成熟。</p>
+      </div>
+    </div>
+  </div>
+  <div class="teacher-note-label">【文本框】课堂批注</div>
+  <div class="teacher-note" contenteditable="true" data-key="masterpieces" data-placeholder="点击此处输入批注…"></div>
+  <div class="notes">学生佳作：胡博然（细腻动作心理）、朱璐琪（环境光影 + 倒装升华句）、王贝儿（温情画面 + 简单有力的感悟）。</div>
+</section>
 
-  <!-- L10. 学生佳作 -->
-  <section class="slide" data-title="学生佳作对比">
-    <p class="page-kicker">Student Work</p>
-    <h2 class="h2">学生佳作 · 对比讲评</h2>
-    <div class="crit-grid three" style="margin-top:14px">
-      <div class="crit-card">
-        <h3>佳作 1</h3>
-        <p class="scene-desc"><b>Para.1：</b>Among them, one dazzling tabla poster stood out with a bold slogan reading "Play for yourself." At these uplifting words, Anjali felt a blazing flame of determination ignited in her chest: She will secure the concert opportunity, not by her gender but by her competence. Ultimately, the decisive recital came. Anjali, who left the taunts and teases aside, braved the stage and played the tabla freely and fluidly. Mr. Zakir announced the winner — Anjali! She made it!</p>
-        <p class="scene-desc"><b>Para.2：</b>After the recital, Deepak walked up to Anjali. Instead of wearing the usual mean expression, he drooped his head in shame, murmuring, "Your performance deserves the honor." Hearing the heartfelt praise, Anjali couldn't help but curve her lips. Heart brimming with a new dose of confidence, Anjali dedicated herself to the demanding practice sessions with Mr. Zakir. She now was fully convinced that music offers equality for all, regardless of gender.</p>
-      </div>
-      <div class="crit-card">
-        <h3>佳作 2</h3>
-        <p class="scene-desc"><b>Para.1：</b>One striking image caught her eye: a young woman, immersed in playing the tabla, beneath the bold slogan "Gender is no barrier, simply go and play!" These powerful words reignited a blazing flame of determination within her. Rather than surrender to doubt, she resolved to redouble her efforts and fight back, proving that her skill, not her gender, should define her success. In the days that followed, Anjali dedicated herself completely, sharpening her craft and inching ever closer to perfection.</p>
-        <p class="scene-desc"><b>Para.2：</b>After the recital, Deepak walked up to Anjali. His sudden presence took Anjali off guard, prompting her to assume a defensive posture. But this time, she saw a change in him. Gone was his usual mean sneer; his head was bowed in shame. "Your performance was truly remarkable—I regret my earlier words," he stammered, visibly embarrassed. As Anjali accepted his apology with a forgiving smile, a warm current surged through her heart. Indeed, she had proven that a girl could excel in anything she set her heart on.</p>
-      </div>
-      <div class="crit-card">
-        <h3>佳作 3</h3>
-        <p class="scene-desc"><b>Para.1：</b>"Music knows no gender." "Savor the charm of music!" She roamed her gaze on them. The energetic words somehow put a bandage on her broken heart, mutely telling her, "you should give it another try." And so she did. Anjali channelled double efforts into practice and her efforts paid off.</p>
-        <p class="scene-desc"><b>点评：</b>标语直接点题「音乐无性别」；「put a bandage on her broken heart」比喻新颖，情感过渡自然。篇幅略短，若补足表演细节与 Deepak 互动更完整。</p>
-      </div>
-    </div>
-    <div class="notes">学生佳作：三篇对比，观察标语扣题、体态与内心描写、主旨回扣的差异。</div>
-  </section>
+<section class="slide" data-title="ChatGPT 范文">
+  <p class="page-kicker">Model Passages · 四版思路</p>
+  <h2 class="h2">完整范文四版 · 同一结尾不同落点</h2>
+  <div class="model-passage"><b>范文 A · 齐声承认型：</b>抱起小猫的 Callie 走出谷仓，家人惊讶围拢；结尾齐声道 "You did get better ears than us!" —— 把玩笑变成勋章。</div>
+  <div class="model-passage"><b>范文 B · 综合句式型：</b>句式拆解全收录（独立主格 / 无灵主语 / 倒装）；结尾以时间收束：<span class="en">From that moment on, a close bond formed between the cute kitten and Callie. Undoubtedly, the kitten became a beloved member of the family, bringing them endless joy and laughter.</span></div>
+  <div class="model-passage"><b>范文 C · 创意升级型（猫妈妈出场）：</b>循声找到的不是一只猫——"That must be the mom!" 猫妈妈叼走小猫回到另一端，草捆深处还有一窝幼崽；结尾 Callie 眨眼："…and 'she' got better ears than you guys."</div>
+  <div class="model-passage"><b>范文 D · 学生创意型：</b>手电筒叼在嘴里攀梯、蓝眼睛小猫、家人惊讶发现；结尾回扣开头：<span class="en">"Well, perhaps today the tiny being could accompany Callie in dragging the hay bales."</span> —— 让新成员自然进入农场日常。</div>
+  <div class="teacher-note-label">【文本框】课堂批注</div>
+  <div class="teacher-note" contenteditable="true" data-key="models" data-placeholder="点击此处输入批注…"></div>
+  <div class="notes">ChatGPT 范文：四版均两段完整；A 齐声承认 / B 句式综合 / C 猫妈妈反转 / D 回扣开头细节。</div>
+</section>
 
-  <!-- L11. 自查清单 -->
-  <section class="slide" data-title="续写自查清单">
-    <p class="page-kicker">Self-check</p>
-    <h2 class="h2">续写自查清单 <span style="font-size:16px;font-weight:700" id="check-count"></span></h2>
-    <div class="crit-grid two" style="margin-top:14px">
-      <ul class="check-list">
-        <li><label><input type="checkbox"> Para.1 以海报开头，标语扣牢「音乐无性别 / 做自己」而非泛泛鼓励</label></li>
-        <li><label><input type="checkbox"> Anjali 反应写具体：体态 / 内心活动 / 与 tabla 的回忆，至少两类</label></li>
-        <li><label><input type="checkbox"> 训练段有过渡句 + 「无视偏见」的表述</label></li>
-        <li><label><input type="checkbox"> 演出段明确写到表演成功（可写观众反应）</label></li>
-      </ul>
-      <ul class="check-list">
-        <li><label><input type="checkbox"> Deepak 道歉自然（羞愧神态 / 真心话），Anjali 反应不落俗套</label></li>
-        <li><label><input type="checkbox"> 主旨回扣海报：相信自己 / 女孩能做任何事</label></li>
-        <li><label><input type="checkbox"> 情节完整：A1-A3 与 B1-B3 要点全部覆盖</label></li>
-        <li><label><input type="checkbox"> 语言表达：有地道短语，无中式英语</label></li>
-      </ul>
+<section class="slide" data-title="讲评⑦ · 猫语料库">
+  <p class="page-kicker">Writing Clinic ⑦ · Kitty Corpus</p>
+  <h2 class="h2">讲评⑦ · 猫语料库（外貌 / 动作 / 声音）</h2>
+  <div class="crit-grid three">
+    <div class="crit-card">
+      <h3>外貌与神态</h3>
+      <p><span class="en">The little kitten was as white as snow, with a pink nose sniffing the air. Its eyes were like two bright emeralds, shining with a curious glint.</span></p>
+      <p><span class="en">Its tiny paws were padded with soft cushions, and its long whiskers seemed to sense every slight movement around it.</span></p>
     </div>
-    <div class="comic-stage mt-l" style="margin-bottom:0">
-      <p class="scene-desc"><b>满分口诀：</b>海报扣题 → 反应具体 → 训练无视偏见 → 表演必成功 → 道歉显真诚 → 主旨回扣海报。</p>
+    <div class="crit-card">
+      <h3>动作</h3>
+      <p><span class="en">It tiptoed quietly, lowering its fat body to the ground as if tracking an invisible prey. Then, all of a sudden, it leaped onto the window board and curled up into a ball…</span></p>
+      <p><span class="en">The kitten pounced on the ball of yarn with lightning speed, its little claws hooking the yarns…</span></p>
     </div>
-    <div class="notes">自查清单：讲评后逐项勾选，快速定位失分点。</div>
-  </section>
+    <div class="crit-card">
+      <h3>声音</h3>
+      <p><span class="en">Staring at Callie, the kitten let out a soft, delicate meow, as if begging for a warm embrace…</span></p>
+      <p><span class="en">It purred contentedly as Callie stroked its silky fur, its low rumbling sound filling the room like a tiny engine.</span></p>
+    </div>
+  </div>
+  <div class="teacher-note-label">【文本框】课堂批注</div>
+  <div class="teacher-note" contenteditable="true" data-key="corpus" data-placeholder="点击此处输入批注…"></div>
+  <div class="notes">讲评⑦：猫语料库三类——外貌神态（雪白毛/祖母绿眼）、动作（偷袭/打滚/蜷缩）、声音（meow/purr）。</div>
+</section>
 
-  <!-- 19. Thanks -->
-  <section class="slide center tc" data-title="结尾">
-    <div>
-      <p class="kicker">The End</p>
-      <h1 class="h1 anim-rise-in" data-anim="rise-in" style="font-size:52px;line-height:1.15">GENDER IS NO BARRIER —<br><span class="gradient-text">SIMPLY GO AND PLAY!</span></h1>
-      <p class="lede" style="margin:20px auto;max-width:560px">漫画故事板 · 导入文档自动生成分镜漫画 + 讲评</p>
-      <p class="dim" style="font-size:13px">按 ← → 翻页 · T 切换主题 · A 切换动效 · F 全屏 · S 演讲者模式 · O 概览</p>
+<section class="slide" data-title="讲评⑧ · 猫行为词汇">
+  <p class="page-kicker">Writing Clinic ⑧ · Feline Body Language</p>
+  <h2 class="h2">讲评⑧ · 猫行为语言词汇（四组情绪）</h2>
+  <div class="crit-grid two">
+    <div class="crit-card">
+      <h3>😻 亲昵与满足 Affection</h3>
+      <p><b>purr</b> 呼噜 · <b>head-butt / bunt</b> 用头轻蹭 · <b>knead / make biscuits</b> 踩奶 · <b>slow blink</b> 缓慢眨眼。<br><span class="en">He bunted his head against the girl's hand, leaving his scent as a silent claim. / With eyes half-closed, she kneaded the cushion rhythmically with her paws.</span></p>
     </div>
-    <div class="notes">结尾页：点题标语与操作提示。</div>
-  </section>
+    <div class="crit-card">
+      <h3>🐾 玩耍与好奇 Playful</h3>
+      <p>扭动后臀扑落叶；尾巴 twitch 时在沙发后 stalk 隐形猎物；听到灌木沙沙耳朵 pricked forward。<br><span class="en">Its ears pricked forward at the faint rustling in the bushes.</span></p>
+    </div>
+    <div class="crit-card">
+      <h3>⚠️ 警觉与不安 Alert</h3>
+      <p>被狗惊到 puff up 两倍大、弓背；喉咙发出低低 hiss 警告保持距离；打雷时耳朵 flattened against its skull；压低 crouch 准备逃跑。<br><span class="en">The cat crouched low, its body tensed and ready to flee.</span></p>
+    </div>
+    <div class="crit-card">
+      <h3>🧼 日常仪态 Daily Rituals</h3>
+      <p>冒险后 fastidious grooming 洗脸；门口 tail held high 迎接，尾尖轻颤；醒来 long elegant stretch；坐下把尾巴整齐绕脚边。<br><span class="en">After the adventure, it settled down for a fastidious grooming session, licking its paw and washing its face.</span></p>
+    </div>
+  </div>
+  <div class="teacher-note-label">【文本框】课堂批注</div>
+  <div class="teacher-note" contenteditable="true" data-key="behavior" data-placeholder="点击此处输入批注…"></div>
+  <div class="notes">讲评⑧：亲昵满足 / 玩耍好奇 / 警觉不安 / 日常仪态——猫的行为即情绪翻译器。</div>
+</section>
 
-</div>
+<section class="slide" data-title="讲评⑨ · 升华角度">
+  <p class="page-kicker">Writing Clinic ⑨ · Thematic Lifts</p>
+  <h2 class="h2">讲评⑨ · 几种升华角度（让主题自然长出）</h2>
+  <div class="crit-grid two">
+    <div class="crit-card">
+      <h3>方向一 · 为「固执」正名</h3>
+      <p>救命的不是耳朵，是相信自己与悲悯。<br><span class="en">It dawned on Callie that it was not her ears that saved a life under the bales; it was her trust in herself and her compassion that lifted the weight of doubt on her mind…</span></p>
+      <p>金句：<span class="en">That night, her so-called stubbornness had a new name: perseverance, and it had saved a life.</span> 也可以给小猫取名 Hay：<span class="en">If you hold fast to your beliefs and harbour kindness in your heart, the world will greet you with its own "Hey".</span></p>
+    </div>
+    <div class="crit-card">
+      <h3>方向二 · 温馨画面收束</h3>
+      <p>小猫在 Briggs 膝上 purr，Dad 在门口微笑——真正的宝藏不只是救了一只动物。<br><span class="en">As the kitten purred contentedly in Briggs's lap, with her dad smiling from the doorway, Callie knew this was the real treasure: not just a rescued animal, but a perfect, unspoken moment of togetherness.</span></p>
+    </div>
+    <div class="crit-card">
+      <h3>方向三 · 微小行动的宏大意义</h3>
+      <p><span class="en">Rescuing one kitten may not change the whole world, but for that kitten, its world was changed forever. And in the process, so was Callie's.</span></p>
+    </div>
+    <div class="crit-card">
+      <h3>画面式结尾 · 少说教多留白</h3>
+      <p>把评价式「perseverance saved a life」改成画面：<br><span class="en">The three of them watched the little ball of fur curl up and fall asleep. Finally, the night fell quiet.</span><br>升华四型：环境型（火苗噼啪、风停了）/ 对比型（几小时前的忙乱 vs 现在的小猫入睡）/ 时间型（多年后仍记得怀中微小的重量与笃定）/ 动作型（只留下画面，让读者自己品）。</p>
+    </div>
+  </div>
+  <div class="teacher-note-label">【文本框】课堂批注</div>
+  <div class="teacher-note" contenteditable="true" data-key="lifts" data-placeholder="点击此处输入批注…"></div>
+  <div class="notes">讲评⑨：三种升华方向 + 画面式结尾原则；提醒好结尾不是结论而是画面。</div>
+</section>
+
+<section class="slide" data-title="续写自查清单">
+  <p class="page-kicker">Self-Check</p>
+  <h2 class="h2">续写自查清单 · 写作前 & 写作后</h2>
+  <ul class="check-list">
+    <li><label><input type="checkbox"><b>① 声音主线在吗？</b>从 faint meow 到 purr，声音有起伏、有递进、有收束？</label></li>
+    <li><label><input type="checkbox"><b>② 段首句接住了吗？</b>Para.1 从「手电光照向梯子」自然展开谷仓之夜；Para.2 从「抱起小猫」写到信任与安顿。</label></li>
+    <li><label><input type="checkbox"><b>③ 动作链完整吗？</b>爬梯 → 搜寻 → 搬草捆 → 发现 → 抱起 → 安抚 → 带回家；每一步都「看得到画面」？</label></li>
+    <li><label><input type="checkbox"><b>④ 回扣原文了吗？</b>呼应 faint meow、better ears、behind the bales、screech owl 等线索？</label></li>
+    <li><label><input type="checkbox"><b>⑤ 环境在服务吗？</b>夜晚的寂静、手电的光、晨光/炉火——环境描写参与了情节与情感？</label></li>
+    <li><label><input type="checkbox"><b>⑥ 家人出现有逻辑吗？</b>叫醒 / 不叫醒 / 没睡三版任选其一，杜绝「she woke her father and brother」式单句跳跃。</label></li>
+    <li><label><input type="checkbox"><b>⑦ 小猫是「角色」吗？</b>它的颤抖、purr、蹭脸、缓慢眨眼——让小猫用行为回应 Callie？</label></li>
+    <li><label><input type="checkbox"><b>⑧ 结尾留余味吗？</b>避免评价式总结；用画面、对比、环境或时间拉长，把主题留给读者去品。</label></li>
+    <li><label><input type="checkbox"><b>⑨ 句式有变化吗？</b>独立主格 / 无灵主语 / 倒装 / 非谓语，2-3 处点睛即可，不堆砌。</label></li>
+    <li><label><input type="checkbox"><b>⑩ 字数与衔接？</b>两段字数均衡；段落内部用声音 / 视线 / 动作自然衔接，不断层。</label></li>
+  </ul>
+  <div class="notes">自查清单：十条覆盖主线、衔接、动作、伏笔、环境、人物、句式与结尾。</div>
+</section>
+
+<section class="slide center tc" data-title="结尾">
+  <div style="max-width:900px;margin:0 auto">
+    <p class="page-kicker" style="font-size:15px">So… who has better ears?</p>
+    <h2 class="h2" style="font-size:46px">Callie does. 🐱</h2>
+    <p class="scene-desc" style="margin:18px auto 0;max-width:780px">也许大人只是太习惯世界的噪声，忘了去听草捆后面微弱的声音。写作也一样：真正动人的续写，往往来自敢相信一个细节、坚持写完一个动作、耐心铺一条声音线的人。</p>
+    <div class="pill-row">
+      <span class="emotion-tag">Listen closely</span>
+      <span class="emotion-tag">Trust your instincts</span>
+      <span class="emotion-tag">Perseverance saves lives</span>
+    </div>
+    <p class="dim" style="margin-top:24px;font-size:14px">续写漫画讲评板 · Callie 与干草棚里的小猫 · 15 格分镜 × 42 页课件逐板块讲评</p>
+  </div>
+  <div class="notes">结尾：呼应 better ears 的玩笑，点题「坚持相信一个声音」。</div>
+</section>
 
 <button class="import-fab" id="import-fab" title="导入文档，自动生成讲评">＋ 导入</button>
 <div class="import-modal" id="import-modal">
@@ -1078,7 +824,7 @@
   <button class="d-btn" id="doodle-close">关闭</button>
 </div>
 <div class="page-nav" id="page-nav">
-  <span class="slide-number" data-current="1" data-total="31">01/31</span>
+  <span class="slide-number" data-current="1" data-total="30">01/30</span>
   <select id="page-jump" title="跳转到指定页"></select>
 </div>
 <canvas id="doodle-canvas"></canvas>
@@ -2561,4 +2307,144 @@ window.addEventListener('load', fitAllSlides);
 <script src="assets/runtime.js"></script>
 
 
+<script src="assets/vendor/pptxgen.bundle.js"></script>
+<script src="assets/export-pptx.js"></script>
+<script>
+/* ============================================================
+ * 整改交互增强（点击展开/收回 · 分镜点击放大 · 导览跳转）
+ * 由 Marvis File Agent 注入；依赖 window.fitText / runtime hash 翻页
+ * ============================================================ */
+(function(){
+  'use strict';
+
+  /* ---- 1. 通用折叠 .tap-fold：点标题行展开/收回 ---- */
+  function bindFolds(root){
+    var heads = (root || document).querySelectorAll('.tap-fold > .tf-head');
+    Array.prototype.forEach.call(heads, function(head){
+      if(head.getAttribute('data-tf-bound')) return;
+      head.setAttribute('data-tf-bound', '1');
+      head.addEventListener('click', function(e){
+        e.stopPropagation();
+        var fold = head.parentElement;
+        var open = fold.classList.toggle('open');
+        head.setAttribute('aria-expanded', open ? 'true' : 'false');
+        var sec = fold.closest('section.slide');
+        if(sec && window.fitText) window.fitText(sec);
+      });
+      head.addEventListener('keydown', function(e){
+        if(e.key === 'Enter' || e.key === ' '){
+          e.preventDefault();
+          e.stopPropagation();
+          head.click();
+        }
+      });
+    });
+  }
+  bindFolds(document);
+  document.addEventListener('DOMContentLoaded', function(){ bindFolds(document); });
+
+  /* ---- 2. 分镜图点击放大（深色遮罩 / 等比 contain / 再点恢复） ---- */
+  var zoomLayer = null;
+  function ensureZoomLayer(){
+    if(zoomLayer) return zoomLayer;
+    zoomLayer = document.createElement('div');
+    zoomLayer.className = 'img-zoom';
+    zoomLayer.setAttribute('hidden', '');
+    var img = document.createElement('img');
+    img.alt = '分镜放大';
+    var closeBtn = document.createElement('button');
+    closeBtn.type = 'button';
+    closeBtn.className = 'zoom-close';
+    closeBtn.setAttribute('aria-label', '关闭放大');
+    closeBtn.innerHTML = '&times;';
+    var hint = document.createElement('p');
+    hint.className = 'zoom-hint';
+    hint.textContent = '点击图片或遮罩任意处关闭';
+    zoomLayer.appendChild(img);
+    zoomLayer.appendChild(closeBtn);
+    zoomLayer.appendChild(hint);
+    document.body.appendChild(zoomLayer);
+    zoomLayer.addEventListener('click', function(){ closeZoom(); });
+    closeBtn.addEventListener('click', function(e){ e.stopPropagation(); closeZoom(); });
+    return zoomLayer;
+  }
+  function openZoom(src){
+    var layer = ensureZoomLayer();
+    layer.querySelector('img').src = src;
+    layer.removeAttribute('hidden');
+    document.documentElement.classList.add('zoom-lock');
+  }
+  function closeZoom(){
+    if(!zoomLayer) return;
+    zoomLayer.setAttribute('hidden', '');
+    zoomLayer.querySelector('img').removeAttribute('src');
+    document.documentElement.classList.remove('zoom-lock');
+  }
+  function zoomOpen(){
+    return zoomLayer && !zoomLayer.hasAttribute('hidden');
+  }
+  // 放大态拦截翻页/空格等键盘事件（capture 优先于 runtime 翻页监听）
+  document.addEventListener('keydown', function(e){
+    if(!zoomOpen()) return;
+    var guard = ['ArrowRight','ArrowLeft',' ','Home','End','PageUp','PageDown','Enter','Escape'];
+    if(guard.indexOf(e.key) >= 0){
+      e.preventDefault();
+      e.stopPropagation();
+      if(e.key === 'Escape') closeZoom();
+    }
+  }, true);
+  function isZoomable(img){
+    if(!img || img.tagName !== 'IMG') return false;
+    if(img.closest('.img-zoom')) return false;
+    if(!img.closest('.deck')) return false;
+    var src = img.getAttribute('src') || '';
+    if(/panel-\d+\.png/i.test(src)) return true;
+    var r = img.getBoundingClientRect();
+    return r.width >= 120 && r.height >= 80;
+  }
+  document.addEventListener('click', function(e){
+    var t = e.target;
+    if(t && t.tagName === 'IMG' && isZoomable(t)){
+      e.stopPropagation();
+      openZoom(t.getAttribute('src') || t.src);
+    }
+  }, false);
+  window.__hcCloseZoom = closeZoom;
+
+  /* ---- 3. 导览卡点击跳转到对应板块 slide ---- */
+  function jumpToSlide(section){
+    if(!section) return;
+    // 讲评板块整页默认折叠，跳转时直接展开该页内容
+    if(section.classList.contains('lesson-reveal') && !section.classList.contains('open')){
+      section.classList.add('open');
+    }
+    var list = document.querySelectorAll('.deck .slide');
+    var idx = Array.prototype.indexOf.call(list, section);
+    if(idx < 0) return;
+    var target = '#/' + (idx + 1);
+    if(location.hash === target){
+      try{
+        window.dispatchEvent(new HashChangeEvent('hashchange'));
+      }catch(err){}
+    }else{
+      location.hash = target;
+    }
+  }
+  document.addEventListener('click', function(e){
+    var cell = e.target && e.target.closest ? e.target.closest('.guide-page .guide-cell') : null;
+    if(!cell) return;
+    e.preventDefault();
+    e.stopPropagation();
+    var t = cell.getAttribute('data-jump');
+    if(!t) return;
+    var sec = null;
+    Array.prototype.some.call(document.querySelectorAll('.deck > section.slide[data-title]'), function(s){
+      var title = s.getAttribute('data-title') || '';
+      if(title === t || title.indexOf(t) === 0){ sec = s; return true; }
+      return false;
+    });
+    if(sec) jumpToSlide(sec);
+  });
+})();
+</script>
 </body></html>
